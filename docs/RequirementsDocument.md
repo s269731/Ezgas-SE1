@@ -30,10 +30,16 @@ Version: 1
 # Abstract
 
 EZGas is a crowdsourcing service that allows users to:
-* collect prices of fuels in different gas stations
-* locate gas stations in an area, along with the prices they practice.
 
-EZGas is supported by a web application (accessible both via smartphone or PC)
+* Perform searches for gas stations in their area by selecting the interested fuel type. The search can be based on the price of fuel or on the distance to reach the gas stations;
+* Report a new price of certain type of fuel in a gas station;
+* Report a new gas station not already available in EZGas.
+
+EZGas is supported by a web application (accessible both via smartphone or PC).
+The gas stations are localized thanks to a specific API of Google Maps.
+
+In order to be able to use the application, users must set up a (free) EZGas account and be logged in.
+He must also activate the GPS position on their smartphone.
 
 # Stakeholders
 
@@ -41,7 +47,7 @@ EZGas is supported by a web application (accessible both via smartphone or PC)
 | Stakeholder name  | Description | 
 | ----------------- |:-----------:|
 | Developer | Develops the application and checks periodically for possible raising issues. |
-| Administrator | Works closely with the application development teams to tune and troubleshoot the application. Leads and participates in efforts to implement application updates to include upgrades, patches, and new releases with the goal of meeting the end users' needs. He is fully responsible for daily monitoring and maintanance activities (monitors and if neccessary can ban users, stop hackers, fix accounts). | 
+| Administrator | Works closely with the application development teams to tune and troubleshoot the application. Leads and participates in efforts to implement application updates to include upgrades, patches, and new releases with the goal of meeting the end users' needs. He is fully responsible for daily monitoring and maintanance activities (monitors and, if necessary, can ban users, stop hackers, fix accounts). | 
 | User | Uses the application directly, because he is interesting in finding the closest gas stations (or the most convenient one) and in keeping prices up to date. |
 | GoogleMaps | Provides an Application Program Interface (API) to the application, so that gas stations can be easily localized. |
 
@@ -101,10 +107,8 @@ John is the administrator of EzGas. Aside from working on application updates an
 |   	   | FR1.4 | Change account details |
 |   	   | FR1.5 | Reset forgotten password |
 | FR2	   |  | Search for the closest gas stations (optionally based on maximum distance and/or price) |
-| FR3	   |  | Give a feedback based on the correctness of the price |
-|		   | FR3.1 | Positive feedback: the price is correct |
-|		   | FR3.2 | Negative feedback: the price is not correct + correct price for the update |
-| FR4	   |  | Insert prices (when not yet inserted) |
+| FR3	   |  | Report a new price |
+| FR4	   |  | Change fuel type |
 | FR5	   |  | Report a new gas station to be added |
 
 ## Non Functional Requirements
@@ -135,8 +139,8 @@ actor GoogleMaps
 
 (FR1. User authentication) as (FR1)
 (FR2. Search for the closest gas stations) as (FR2)
-(FR3. Give a feedback to prices) as (FR3)
-(FR4. Insert prices) as (FR4)
+(FR3. Report a new price) as (FR3)
+(FR4. Change fuel type) as (FR4)
 (FR5. Report a new gas station to be added) as (FR5)
 
 User --> (FR1)
@@ -148,8 +152,6 @@ User --> (FR1)
 User --> (FR2)
 (FR2) --> GoogleMaps
 User --> (FR3)
-(FR3) ..> (FR3.1 Positive feedback) : include
-(FR3) ..> (FR3.2 Negative feedback + Update) : include
 User --> (FR4)
 User --> (FR5)
 
@@ -162,8 +164,8 @@ User --> (FR5)
 | ------------- |:-------------:| 
 |  Precondition     | User U has not subscribed an account with EZGas |  
 |  Post condition     | User U is enrolled to EZGas |
-|  Nominal Scenario     | User U compiles a form providing the required information; subsequently, he will receive an e-mail with a link to be clicked in order to confirm the subscription. |
-|  Variants     | If the inserted e-mail address is not in the valid format, issue warning. |
+|  Nominal Scenario     | User U compiles a form, providing the required information (personal details like name, surname, ...) and specifying the preferred fuel type; subsequently, he will receive an e-mail with a link to be clicked in order to confirm the subscription. |
+|  Variants     | The inserted e-mail address is not in the valid format, issue warning |
 
 ### Use case 2, UC2 - FR1.2 Login to EZGas 
 | Actors Involved        | User |
@@ -187,13 +189,13 @@ User --> (FR5)
 |  Precondition     | User U is logged in with EZGas |  
 |  Post condition     | Account details of User U are updated|
 |  Nominal Scenario     | User U modifies some personal information (name, address, e-mail, ...) and then inserts the password in order to make modifications permanent. |
-|  Variants     | If the inserted password is not correct, issue warning. |
+|  Variants     | The inserted password is not correct, issue warning |
 
 ### Use case 5, UC5 - FR1.5 Reset forgotten password
 | Actors Involved        | User |
 | ------------- |:-------------:| 
 |  Precondition     | User U is enrolled to EZGas |  
-|  Post condition     | Password of User U is updated|
+|  Post condition     | Password of User U is resetted |
 |  Nominal Scenario     | User U inserts his e-mail address; he will receive an e-mail with a temporary password to be used in order to log in.|
 |  Variants     |  |
 
@@ -203,128 +205,249 @@ User --> (FR5)
 | Actors Involved        | User, GoogleMaps |
 | ------------- |:-------------:| 
 |  Precondition     | User U is logged in with EZGas, GPS position is activated |  
-|  Post condition     | EZGas returns a list of gas stations |
-|  Nominal Scenario   | User U selects the interested type of fuel and inserts a maximum distance and/or maximum price in order to filter the results based on these constraints; the application, thanks to GoogleMaps API, will provide a list of gas stations (with respective prices) that satisfies the request. |
-|  Variant 1     | User U doesn't insert any preference in terms of maximum distance and/or maximum price. The application will apply default parameters. |
-|  Variant 2	 | EZGas returns a list of gas stations that is empty, issue warning. |
+|  Post condition     | EZGas returns a list of gas stations that sell the preferred fuel type F (specified by the User U when he signed up, see UC1) |
+|  Nominal Scenario   | User U inserts a maximum distance and/or maximum price in order to filter the results based on these constraints; the application, thanks to GoogleMaps API, will provide a list of gas stations (with respective prices) that satisfies the request. |
+|  Variant 1     | User U doesn't insert any preference in terms of maximum distance and/or maximum price: the application will apply default parameters |
+|  Variant 2	 | There are no gas stations in the area that satisfy the constraints (the resulted list is empty), issue warning to User U |
 
 ##### Scenario 6.1
 
 | Scenario ID: SC6.1        | Corresponds to UC6  |
 | ------------- |:-------------| 
-| Description | User U wants to search for the closest gas stations (filter parameters are set) |
-| Precondition | User U has logged in with EZGas, GPS position is activated |
-| Postcondition | List of gas stations provided based on the GPS position and filter parameters |
+| Description | User U performs a search that produces no results |
+| Precondition |  |
+| Postcondition | |
 | Step#        |  Step description   |
-|  1     | User U selects the type of the fuel he's interested in |  
-|  2     | User U inserts a maximum distance in order to filter the results |
-|  3     | User U inserts (optionally) a maximum price in order to apply a second filter to the results |
-|  4 	 | The search process starts |
-|  5	 | EZGas provides a list of gas stations based on the GPS position and ordered by distance and, eventually, by price |
+|  1	 | GoogleMaps detects the GPS position of the User U  and sends that to EZGas | 
+|  2     | User U performs a search (with or without filter parameters set) |
+|  3     | EZGas does not find any gas stations, User U is notified|
 
 ##### Scenario 6.2
 
 | Scenario ID: SC6.2        | Corresponds to UC6  |
 | ------------- |:-------------| 
-| Description | User U wants to search for the closest gas stations (no filter parameter is set) |
-| Precondition | User U has logged in with EZGas, GPS position is activated |
+| Description | User U wants to search for the closest gas stations (filter parameters are set) that sell the preferred fuel type F (specified by the user when he signed up, see UC1) |
+| Precondition |  |
+| Postcondition | List of gas stations provided based on the GPS position and filter parameters |
+| Step#        |  Step description   | 
+|  1	 | GoogleMaps detects the GPS position of the User U and sends that to EZGas | 
+|  2     | User U inserts a maximum distance in order to filter the results |
+|  3     | User U inserts (optionally) a maximum price in order to apply a second filter to the results |
+|  4 	 | User U starts the search |
+|  5	 | EZGas provides a list of gas stations based on the GPS position and ordered by distance and, eventually, by price |
+
+##### Scenario 6.3
+
+| Scenario ID: SC6.3        | Corresponds to UC6  |
+| ------------- |:-------------| 
+| Description | User U wants to search for the closest gas stations (no filter parameter is set) that sell the preferred fuel type F (specified by the user when he signed up, see UC1) |
+| Precondition |  |
 | Postcondition | List of gas stations provided based only on the GPS position |
-| Step#        |  Step description   |
-|  1     | User U selects the type of the fuel he's interested in |  
+| Step#        |  Step description   |  
+|  1	 | GoogleMaps detects the GPS position of the User U and sends that to EZGas | 
 |  2     | "Maximum distance" field is left empty (default value will be used) |
 |  3     | "Maximum price" field is left empty (default: no upper bound to the price) |
-|  4 	 | The search process starts |
+|  4 	 | User U starts the search |
 |  5	 | EZGas provides a list of gas stations based only on the GPS position, using a default value (e.g. 5 km) as maximum distance of gas stations from the User's position. |
 
 
-### Use case 7, UC7 - FR3.1  Positive feedback: the price is correct 
+### Use case 7, UC7 - FR3 Report a new price
 
 | Actors Involved        | User |
 | ------------- |:-------------:| 
-|  Precondition     | User U is logged in, GPS position is activated |  
-|  Post condition     | Number of positive feedbacks for the price P of fuel type F at the gas station has been incremented by 1 |
-|  Nominal Scenario     | User U selects price P of the fuel type F of the gas station he is at, selects "give positive feedback", and quantity of positive feedbacks is incremented for (P, F). |
-|  Variants     | |
+|  Precondition     | User U is logged in with EZGas, User U has performed the search S, list of the results is not empty | 
+|  Post condition     | The reportsNumber RN for the suggestedPrice P' of fuel type F for the gas station GS is incremented by 1 |
+|  Nominal Scenario     | User U selects a specific gas station GS (from the results of the search S) and inserts a suggestedPrice P' for the fuel type F. The suggestedPrice P' will be effectively visible as currentPrice only when the reportsNumber related to P' will be at least equal to a certain quantity M. |
+|  Variant 1     | The suggestedPrice P' inserted by the User U is equal to the currentPrice P (that is currently shown), issue warning |
+|  Variant 2	 | The report sent by the User U is the Mth one related to the suggestedPrice P', suggestedPrice P' will be shown as the new currentPrice |
 
+##### Scenario 7.1
 
-### Use case 8, UC8 - FR3.2 Negative feedback: the price is not correct + correct price for the update
-
-| Actors Involved        | User |
-| ------------- |:-------------:| 
-|  Precondition     | User U is logged in, GPS position is activated |  
-|  Post condition     | Number of negative feedbacks for the price P of fuel type F at the gas station has been incremented by 1, New price P' for F has been added to the system by U |
-|  Nominal Scenario     | User U selects price P of the fuel type F of the gas station he is at, selects "give negative feedback", then U inserts correct price of F, and quantity of negative feedbacks is incremented for (P,F). |
-|  Variants     | User U inputs invalid price (negative price or invalid format), issue warning. |
-
-##### Scenario 8.1
-
-| Scenario ID: SC8.1        | Corresponds to UC8  |
+| Scenario ID: SC7.1        | Corresponds to UC7  |
 | ------------- |:-------------| 
-| Description | Price P of a fuel type in a certain gas station is incorrect, so the User U gives the price a negative feedback and inserts the correct one|
-| Precondition | User U is logged in and has just performed a search (interested type of fuel F already selected) |
-| Postcondition | Number of negative feedbacks for the price P of fuel type F at the gas station has been incremented by 1, New price P' for F has been added to the system by U |
+| Description | User U reports a suggestedPrice P' of fuel type F for the gas station GS, P' is equal to the currentPrice P (that is currently shown) |
+| Precondition |  |
+| Postcondition |  |
 | Step#        |  Step description   | 
-|  1     | User U gives a negative feedback to the price P of fuel F for a certain gas station |
-|  2     | User U inputs the correct price P' for F |
-|  3 	 | User U submits feedback |
-|		 | (The new (correct) price will be effectively added when the number of Users that have inserted the same price will be higher than a certain bound.) |
+|  1     | User U selects a gas stations GS among those resulted from a search |
+|  2     | User U inserts a suggestedPrice P' for fuel type F |
+|  3 	 | User U confirms and sends the report |
+|  4	 | The suggestedPrice P' is equal to the currentPrice P, issue warning |
+
+##### Scenario 7.2
+
+| Scenario ID: SC7.2        | Corresponds to UC7  |
+| ------------- |:-------------| 
+| Description | User U reports a suggestedPrice P'' of fuel type F for the gas station GS |
+| Precondition | At least one suggestedPrice P' with reportsNumber RN less than M-1 exists |
+| Postcondition | The reportsNumber RN of the suggestedPrice P'' of fuel type F for the gas station GS is incremented by 1 |
+| Step#        |  Step description   | 
+|  1     | User U selects a gas station GS among those resulted from a search |
+|  2     | User U inserts a new price P'' for fuel type F and P'' is equal to a certain suggestedPrice P' |
+|  3 	 | User U confirms and sends the report |
+
+##### Scenario 7.3
+
+| Scenario ID: SC7.3        | Corresponds to UC7  |
+| ------------- |:-------------| 
+| Description | User U reports a suggestedPrice P'' of fuel type F for the gas station GS (Nth report for the suggestedPrice P'') |
+| Precondition | At least one suggestedPrice P' with reportsNumber RN equal to M-1 exists |
+| Postcondition | The reportsNumber RN of the suggestedPrice P'' of fuel type F for the gas station GS is incremented by 1, reaching the upper bound M. The currentPrice is updated with the suggestedPrice P'' |
+| Step#        |  Step description   | 
+|  1     | User U selects a gas station GS among those resulted from a search |
+|  2     | User U inserts a new price P'' for fuel type F and P'' is equal to a certain suggestedPrice P' |
+|  3 	 | User U confirms and sends the report |
 
 
-### Use case 9, UC9 - FR4 Insert prices (when not yet inserted)
+### Use case 8, UC8 - FR4 Change fuel type
 
 | Actors Involved        | User |
 | ------------- |:-------------:| 
-|  Precondition     | User U is logged in with EZGas, prices not available yet |  
-|  Post condition     | Prices for a selected gas station are inserted |
-|  Nominal Scenario     | User U has just performed a search and then he reaches a certain gas station. Once there, he inserts the prices of the day. |
-|  Variants     |  |
+|  Precondition     | User U is logged in with EZGas, fuel type F is set |  
+|  Post condition     | New fuel type F' is set|
+|  Nominal Scenario     | User U selects a new preferred fuel type F' and then confirms the choice. |
+|  Variants    | |
 
 
-### Use case 10, UC10 - FR5 Report a new gas station to be added
+### Use case 9, UC9 - FR5 Report a new gas station to be added
 
 | Actors Involved        | User |
 | ------------- |:-------------:| 
 |  Precondition     | User U is logged in with EZGas |  
-|  Post condition     | Number of reports for the specific gas station incremented by one |
-|  Nominal Scenario     | User U sends a request for reporting a gas station that hasn't been inserted yet in EZGas. The request will remain pending until it reaches a certain quantity N of reports from different users. |
-|  Variants     | If the request is the Nth one related to that specific gas station, this will be added among the available ones. |
+|  Post condition     | ReportsNumber RN for the gas station GS is incremented by 1 |
+|  Nominal Scenario     | User U reports a gas station GS to EZGas. The gas station GS will be effectively added when its reportsNumber RN will be at least equal to a certain quantity N. |
+|  Variant 1     | Gas station GS is already available in EZGas, issue warning |
+|  Variant 2 	 | The report sent by the User U is the Nth one related to the gas station GS, GS will be added |
 
-##### Scenario 10.1
+##### Scenario 9.1
 
-| Scenario ID: SC10.1        | Corresponds to UC10  |
+| Scenario ID: SC9.1        | Corresponds to UC9  |
 | ------------- |:-------------| 
-| Description | User U wants to report a gas station not already inserted (1st report for that gas station) |
-| Precondition | User U has logged in with EZGas |
-| Postcondition | Number of indications for that specific gas station incremented by one |
+| Description | User U reports a gas station GS that is already available in EZGas |
+| Precondition |  |
+| Postcondition |  |
 | Step#        |  Step description   |
-|  1     | User U inserts required information about a certain gas station|
-|  2     | User U confirms and sends the request |
-|   	 | (The request will remain pending until that gas station receives at least N reports by different users.) |
+|  1     | User U inserts required information about the gas station GS |
+|  2     | User U confirms and sends the report |
+|  3	 | Gas station GS is already available in EZGas, issue warning |
 
-##### Scenario 10.2
+##### Scenario 9.2
 
-| Scenario ID: SC10.2        | Corresponds to UC10  |
+| Scenario ID: SC9.2        | Corresponds to UC9  |
 | ------------- |:-------------| 
-| Description | User U wants to report a new gas station not already inserted (Nth report for that gas station) |
-| Precondition | User U has logged in with EZGas |
-| Postcondition | Number of indications for that specific gas station incremented by one. Tot_reports = N, gas station added among the available ones |
+| Description | User U reports a gas station GS that is not available in EZGas yet |
+| Precondition | At least one gas station GS' whose reportsNumber is less than N-1 exists |
+| Postcondition | The reportsNumber RN of gas station GS is incremented by 1 |
+| Step#        |  Step description   |
+|  1     | User U inserts required information about the gas station GS |
+|  2     | User U confirms and sends the report |
+
+##### Scenario 9.3
+
+| Scenario ID: SC9.3        | Corresponds to UC9  |
+| ------------- |:-------------| 
+| Description | User U reports a gas station GS that is not available in EZGas yet (Nth report for the gas station GS) |
+| Precondition | At least one gas station GS' whose reportsNumber is equal to N-1 exists |
+| Postcondition | The reportsNumber RN of gas station GS is incremented by 1. RN is equal to N, gas station GS is added among the available ones |
 | Step#        | Step description  |
-|  1     | User U inserts required information about a certain gas station|  
-|  2     | User U confirms and sends the request |
-|  3     | Since the request is the Nth one related to that specific gas station, this will be added among the available ones. |
+|  1     | User U inserts required information about the gas station GS |  
+|  2     | User U confirms and sends the report |
 
 
 # Glossary
 
-\<use UML class diagram to define important concepts in the domain of the system, and their relationships> 
+```plantuml
+@startuml
 
-\<concepts are used consistently all over the document, ex in use cases, requirements etc>
+class User {
+  +user_id
+  +email
+  +password
+}
+
+class Administrator {
+	+AdminKey
+}
+
+class EZGas {
+}
+
+class GasStation {
+  +Company
+  +reportsNumber:{0,1,..,N}
+}
+
+class Fuel {
+  +type
+}
+
+class Price {
+  +value
+  +reportsNumber:{0,1,..,M}
+}
+
+class Position {
+  +address
+  +latitude
+  +longitude
+}
+
+class Data{
+  +day
+  +month
+  +year
+}
+
+
+Administrator -- EZGas: > manages
+User "*" -- EZGas : > is enrolled
+EZGas -- "*" GasStation: < is stored
+GasStation "*"-- "*" Fuel: > sells
+GasStation -- Position: > is located
+Fuel "*" --"+ currentPrice     " Price: \n shows \n ▼ \n\n
+(Fuel,Price) .. Data
+Fuel "*"--"\n\t\t\t\t*\n     suggestedPrice +" Price :  \n has         \n ▼         \n\n 
+User "*"-- Position: > is located
+note " ReportsNumber is the number of reports \nthat the Users perform in order to report\na certain gas station GS that is not available \nin EZGas yet. When reportsNumber related \nto the gas station GS reaches the upperbound \nN, the gasStation GS will be added to EZGas." as n1
+note "currentPrice is a fuel price that the system shows to the Users.\nIf the shown price is no more valid, the User can report a suggestedPrice.\nReportsNumber is the number of reports for a suggestedPrice.\nWhen reportsNumber related to a certain suggestedPrice reaches the \nupperbound M, that will become the new currentPrice." as n2
+
+n1 -left- GasStation
+n2 -up-Price
+
+
+@enduml
+``` 
 
 # System Design
 \<describe here system design>
 
 \<must be consistent with Context diagram>
 
-# Deployment Diagram 
+# Deployment Diagram
 
-\<describe here deployment diagram >
+```plantuml
+@startuml
+
+node EZGasServer {
+  artifact ERP {
+	  artifact DatabaseAccounts
+	  artifact DatabaseGasStations
+  }
+}
+
+node PCAdministrator {
+	artifact Browser
+}
+node PCClient {
+	artifact Browser
+}
+node SmartphoneClient {
+	artifact EZGasApplication
+}
+
+EZGasServer -- PCAdministrator : internet
+EZGasServer -- PCClient : internet
+EZGasServer -- SmartphoneClient : internet
+
+@enduml
+```

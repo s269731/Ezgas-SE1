@@ -2,7 +2,7 @@
 
 Authors: Cao Peng, Finocchiaro Loredana, Marino Matteo, Mc Mahon Shannon
 
-Date:
+Date: 19/04/2020
 
 Version: 1
 
@@ -32,7 +32,7 @@ Version: 1
 EZGas is a crowdsourcing service that allows users to:
 
 * Perform searches for gas stations in their area by selecting the interested fuel type. The search can be based on the price of fuel or on the distance to reach the gas stations;
-* Report a new price of certain type of fuel in a gas station;
+* Report a new price of a certain type of fuel in a gas station;
 * Report a new gas station not already available in EZGas.
 
 EZGas is supported by a web application (accessible both via smartphone or PC).
@@ -47,7 +47,7 @@ He must also activate the GPS position on their smartphone.
 | Stakeholder name  | Description | 
 | ----------------- |:-----------:|
 | Developer | Develops the application and checks periodically for possible raising issues. |
-| Administrator | Works closely with the application development teams to tune and troubleshoot the application. Leads and participates in efforts to implement application updates to include upgrades, patches, and new releases with the goal of meeting the end users' needs. He is fully responsible for daily monitoring and maintanance activities (monitors and, if necessary, can ban users, stop hackers, fix accounts). | 
+| Administrator | Works closely with the application developer to tune and troubleshoot the application. Leads and participates in efforts to implement application updates to include upgrades, patches, and new releases with the goal of meeting the end users' needs. He is fully responsible for daily monitoring and maintanance activities (monitors and, if necessary, can ban users, stop hackers, fix accounts). | 
 | User | Uses the application directly, because he is interesting in finding the closest gas stations (or the most convenient one) and in keeping prices up to date. |
 | GoogleMaps | Provides an Application Program Interface (API) to the application, so that gas stations can be easily localized. |
 
@@ -74,7 +74,7 @@ GoogleMaps -- (EZGas)
 | Actor | Logical Interface | Physical Interface  |
 | ------------- |:-------------:| -----:|
 | Administrator | GUI | Screen, keyboard |
-| User | GUI | Smartphone, Internet connection |
+| User | GUI | Smartphone (or pc), Internet connection |
 | GoogleMaps | API | Internet connection |
 
 # Stories and personas
@@ -91,7 +91,7 @@ Sara is a nature lover. In order to avoid polluting, she has bought an electric 
 However it can be difficult for her to find gas stations that allow her to charge the battery. She recently found one, and noted it down to share this information with those friends of hers which also have an electric car. 
 Sara would like to have a simple way of locating the nearest gas stations that recharges electrical cars, and share this information with others.
 
-John is the administrator of EzGas. Aside from working on application updates and fixing possible bugs, he is responsible for the daily monitoring of users. A certain user has been misusing the application, giving only negative feedback to prices and inserting prices that are never reported by other users who have gone to the same stations. In cases like these, it is John's job to warn the user that he will be banned if the incorrect behaviour continues.
+John is the administrator of EzGas. Aside from working on application updates and fixing possible bugs, he is responsible for the daily monitoring of users.
 
 
 # Functional and non functional requirements
@@ -117,11 +117,11 @@ John is the administrator of EzGas. Aside from working on application updates an
 | ID        | Type (efficiency, reliability, ..)           | Description  | Refers to |
 | ------------- |:-------------:| :-----:| -----:|
 |  NFR1     |  Usability | The user interface of the application is simple and intuitive, no training is necessary | All FR |
-|  NFR2     | Performance | The application should react with a maximum delay < 1 sec | FR2 |
+|  NFR2     | Performance | The application should react with a maximum delay of 1 sec | FR2 |
 |  NFR3     | Performance | The application should react with a maximum delay of 0.5 sec | All FR (except FR2) |
 |  NFR4     | Reliability | The downtime of the application should be not higher than 1 hour per year | All FR |
 |  NFR5     | Portability | The application runs on Android (from 7.0 to 10.0 version) and iOS (from 9.3.6 to 13.4 version) | All FR |
-|  NFR6     | Portability | The web application runs on Chrome (80.0.3987 version), Firefox (from 58 to 75 version) and Safari (from 10.1.2 to 13.1 version). | All FR |
+|  NFR6     | Portability | The web application runs on Chrome (80.0.3987 version), Firefox (from 58 to 75 version) and Safari (from 10.1.2 to 13.1 version) | All FR |
 |  NFR7     | Privacy | The application must satisfy all the GDPR rules | All FR |
 |  NFR8     | Domain | Currency (euro, dollar, ...) and units (liter, gallon, ...) depend on the country the user is in | All FR |
 |  NFR9     | Localisation | Decimal numbers use . (dot) as decimal separator | |
@@ -169,7 +169,7 @@ Administrator --> (FR6)
 ### Use case 1, UC1 - FR1.1 Create an EZGas account
 | Actors Involved        | User |
 | ------------- |:-------------:| 
-|  Precondition     | User U has not subscribed an account with EZGas |  
+|  Precondition     | User U is not enrolled to EZGas |  
 |  Post condition     | User U is enrolled to EZGas |
 |  Nominal Scenario     | User U compiles a form, providing the required information (personal details like name, surname, ...) and specifying the preferred fuel type; subsequently, he will receive an e-mail with a link to be clicked in order to confirm the subscription. |
 |  Variant 1     | The inserted e-mail address is not in the valid format, issue warning |
@@ -204,7 +204,7 @@ Administrator --> (FR6)
 | Actors Involved        | User |
 | ------------- |:-------------:| 
 |  Precondition     | User U is enrolled to EZGas |  
-|  Post condition     | Password of User U is resetted |
+|  Post condition     | Password of User U is reset |
 |  Nominal Scenario     | User U inserts his e-mail address; he will receive an e-mail with a temporary password to be used in order to log in. |
 |  Variants     |  |
 
@@ -215,8 +215,8 @@ Administrator --> (FR6)
 | ------------- |:-------------:| 
 |  Precondition     | User U is logged in with EZGas, GPS position is activated |  
 |  Post condition     | EZGas returns a list of gas stations that sell the preferred fuel type F (specified by the User U when he signed up, see UC1) |
-|  Nominal Scenario   | User U inserts a maximum distance and/or maximum price in order to filter the results based on these constraints; the application, thanks to GoogleMaps API, will provide a list of gas stations (with respective prices) that satisfies the request. |
-|  Variant 1	 | There are no gas stations in the area that satisfy the constraints (the resulted list is empty), issue warning to User U |
+|  Nominal Scenario   | User U inserts a maximum distance and/or maximum price in order to filter the results based on these constraints; the application, thanks to GoogleMaps API, will provide a list of gas stations (with respective price for fuel type F and distance from the User U's position) that satisfies the request. |
+|  Variant 1	 | There are no gas stations in the area that satisfy the constraints (the resulted list is empty), issue warning |
 |  Variant 2     | User U inserts as maximum distance a value that is higher than the maximum value predefined in the application, issue warning |
 |  Variant 3     | User U doesn't insert any preference in terms of maximum distance and/or maximum price: the application will apply default parameters |
 
@@ -255,7 +255,7 @@ Administrator --> (FR6)
 |  2     | User U inserts a maximum distance in order to filter the results |
 |  3     | User U inserts (optionally) a maximum price in order to apply a second filter to the results |
 |  4 	 | User U starts the search |
-|  5	 | EZGas provides a list of gas stations based on the GPS position and ordered by distance and, eventually, by price |
+|  5	 | EZGas provides a list of gas stations based on the GPS position and ordered by distance and, possibly, by price |
 
 ##### Scenario 6.4
 
@@ -269,7 +269,7 @@ Administrator --> (FR6)
 |  2     | "Maximum distance" field is left empty (default value will be used) |
 |  3     | "Maximum price" field is left empty (default: no upper bound to the price) |
 |  4 	 | User U starts the search |
-|  5	 | EZGas provides a list of gas stations based only on the GPS position, using a default value (e.g. 5 km) as maximum distance of gas stations from the User's position. |
+|  5	 | EZGas provides a list of gas stations based only on the GPS position, using a default value (e.g. 5 km) as maximum distance of gas stations from the User's position and ordered by distance. |
 
 
 ### Use case 7, UC7 - FR3 Report a new price
@@ -278,10 +278,11 @@ Administrator --> (FR6)
 | ------------- |:-------------:| 
 |  Precondition     | User U is logged in with EZGas, User U has performed the search S, list of the results is not empty | 
 |  Post condition     | The reportsNumber RN for the suggestedPrice P' of fuel type F for the gas station GS is incremented by 1 |
-|  Nominal Scenario     | User U selects a specific gas station GS (from the results of the search S) and inserts a suggestedPrice P' for the fuel type F. The suggestedPrice P' will be effectively visible as currentPrice only when the reportsNumber related to P' will be at least equal to a certain quantity M. |
+|  Nominal Scenario     | User U selects a specific gas station GS (from the results of the search S) and inserts a suggestedPrice P' for the fuel type F. The suggestedPrice P' will be effectively visible as currentPrice only when the reportsNumber RN related to P' will be at least equal to a certain quantity M. |
 |  Variant 1     | The suggestedPrice P' inserted by the User U is equal to the currentPrice P (that is currently shown), issue warning |
-|  Variant 2	 | The report sent by the User U is the Mth one related to the suggestedPrice P', suggestedPrice P' will be shown as the new currentPrice |
-|  Variant 3   | User U has already reported a suggestedPrice P' for the gas station GS in the space of a day, issue warning |
+|  Variant 2     | The report sent by the User U is the 1st one related to the suggestedPrice P', suggestedPrice P' will be stored internally with reportsNumber RN equal to 1 |
+|  Variant 3	 | The report sent by the User U is the Mth one related to the suggestedPrice P', suggestedPrice P' will be shown as the new currentPrice |
+|  Variant 4   | User U has already reported a suggestedPrice P' for the gas station GS in the space of a day, issue warning |
 
 ##### Scenario 7.1
 
@@ -312,7 +313,7 @@ Administrator --> (FR6)
 
 | Scenario ID: SC7.3        | Corresponds to UC7  |
 | ------------- |:-------------| 
-| Description | User U reports a suggestedPrice P'' of fuel type F for the gas station GS (Nth report for the suggestedPrice P'') |
+| Description | User U reports a suggestedPrice P'' of fuel type F for the gas station GS (Mth report for the suggestedPrice P'') |
 | Precondition | At least one suggestedPrice P' with reportsNumber RN equal to M-1 exists |
 | Postcondition | The reportsNumber RN of the suggestedPrice P'' of fuel type F for the gas station GS is incremented by 1, reaching the upper bound M. The currentPrice is updated with the suggestedPrice P'', suggestedPrice list is emptied |
 | Step#        |  Step description   | 
@@ -339,8 +340,9 @@ Administrator --> (FR6)
 |  Post condition     | ReportsNumber RN for the gas station GS is incremented by 1 |
 |  Nominal Scenario     | User U reports a gas station GS to EZGas. The gas station GS will be effectively added when its reportsNumber RN will be at least equal to a certain quantity N. |
 |  Variant 1     | Gas station GS is already available in EZGas, issue warning |
-|  Variant 2 	 | The report sent by the User U is the Nth one related to the gas station GS, GS will be added |
-|  Variant 3   | User U has already reported the gas station GS, issue warning |
+|  Variant 2     | The report sent by the User U is the 1st one related to the gas station GS, the gas station GS will be stored internally with reportsNumber RN equal to 1 |
+|  Variant 3 	 | The report sent by the User U is the Nth one related to the gas station GS, GS will be added |
+|  Variant 4   | User U has already reported the gas station GS, issue warning |
 
 ##### Scenario 9.1
 
@@ -358,22 +360,22 @@ Administrator --> (FR6)
 
 | Scenario ID: SC9.2        | Corresponds to UC9  |
 | ------------- |:-------------| 
-| Description | User U reports a gas station GS that is not available in EZGas yet |
+| Description | User U reports a gas station GS |
 | Precondition | At least one gas station GS' whose reportsNumber is less than N-1 exists |
 | Postcondition | The reportsNumber RN of gas station GS is incremented by 1 |
 | Step#        |  Step description   |
-|  1     | User U inserts required information about the gas station GS |
+|  1     | User U inserts required information about the gas station GS that is equal to a certain gas station GS' |
 |  2     | User U confirms and sends the report |
 
 ##### Scenario 9.3
 
 | Scenario ID: SC9.3        | Corresponds to UC9  |
 | ------------- |:-------------| 
-| Description | User U reports a gas station GS that is not available in EZGas yet (Nth report for the gas station GS) |
+| Description | User U reports a gas station GS (Nth report for the gas station GS) |
 | Precondition | At least one gas station GS' whose reportsNumber is equal to N-1 exists |
 | Postcondition | The reportsNumber RN of gas station GS is incremented by 1. RN is equal to N, gas station GS is added among the available ones |
 | Step#        | Step description  |
-|  1     | User U inserts required information about the gas station GS |  
+|  1     | User U inserts required information about the gas station GS that is equal to a certain gas station GS' |  
 |  2     | User U confirms and sends the report |
 
 
@@ -381,7 +383,7 @@ Administrator --> (FR6)
 
 | Actors Involved        | Administrator, User |
 | ------------- |:-------------:| 
-|  Precondition     | Each User U has subscribed an account, accepting terms of service and privacy policy of EZGas | 
+|  Precondition     | Each User U is enrolled to EZGas (and so he has accepted terms of service and privacy policy of EZGas) | 
 |  Post condition     | Each activity performed by each User U in EZGas is recorded in the system |
 |  Nominal Scenario     | Administrator keeps trace of application usage by analyzing the activities perfomed by each User U, in order to obtain useful statistics about his daily/monthly behaviour. |
 |  Variants     |  |
@@ -393,7 +395,7 @@ Administrator --> (FR6)
 @startuml
 
 class User {
-  +user_id
+  +userId
   +name
   +surname
   +address
@@ -404,14 +406,15 @@ class User {
 }
 
 class Administrator {
-	+AdminKey
+	+adminKey
 }
 
 class EZGas {
 }
 
 class GasStation {
-  +Company
+  +gasStationId
+  +company
   +reportsNumber:{0,1,..,N}
 }
 
@@ -439,27 +442,27 @@ class Data{
 
 Administrator -- EZGas: > manages
 User "*" -- EZGas: > is enrolled
-User "*" -- Fuel: > selects
-note " The preferred fuel type is selected by \nthe User during the subscription phase. \nUser can subsequently change, if he wishes, \nthis option (see UC4). " as n3
-EZGas -- "*" GasStation: < is stored
+EZGas -- "\n    *" GasStation: < is stored
+User "*"-- "\t\t\t\t"Fuel:  selects\t\t\n▼  \t\t
 GasStation "*"-- "*" Fuel: > sells
-GasStation -- Position: > is located
+GasStation -left- Position: > is located
 Fuel "*" --"+ currentPrice     " Price: \n shows \n ▼ \n\n
 (Fuel, Price) .. Data
 Fuel "*"--"\n\t\t\t\t*\n     suggestedPrice +" Price :  \n has         \n ▼         \n\n 
-User "*"-- Position: > is located
-note " ReportsNumber is the number of reports \nthat the Users perform in order to report\na certain gas station GS that is not available \nin EZGas yet. When reportsNumber related \nto the gas station GS reaches the upperbound \nN, the gasStation GS will be added to EZGas." as n1
-note "currentPrice is a fuel price that the system shows to the Users.\nIf the shown price is no more valid, the User can report a suggestedPrice.\nReportsNumber is the number of reports for a suggestedPrice.\nWhen reportsNumber related to a certain suggestedPrice reaches the \nupperbound M, that will become the new currentPrice." as n2
+User "*"-- Position: > \n\n\nis located
+note "ReportsNumber is the number of reports \nthat the Users perform in order to report\na certain gas station GS that is not available \nin EZGas yet. When reportsNumber related \nto the gas station GS reaches the upper bound \nN, the gasStation GS will be added to EZGas." as n1
+note "currentPrice is a fuel price that the system shows to the Users.\nIf the shown price is no more valid, the User can report a suggestedPrice.\nReportsNumber is the number of reports for a suggestedPrice.\nWhen reportsNumber related to a certain suggestedPrice reaches the \nupper bound M, that will become the new currentPrice." as n2
+note "The preferred fuel type is selected by \nthe User during the subscription phase. \nUser can subsequently change, if he wishes, \nthis option (see UC4). " as n3
 
 n1 -left- GasStation
 n2 -up-Price
-n3 -right- Fuel
+n3 -left- Fuel
 
 @enduml
 ``` 
 
 # System Design
-Not meaningful in this case.
+Not meaningful in this case, since EZGas has no hardware components.
 
 # Deployment Diagram
 
@@ -474,10 +477,10 @@ node EZGasServer {
 }
 
 node PCAdministrator {
-	artifact Browser
+	artifact AdminBrowser
 }
 node PCClient {
-	artifact Browser
+	artifact ClientBrowser
 }
 node SmartphoneClient {
 	artifact EZGasApplication

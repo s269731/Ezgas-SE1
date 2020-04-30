@@ -121,7 +121,9 @@ package "it.polito.ezgas.controller" {
 }
 
 package "it.polito.ezgas.converter" {
-
+    class "GasStationConverter"
+    class "PriceReportConverter"
+    class "UserConverter"
 }
 
 package "it.polito.ezgas.dto" {
@@ -130,7 +132,6 @@ package "it.polito.ezgas.dto" {
     class "UserDto"
     class "LoginDto"
     class "IdPw"
-
 }
 
 package "it.polito.ezgas.entity" {
@@ -140,7 +141,9 @@ package "it.polito.ezgas.entity" {
 }
 
 package "it.polito.ezgas.repository" {
-
+    class "GasStationRepository"
+    class "PriceReportRepository"
+    class "UserRepository"
 }
 
     
@@ -220,13 +223,6 @@ Contains Service classes that implement the Service Interfaces in the Service pa
 
 
 
-
-
-
-
-
-
-
 # Low level design
 
 <Based on the official requirements and on the Spring Boot design guidelines, define the required classes (UML class diagram) of the back-end in the proper packages described in the high-level design section.>
@@ -235,7 +231,42 @@ Contains Service classes that implement the Service Interfaces in the Service pa
 ```plantuml
 @startuml
 
+package "it.polito.ezgas.entity" {
+    class "GasStation"
+    class "PriceReport"
+    class "User"
+}
 
+package "it.polito.ezgas.service"  as ps {
+    interface "GasStationService"
+    interface "UserService"
+} 
+
+package "it.polito.ezgas.controller" {
+    class "GasStationController"
+    class "HomeController"
+    class "UserController"
+}
+
+package "it.polito.ezgas.dto" {
+    class "GasStationDto"
+    class "PriceReportDto"
+    class "UserDto"
+    class "LoginDto"
+    class "IdPw"
+}
+
+package "it.polito.ezgas.converter" {
+    class "GasStationConverter"
+    class "PriceReportConverter"
+    class "UserConverter"
+}
+
+package "it.polito.ezgas.repository" {
+    class "GasStationRepository"
+    class "PriceReportRepository"
+    class "UserRepository"
+}
 
 class User {
     +userId: Integer
@@ -336,6 +367,33 @@ class "IdPw" {
     +pw: String
 }
 
+class "GasStationConverter" {
+    +toGasStationDto(GasStation gasStation): GasStationDto
+}
+
+class "PriceReportConverter" {
+    +toPriceReportDto(PriceReport priceReport): PriceReportDto
+}
+
+class "UserConverter" {
+    +toUserDto(User user): UserDto
+}
+
+class "GasStationRepository" {
+    +findGasStationById(Integer gasStationId): GasStation
+    +findGasStationByAddress(String gasStationAddress): GasStation
+    +findGasStationByLatLon(double lat, double lon): GasStation
+}
+
+class "PriceReportRepository" {
+    +findPriceReportById(Integer PriceReportId): PriceReport
+}
+
+class "UserRepository" {
+    +findUserById(Integer userId): User
+    +findUserByEmail(String email): String
+}
+
 class "GasStationController" {
     +gasStationService: GasStationService
     +getGasStationById(Integer gasStationId): GasStationDto
@@ -344,8 +402,23 @@ class "GasStationController" {
     +deleteGasStation(Integer gasStationId): void
     +getGasStationsByGasolineType(String gasolinetype): List<GasStationDto>
     +getGasStationsByProximity(Double myLat, Double myLon): List<GasStationDto>
-    +getGasStationsWithCoordinates(Double myLat, Double myLon, String gasolineType, String carSharing): List<GasStationDto>
-    +setGasStationReport(Integer gasStationId, double dieselPrice, double superPrice, double superPlusPrice, double gasPrice, double methanePrice, Integer userId): void
+    +getGasStationsWithCoordinates(Double myLat, Double myLon, 
+    String gasolineType, String carSharing): List<GasStationDto>
+    +setGasStationReport(Integer gasStationId, double dieselPrice, double superPrice, 
+    double superPlusPrice, double gasPrice, double methanePrice, Integer userId): void
+}
+
+interface "GasStationService" {
+    +getGasStationById(Integer gasStationId): GasStationDto
+    +getAllGasStations(): List<GasStationDto>
+    +saveGasStation(GasStationDto gasStationDto): void
+    +deleteGasStation(Integer gasStationId): void
+    +getGasStationsByGasolineType(String gasolinetype): List<GasStationDto>
+    +getGasStationsByProximity(Double myLat, Double myLon): List<GasStationDto>
+    +getGasStationsWithCoordinates(Double myLat, Double myLon, 
+    String gasolineType, String carSharing): List<GasStationDto>
+    +setGasStationReport(Integer gasStationId, double dieselPrice, double superPrice, 
+    double superPlusPrice, double gasPrice, double methanePrice, Integer userId): void
 }
 
 class "HomeController" {
@@ -368,6 +441,39 @@ class "UserController" {
     +login(IdPw credentials): LoginDto
 }
 
+interface "UserService" {
+    +getUserById(Integer userId): UserDto
+    +getAllUsers(): List<UserDto>
+    +saveUser(UserDto userDto): UserDto
+    +deleteUser(Integer userId): Boolean
+    +increaseUserReputation(Integer userId): Integer
+    +decreaseUserReputation(Integer userId): Integer
+    +login(IdPw credentials): LoginDto
+}
+
+GasStation --> User
+PriceReport --> User
+GasStationDto --> UserDto
+GasStationDto --> PriceReportDto
+GasStationController --> GasStationService
+UserController --> UserService
+GasStation --> GasStationConverter
+GasStationConverter --> GasStationDto
+PriceReport --> PriceReportConverter
+PriceReportConverter --> PriceReportDto
+User --> UserConverter
+UserConverter --> UserDto
+UserDto --> UserController
+IdPw --> UserController
+LoginDto --> UserController
+GasStationDto --> GasStationController
+UserService --> LoginDto
+UserService --> UserDto
+UserService --> IdPw
+GasStationService --> GasStationDto
+User -left-> UserRepository
+GasStation -left-> GasStationRepository
+PriceReport -left-> PriceReportRepository
 
 @enduml
 ```
@@ -377,6 +483,7 @@ class "UserController" {
 # Verification traceability matrix
 
 \<for each functional requirement from the requirement document, list which classes concur to implement it>
+
 
 
 

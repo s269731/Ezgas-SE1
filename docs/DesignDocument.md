@@ -1,11 +1,11 @@
 # Design Document 
 
 
-Authors: 
+Authors: Cao Peng, Finocchiaro Loredana, Marino Matteo, Mc Mahon Shannon
 
-Date:
+Date: 30/04/2020
 
-Version:
+Version: 1
 
 
 # Contents
@@ -109,13 +109,15 @@ For more information about the Spring design guidelines and naming conventions: 
 package "Backend" {
 
 package "it.polito.ezgas.service"  as ps {
-   interface "GasStationService"
-   interface "UserService"
+    interface "GasStationService"
+    interface "UserService"
 } 
 
 
 package "it.polito.ezgas.controller" {
-
+    class "GasStationController"
+    class "HomeController"
+    class "UserController"
 }
 
 package "it.polito.ezgas.converter" {
@@ -123,11 +125,18 @@ package "it.polito.ezgas.converter" {
 }
 
 package "it.polito.ezgas.dto" {
+    class "GasStationDto"
+    class "PriceReportDto"
+    class "UserDto"
+    class "LoginDto"
+    class "IdPw"
 
 }
 
 package "it.polito.ezgas.entity" {
-
+    class "GasStation"
+    class "PriceReport"
+    class "User"
 }
 
 package "it.polito.ezgas.repository" {
@@ -223,25 +232,151 @@ Contains Service classes that implement the Service Interfaces in the Service pa
 <Based on the official requirements and on the Spring Boot design guidelines, define the required classes (UML class diagram) of the back-end in the proper packages described in the high-level design section.>
 
 
+```plantuml
+@startuml
 
 
 
+class User {
+    +userId: Integer
+    +userName: String
+    +password: String
+    +email: String
+    +reputation: Integer {-5..+5}
+    +admin: Boolean
+}
+
+class PriceReport {
+    +priceReportId: Integer
+    +user: User
+    +dieselPrice: double
+    +superPrice: double
+    +superPlusPrice: double
+    +methane: double
+    +gasPrice: double
+}
+
+class GasStation {
+    +gasStationId: Integer
+    +gasStationName: String
+    +gasStationAddress: String
+    +hasDiesel: Boolean
+    +hasSuper: Boolean
+    +hasSuperPlus: Boolean
+    +hasGas: Boolean
+    +hasMethane: Boolean
+    +carSharing: String
+    +lat: double
+    +lon: double
+    +dieselPrice: double
+    +superPrice: double
+    +superPlusPrice: double
+    +gasPrice: double
+    +methanPrice: double
+    +reportUser: Integer
+    +reportTimestamp: String
+    +reportDependability: double
+    +user: User
+}
+
+class "GasStationDto" {
+    +gasStationId: Integer
+    +gasStationName: String
+    +gasStationAddress: String
+    +hasDiesel: Boolean
+    +hasSuper: Boolean
+    +hasSuperPlus: Boolean
+    +hasGas: Boolean
+    +hasMethane: Boolean
+    +carSharing: String
+    +lat: double
+    +lon: double
+    +dieselPrice: double
+    +superPrice: double
+    +superPlusPrice: double
+    +gasPrice: double
+    +methanPrice: double
+    +reportUser: Integer
+    +reportTimestamp: String
+    +reportDependability: double
+    +userDto: UserDto
+    +priceReportDtos: List<PriceReportDto>
+}
+
+class "PriceReportDto" {
+    +priceReportId: Integer
+    +user: User
+    +dieselPrice: double
+    +superPrice: double
+    +superPlusPrice: double
+    +methane: double
+    +gasPrice: double
+}
+
+class "UserDto" {
+    +userId: Integer
+    +userName: String
+    +password: String
+    +email: String
+    +reputation: Integer {-5..+5}
+    +admin: Boolean    
+}
+
+class "LoginDto" {
+    +userId: Integer
+    +userName: String
+    +email: String
+    +reputation: Integer {-5..+5}
+    +admin: Boolean
+    +token: String
+}
+
+class "IdPw" {
+    +user: String
+    +pw: String
+}
+
+class "GasStationController" {
+    +gasStationService: GasStationService
+    +getGasStationById(Integer gasStationId): GasStationDto
+    +getAllGasStations(): List<GasStationDto>
+    +saveGasStation(GasStationDto gasStationDto): void
+    +deleteGasStation(Integer gasStationId): void
+    +getGasStationsByGasolineType(String gasolinetype): List<GasStationDto>
+    +getGasStationsByProximity(Double myLat, Double myLon): List<GasStationDto>
+    +getGasStationsWithCoordinates(Double myLat, Double myLon, String gasolineType, String carSharing): List<GasStationDto>
+    +setGasStationReport(Integer gasStationId, double dieselPrice, double superPrice, double superPlusPrice, double gasPrice, double methanePrice, Integer userId): void
+}
+
+class "HomeController" {
+    +admin(): String
+    +index(): String
+    +map(): String
+    +login(): String
+    +update(): String
+    +signup(): String
+}
+
+class "UserController" {
+    +userService: UserService
+    +getUserById(Integer userId): UserDto
+    +getAllUsers(): List<UserDto>
+    +saveUser(UserDto userDto): UserDto
+    +deleteUser(Integer userId): Boolean
+    +increaseUserReputation(Integer userId): Integer
+    +decreaseUserReputation(Integer userId): Integer
+    +login(IdPw credentials): LoginDto
+}
 
 
-
-
+@enduml
+```
 
 
 
 # Verification traceability matrix
 
 \<for each functional requirement from the requirement document, list which classes concur to implement it>
-
-
-
-
-
-
 
 
 

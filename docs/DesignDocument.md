@@ -3,7 +3,7 @@
 
 Authors: Cao Peng, Finocchiaro Loredana, Marino Matteo, Mc Mahon Shannon
 
-Date: 30/04/2020
+Date: 02/05/2020
 
 Version: 1
 
@@ -141,9 +141,9 @@ package "it.polito.ezgas.entity" {
 }
 
 package "it.polito.ezgas.repository" {
-    class "GasStationRepository"
-    class "PriceReportRepository"
-    class "UserRepository"
+    interface "GasStationRepository"
+    interface "PriceReportRepository"
+    interface "UserRepository"
 }
 
     
@@ -263,9 +263,9 @@ package "it.polito.ezgas.converter" {
 }
 
 package "it.polito.ezgas.repository" {
-    class "GasStationRepository"
-    class "PriceReportRepository"
-    class "UserRepository"
+    interface "GasStationRepository"
+    interface "PriceReportRepository"
+    interface "UserRepository"
 }
 
 class User {
@@ -336,7 +336,7 @@ class "GasStationDto" {
 
 class "PriceReportDto" {
     +priceReportId: Integer
-    +user: User
+    +user: UserDto
     +dieselPrice: double
     +superPrice: double
     +superPlusPrice: double
@@ -379,19 +379,23 @@ class "UserConverter" {
     +toUserDto(User user): UserDto
 }
 
-class "GasStationRepository" {
+interface "GasStationRepository" {
     +findGasStationById(Integer gasStationId): GasStation
-    +findGasStationByAddress(String gasStationAddress): GasStation
-    +findGasStationByLatLon(double lat, double lon): GasStation
+    +findGasStationByProximity(double lat, double lon): GasStation
+    +findGasStationByGasolineType(String gasolintype): List<GasStation>
+    +findGasStationWithCoordinates(Double myLat, Double myLon, 
+    String gasolineType, String carSharing): List<GasStation>
+    +findGasStationWithoutCoordinates(String gasolinetype, 
+    String carsharing): List<GasStation>
 }
 
-class "PriceReportRepository" {
+interface "PriceReportRepository" {
     +findPriceReportById(Integer PriceReportId): PriceReport
 }
 
-class "UserRepository" {
+interface "UserRepository" {
     +findUserById(Integer userId): User
-    +findUserByEmail(String email): String
+    +findUserByUserAndPass(String user, String pass): User
 }
 
 class "GasStationController" {
@@ -404,6 +408,7 @@ class "GasStationController" {
     +getGasStationsByProximity(Double myLat, Double myLon): List<GasStationDto>
     +getGasStationsWithCoordinates(Double myLat, Double myLon, 
     String gasolineType, String carSharing): List<GasStationDto>
+    ++getGasStationsWithoutCoordinates(String gasolinetype, String carsharing): List<GasStationDto>
     +setGasStationReport(Integer gasStationId, double dieselPrice, double superPrice, 
     double superPlusPrice, double gasPrice, double methanePrice, Integer userId): void
 }
@@ -411,12 +416,13 @@ class "GasStationController" {
 interface "GasStationService" {
     +getGasStationById(Integer gasStationId): GasStationDto
     +getAllGasStations(): List<GasStationDto>
-    +saveGasStation(GasStationDto gasStationDto): void
-    +deleteGasStation(Integer gasStationId): void
+    +saveGasStation(GasStationDto gasStationDto): gasStationDto
+    +deleteGasStation(Integer gasStationId): Boolean
     +getGasStationsByGasolineType(String gasolinetype): List<GasStationDto>
     +getGasStationsByProximity(Double myLat, Double myLon): List<GasStationDto>
     +getGasStationsWithCoordinates(Double myLat, Double myLon, 
     String gasolineType, String carSharing): List<GasStationDto>
+    +getGasStationsWithoutCoordinates(String gasolinetype, String carsharing): List<GasStationDto>
     +setGasStationReport(Integer gasStationId, double dieselPrice, double superPrice, 
     double superPlusPrice, double gasPrice, double methanePrice, Integer userId): void
 }
@@ -467,10 +473,9 @@ UserDto -down-> UserController
 IdPw --> UserController
 LoginDto --> UserController
 GasStationDto --> GasStationController
-UserService -up-> LoginDto
-UserService --> UserDto
-UserService --> IdPw
-GasStationService --> GasStationDto
+UserService -up-> UserRepository
+GasStationService -up-> GasStationRepository
+GasStationService -up-> PriceReportRepository
 User -left-> UserRepository
 GasStation -left-> GasStationRepository
 PriceReport -left-> PriceReportRepository
@@ -479,15 +484,32 @@ PriceReport -left-> PriceReportRepository
 ```
 
 
-
 # Verification traceability matrix
 
 \<for each functional requirement from the requirement document, list which classes concur to implement it>
 
+
+|          | User | GasStation | PriceReport | UserDto | GasStationDto | PriceReportDto | LoginDto | IdPw | UserRepository | GasStationRepository | PriceReportRepository | UserConverter | GasStationConverter | PriceReportConverter | UserController | GasStationController | UserService | GasStationService |
+| ------------- |:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:| 
+| FR1.1    | X |  |  | X |  |  |  |  | X |  |  | X |  |  | X |  | X |  |
+| FR1.2    | X |  |  |  |  |  |  |  | X |  |  |  |  |  | X |  | X |  |
+| FR1.3    | X |  |  | X |  |  |  |  | X |  |  | X |  |  | X |  | X |  |
+| FR1.4    | X |  |  | X |  |  |  |  | X |  |  | X |  |  | X |  | X |  |
+| FR2      | X | X |  | X | X |  |  |  | X | X |  | X | X |  | X | X | X | X |
+| FR3.1    |  | X |  |  | X |  |  |  |  | X |  |  | X |  |  | X |  | X |
+| FR3.2    |  | X |  |  |  |  |  |  |  | X |  |  |  |  |  | X |  | X |
+| FR3.3    |  | X |  |  | X |  |  |  |  | X |  |  | X |  |  | X |  | X |
+| FR4      |  | X |  |  | X |  |  |  |  | X |  |  | X |  |  | X |  | X |
+| FR5.1    |  | X | X |  | X | X |  |  |  | X | X |  | X | X |  | X |  | X |
+| FR5.2    |  | X |  |  | X |  |  |  |  | X |  |  | X |  |  | X |  | X |
+| FR5.3    | X |  |  | X |  |  | X |  | X |  |  | X |  |  | X |  | X |  |
+
+
+
 # Verification sequence diagrams 
 \<select key scenarios from the requirement document. For each of them define a sequence diagram showing that the scenario can be implemented by the classes and methods in the design>
 
-Note that the functions from GUI to Controller classes are not present in the uml diagram, since we didn't analyze the GUI (that regards the front end part).
+Note that the functions from GUI to Controller classes are not present in the UML diagram, since we didn't analyze the GUI (that regards the front end part).
 
 ### Use case 1, UC1 - Create User Account
 

@@ -4,13 +4,13 @@ Report in this table the effort (in person hours) spent per week, per activity, 
 This means that you have to sum the working hours of each component of the team.
 Count only effort spent on EZGas (so do not count effort spent in virtual labs 1 to 4)
 
-These figures will not be used to evaluate neither the project nor the team
+These figures will not be used to evauate neither the project nor the team
 
 | Week | requirement engineering | design | coding | unit testing | integration testing | acceptance testing | management | git maven |
 |:-----------:|:--------:|:-----------:|:-----------:|:----------:|:------------:|:---------------:|:-------------:|:--------------:|
-| apr 13 - 19| | | | | | | | | 
-| apr 20 - 27| | | | | | | | | 
-| apr 28 - 3 | | | | | | | | | 
+| apr 13 - 19| 60 | | | | | | | | 
+| apr 20 - 27| | 12 | | | | | | | 
+| apr 28 - 3 | | 36 | | | | | | | 
 | may 4 - 10 | | | | | | | | | 
 | may 11 - 17| | | | | | | | | 
 | may 18 - 24| | | | | | | | | 

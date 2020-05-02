@@ -62,9 +62,9 @@ actor Administrator
 actor User
 actor GoogleMaps
 
-Administrator -- (EZGas)
-User -- (EZGas)
-GoogleMaps -- (EZGas)
+Administrator --> (EZGas)
+User --> (EZGas)
+GoogleMaps <-- (EZGas)
 
 @enduml
 ```

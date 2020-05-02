@@ -451,23 +451,23 @@ interface "UserService" {
     +login(IdPw credentials): LoginDto
 }
 
-GasStation --> User
-PriceReport --> User
+GasStation -left-> User
+PriceReport -left-> User
 GasStationDto --> UserDto
 GasStationDto --> PriceReportDto
 GasStationController --> GasStationService
-UserController --> UserService
+UserController -down-> UserService
 GasStation --> GasStationConverter
 GasStationConverter --> GasStationDto
 PriceReport --> PriceReportConverter
 PriceReportConverter --> PriceReportDto
 User --> UserConverter
 UserConverter --> UserDto
-UserDto --> UserController
+UserDto -down-> UserController
 IdPw --> UserController
 LoginDto --> UserController
 GasStationDto --> GasStationController
-UserService --> LoginDto
+UserService -up-> LoginDto
 UserService --> UserDto
 UserService --> IdPw
 GasStationService --> GasStationDto
@@ -484,17 +484,112 @@ PriceReport -left-> PriceReportRepository
 
 \<for each functional requirement from the requirement document, list which classes concur to implement it>
 
-
-
-
-
-
 # Verification sequence diagrams 
 \<select key scenarios from the requirement document. For each of them define a sequence diagram showing that the scenario can be implemented by the classes and methods in the design>
 
+Note that the functions from GUI to Controller classes are not present in the uml diagram, since we didn't analyze the GUI (that regards the front end part).
 
+### Use case 1, UC1 - Create User Account
 
+```plantuml
 
+@startuml
+autonumber
+actor User
 
+GUI -> UserController: signUp()
+UserController -> GasStationService:saveUser()
+
+@enduml
+
+```
+### Use case 4, UC4 - Create Gas Station 
+
+```plantuml
+
+@startuml
+autonumber
+actor Administrator
+
+GUI -> GasStationController: addGasStation()
+GasStationController -> GasStationService:saveGasStation()
+
+@enduml
+
+```
+
+### Use case 7, UC7 - Report fuel price for a gas station
+```plantuml
+
+@startuml
+
+autonumber
+actor User
+GUI -> GasStationController: selectGasStation()
+GasStationController -> GasStationService: setGasStationReport()
+
+@enduml
+
+```
+
+### Use case 8, UC8 - Obtain price of fuel for gas stations in a certain geographic area
+
+```plantuml
+
+@startuml
+autonumber
+actor AnonymousUser
+
+GUI -> GasStationController: searchGasStation()
+GasStationController -> GasStationService:getGasStationsByProximity()
+note right: This is the nominal scenario, the other variants present in\n the requirement document can be obtained by simply \nsubstituting "getGasStationsByProximity()" with the following options: \n "getGasStationsByGasolineType()", \n"getGasStationsWithCoordinates()" \n"getGasStationsWithoutCoordinates()",\n "getGasStationByCarSharing()".
+
+@enduml
+
+```
+
+### Use case 10, UC10 - Evaluate price
+
+##### Scenario 10.1 
+
+```plantuml
+
+@startuml
+
+autonumber
+actor User
+GUI -> GasStationController: selectGasStation()
+activate GasStationController
+activate GUI
+GUI -> GasStationController: evaluatePriceOk()
+deactivate GasStationController
+deactivate GUI
+GasStationController -> UserService: increaseUserReputation()
+note right: If the reputation of the User is lower than 5, it will be \nincremented by 1; if it is already equal to 5, it will not \nbe incremented.
+
+@enduml
+
+```
+
+##### Scenario 10.2 
+
+```plantuml
+
+@startuml
+
+autonumber
+actor User
+GUI -> GasStationController: selectGasStation()
+activate GasStationController
+activate GUI
+GUI -> GasStationController: evaluatePriceWrong()
+deactivate GasStationController
+deactivate GUI
+GasStationController -> UserService: decreaseUserReputation()
+note right: If the reputation of the User is greater than -5, it will be \ndecremented by 1; if it is already equal to -5, it will not \nbe decremented.
+
+@enduml
+
+```
 
 

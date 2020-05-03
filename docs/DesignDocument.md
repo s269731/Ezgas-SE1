@@ -1,11 +1,11 @@
 # Design Document 
 
 
-Authors: 
+Authors: Cao Peng, Finocchiaro Loredana, Marino Matteo, Mc Mahon Shannon
 
-Date:
+Date: 02/05/2020
 
-Version:
+Version: 1
 
 
 # Contents
@@ -109,29 +109,41 @@ For more information about the Spring design guidelines and naming conventions: 
 package "Backend" {
 
 package "it.polito.ezgas.service"  as ps {
-   interface "GasStationService"
-   interface "UserService"
+    interface "GasStationService"
+    interface "UserService"
 } 
 
 
 package "it.polito.ezgas.controller" {
-
+    class "GasStationController"
+    class "HomeController"
+    class "UserController"
 }
 
 package "it.polito.ezgas.converter" {
-
+    class "GasStationConverter"
+    class "PriceReportConverter"
+    class "UserConverter"
 }
 
 package "it.polito.ezgas.dto" {
-
+    class "GasStationDto"
+    class "PriceReportDto"
+    class "UserDto"
+    class "LoginDto"
+    class "IdPw"
 }
 
 package "it.polito.ezgas.entity" {
-
+    class "GasStation"
+    class "PriceReport"
+    class "User"
 }
 
 package "it.polito.ezgas.repository" {
-
+    interface "GasStationRepository"
+    interface "PriceReportRepository"
+    interface "UserRepository"
 }
 
     
@@ -211,26 +223,266 @@ Contains Service classes that implement the Service Interfaces in the Service pa
 
 
 
-
-
-
-
-
-
-
 # Low level design
 
 <Based on the official requirements and on the Spring Boot design guidelines, define the required classes (UML class diagram) of the back-end in the proper packages described in the high-level design section.>
 
 
+```plantuml
+@startuml
 
+package "it.polito.ezgas.entity" {
+    class "GasStation"
+    class "PriceReport"
+    class "User"
+}
 
+package "it.polito.ezgas.service"  as ps {
+    interface "GasStationService"
+    interface "UserService"
+} 
 
+package "it.polito.ezgas.controller" {
+    class "GasStationController"
+    class "HomeController"
+    class "UserController"
+}
 
+package "it.polito.ezgas.dto" {
+    class "GasStationDto"
+    class "PriceReportDto"
+    class "UserDto"
+    class "LoginDto"
+    class "IdPw"
+}
 
+package "it.polito.ezgas.converter" {
+    class "GasStationConverter"
+    class "PriceReportConverter"
+    class "UserConverter"
+}
 
+package "it.polito.ezgas.repository" {
+    interface "GasStationRepository"
+    interface "PriceReportRepository"
+    interface "UserRepository"
+}
 
+class User {
+    +userId: Integer
+    +userName: String
+    +password: String
+    +email: String
+    +reputation: Integer {-5..+5}
+    +admin: Boolean
+}
 
+class PriceReport {
+    +priceReportId: Integer
+    +user: User
+    +dieselPrice: double
+    +superPrice: double
+    +superPlusPrice: double
+    +methane: double
+    +gasPrice: double
+}
+
+class GasStation {
+    +gasStationId: Integer
+    +gasStationName: String
+    +gasStationAddress: String
+    +hasDiesel: Boolean
+    +hasSuper: Boolean
+    +hasSuperPlus: Boolean
+    +hasGas: Boolean
+    +hasMethane: Boolean
+    +carSharing: String
+    +lat: double
+    +lon: double
+    +dieselPrice: double
+    +superPrice: double
+    +superPlusPrice: double
+    +gasPrice: double
+    +methanPrice: double
+    +reportUser: Integer
+    +reportTimestamp: String
+    +reportDependability: double
+    +user: User
+}
+
+class "GasStationDto" {
+    +gasStationId: Integer
+    +gasStationName: String
+    +gasStationAddress: String
+    +hasDiesel: Boolean
+    +hasSuper: Boolean
+    +hasSuperPlus: Boolean
+    +hasGas: Boolean
+    +hasMethane: Boolean
+    +carSharing: String
+    +lat: double
+    +lon: double
+    +dieselPrice: double
+    +superPrice: double
+    +superPlusPrice: double
+    +gasPrice: double
+    +methanPrice: double
+    +reportUser: Integer
+    +reportTimestamp: String
+    +reportDependability: double
+    +userDto: UserDto
+    +priceReportDtos: List<PriceReportDto>
+}
+
+class "PriceReportDto" {
+    +priceReportId: Integer
+    +user: UserDto
+    +dieselPrice: double
+    +superPrice: double
+    +superPlusPrice: double
+    +methane: double
+    +gasPrice: double
+}
+
+class "UserDto" {
+    +userId: Integer
+    +userName: String
+    +password: String
+    +email: String
+    +reputation: Integer {-5..+5}
+    +admin: Boolean    
+}
+
+class "LoginDto" {
+    +userId: Integer
+    +userName: String
+    +email: String
+    +reputation: Integer {-5..+5}
+    +admin: Boolean
+    +token: String
+}
+
+class "IdPw" {
+    +user: String
+    +pw: String
+}
+
+class "GasStationConverter" {
+    +toGasStationDto(GasStation gasStation): GasStationDto
+}
+
+class "PriceReportConverter" {
+    +toPriceReportDto(PriceReport priceReport): PriceReportDto
+}
+
+class "UserConverter" {
+    +toUserDto(User user): UserDto
+}
+
+interface "GasStationRepository" {
+    +findGasStationById(Integer gasStationId): GasStation
+    +findByLatBetweenAndLonBetween(Double myLat_inf, Double myLat_sup, Double myLon_inf, Double myLon_sup): List<GasStation>
+    +findByDieselTrue(): List<GasStation>
+    +findBySuperTrue(): List<GasStation>
+    +findBySuperPlusTrue(): List<GasStation>
+    +findByGasTrue(): List<GasStation>
+    +findByMethaneTrue(): List<GasStation>
+}
+
+interface "PriceReportRepository" {
+    +findPriceReportById(Integer PriceReportId): PriceReport
+}
+
+interface "UserRepository" {
+    +findUserById(Integer userId): User
+    +findUserByAdminTrue(): User
+    +findByUsernameAndPassword(String username, String password): User
+}
+
+class "GasStationController" {
+    +gasStationService: GasStationService
+    +getGasStationById(Integer gasStationId): GasStationDto
+    +getAllGasStations(): List<GasStationDto>
+    +saveGasStation(GasStationDto gasStationDto): void
+    +deleteGasStation(Integer gasStationId): void
+    +getGasStationsByGasolineType(String gasolinetype): List<GasStationDto>
+    +getGasStationsByProximity(Double myLat, Double myLon): List<GasStationDto>
+    +getGasStationsWithCoordinates(Double myLat, Double myLon, 
+    String gasolineType, String carSharing): List<GasStationDto>
+    ++getGasStationsWithoutCoordinates(String gasolinetype, String carsharing): List<GasStationDto>
+    +setGasStationReport(Integer gasStationId, double dieselPrice, double superPrice, 
+    double superPlusPrice, double gasPrice, double methanePrice, Integer userId): void
+}
+
+interface "GasStationService" {
+    +getGasStationById(Integer gasStationId): GasStationDto
+    +getAllGasStations(): List<GasStationDto>
+    +saveGasStation(GasStationDto gasStationDto): gasStationDto
+    +deleteGasStation(Integer gasStationId): Boolean
+    +getGasStationsByGasolineType(String gasolinetype): List<GasStationDto>
+    +getGasStationsByProximity(Double myLat, Double myLon): List<GasStationDto>
+    +getGasStationsWithCoordinates(Double myLat, Double myLon, 
+    String gasolineType, String carSharing): List<GasStationDto>
+    +getGasStationsWithoutCoordinates(String gasolinetype, String carsharing): List<GasStationDto>
+    +setGasStationReport(Integer gasStationId, double dieselPrice, double superPrice, 
+    double superPlusPrice, double gasPrice, double methanePrice, Integer userId): void
+}
+
+class "HomeController" {
+    +admin(): String
+    +index(): String
+    +map(): String
+    +login(): String
+    +update(): String
+    +signup(): String
+}
+
+class "UserController" {
+    +userService: UserService
+    +getUserById(Integer userId): UserDto
+    +getAllUsers(): List<UserDto>
+    +saveUser(UserDto userDto): UserDto
+    +deleteUser(Integer userId): Boolean
+    +increaseUserReputation(Integer userId): Integer
+    +decreaseUserReputation(Integer userId): Integer
+    +login(IdPw credentials): LoginDto
+}
+
+interface "UserService" {
+    +getUserById(Integer userId): UserDto
+    +getAllUsers(): List<UserDto>
+    +saveUser(UserDto userDto): UserDto
+    +deleteUser(Integer userId): Boolean
+    +increaseUserReputation(Integer userId): Integer
+    +decreaseUserReputation(Integer userId): Integer
+    +login(IdPw credentials): LoginDto
+}
+
+GasStation -left-> User
+PriceReport -left-> User
+GasStationDto --> UserDto
+GasStationDto --> PriceReportDto
+GasStationController --> GasStationService
+UserController -down-> UserService
+GasStation --> GasStationConverter
+GasStationConverter --> GasStationDto
+PriceReport --> PriceReportConverter
+PriceReportConverter --> PriceReportDto
+User --> UserConverter
+UserConverter --> UserDto
+UserDto -down-> UserController
+IdPw --> UserController
+LoginDto --> UserController
+GasStationDto --> GasStationController
+UserService -up-> UserRepository
+GasStationService -up-> GasStationRepository
+GasStationService -up-> PriceReportRepository
+User -left-> UserRepository
+GasStation -left-> GasStationRepository
+PriceReport -left-> PriceReportRepository
+
+@enduml
+```
 
 
 # Verification traceability matrix
@@ -238,21 +490,129 @@ Contains Service classes that implement the Service Interfaces in the Service pa
 \<for each functional requirement from the requirement document, list which classes concur to implement it>
 
 
-
-
-
-
-
-
+|          | User | GasStation | PriceReport | UserDto | GasStationDto | PriceReportDto | LoginDto | IdPw | UserRepository | GasStationRepository | PriceReportRepository | UserConverter | GasStationConverter | PriceReportConverter | UserController | GasStationController | UserService | GasStationService |
+| ------------- |:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:| 
+| FR1.1    | X |  |  | X |  |  |  |  | X |  |  | X |  |  | X |  | X |  |
+| FR1.2    | X |  |  |  |  |  |  |  | X |  |  |  |  |  | X |  | X |  |
+| FR1.3    | X |  |  | X |  |  |  |  | X |  |  | X |  |  | X |  | X |  |
+| FR1.4    | X |  |  | X |  |  |  |  | X |  |  | X |  |  | X |  | X |  |
+| FR2      | X | X |  | X | X |  |  |  | X | X |  | X | X |  | X | X | X | X |
+| FR3.1    |  | X |  |  | X |  |  |  |  | X |  |  | X |  |  | X |  | X |
+| FR3.2    |  | X |  |  |  |  |  |  |  | X |  |  |  |  |  | X |  | X |
+| FR3.3    |  | X |  |  | X |  |  |  |  | X |  |  | X |  |  | X |  | X |
+| FR4      |  | X |  |  | X |  |  |  |  | X |  |  | X |  |  | X |  | X |
+| FR5.1    |  | X | X |  | X | X |  |  |  | X | X |  | X | X |  | X |  | X |
+| FR5.2    |  | X |  |  | X |  |  |  |  | X |  |  | X |  |  | X |  | X |
+| FR5.3    | X |  |  | X |  |  | X |  | X |  |  | X |  |  | X |  | X |  |
 
 
 
 # Verification sequence diagrams 
 \<select key scenarios from the requirement document. For each of them define a sequence diagram showing that the scenario can be implemented by the classes and methods in the design>
 
+Note that the functions from GUI to Controller classes are not present in the UML diagram, since we didn't analyze the GUI (that regards the front end part).
 
+### Use case 1, UC1 - Create User Account
 
+```plantuml
 
+@startuml
+autonumber
+actor User
 
+GUI -> UserController: signUp()
+UserController -> GasStationService: saveUser()
+
+@enduml
+
+```
+### Use case 4, UC4 - Create Gas Station 
+
+```plantuml
+
+@startuml
+autonumber
+actor Administrator
+
+GUI -> GasStationController: addGasStation()
+GasStationController -> GasStationService: saveGasStation()
+
+@enduml
+
+```
+
+### Use case 7, UC7 - Report fuel price for a gas station
+```plantuml
+
+@startuml
+
+autonumber
+actor User
+GUI -> GasStationController: selectGasStation()
+GasStationController -> GasStationService: setGasStationReport()
+
+@enduml
+
+```
+
+### Use case 8, UC8 - Obtain price of fuel for gas stations in a certain geographic area
+
+```plantuml
+
+@startuml
+autonumber
+actor AnonymousUser
+
+GUI -> GasStationController: searchGasStation()
+GasStationController -> GasStationService:getGasStationsByProximity()
+note right: This is the nominal scenario, the other variants present in\n the requirement document can be obtained by simply \nsubstituting "getGasStationsByProximity()" with the following options: \n "getGasStationsByGasolineType()", \n"getGasStationsWithCoordinates()" \n"getGasStationsWithoutCoordinates()",\n "getGasStationByCarSharing()".
+
+@enduml
+
+```
+
+### Use case 10, UC10 - Evaluate price
+
+##### Scenario 10.1 
+
+```plantuml
+
+@startuml
+
+autonumber
+actor User
+GUI -> GasStationController: selectGasStation()
+activate GasStationController
+activate GUI
+GUI -> GasStationController: evaluatePriceOk()
+deactivate GasStationController
+deactivate GUI
+GasStationController -> UserService: increaseUserReputation()
+note right: If the reputation of the User is lower than 5, it will be \nincremented by 1; if it is already equal to 5, it will not \nbe incremented.
+
+@enduml
+
+```
+
+##### Scenario 10.2 
+
+```plantuml
+
+@startuml
+
+autonumber
+actor User
+GUI -> GasStationController: selectGasStation()
+activate GasStationController
+activate GUI
+GUI -> GasStationController: evaluatePriceWrong()
+deactivate GasStationController
+deactivate GUI
+GasStationController -> UserService: decreaseUserReputation()
+note right: If the reputation of the User is greater than -5, it will be \ndecremented by 1; if it is already equal to -5, it will not \nbe decremented.
+
+@enduml
+
+```
 
 

@@ -32,6 +32,7 @@ Version: 1
 | C = Estimated cost, in euro (here use 1 person hour cost = 30 euro) | 4800€ | 
 | Estimated calendar time, in calendar weeks (Assume team of 4 people, 8 hours per day, 5 days per week ) | 5 days |               
 
+The number of estimated classes was calculated referring to the Spring framework (including all packages).
 Note that for the estimation by product decomposition we have considered only LOC related to the coding part (since it is written that the estimated size of project had to be computed as NC * A). It follows that the estimated calendar time (5 days, i.e. 160 ph) will correspond only to the coding activity in the estimation by activity decomposition.
 
 # Estimate by activity decomposition
@@ -54,12 +55,10 @@ Insert here Gantt chart with above activities
 @startuml
 
 [Req doc] lasts 2 days
-[Design] lasts 1 days
+[Design] lasts 2 days
 [Req doc] -> [Design]
-[Design (review)] lasts 1 days
-[Design] -> [Design (review)]
 [Design] -> [Coding]
-[Coding] lasts 6 days
+[Coding] lasts 5 days
 [Testing] lasts 4 days
 [Coding] -> [Testing]
 

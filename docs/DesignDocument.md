@@ -381,12 +381,12 @@ class "UserConverter" {
 
 interface "GasStationRepository" {
     +findGasStationById(Integer gasStationId): GasStation
-    +findGasStationByProximity(double lat, double lon): GasStation
-    +findGasStationByGasolineType(String gasolintype): List<GasStation>
-    +findGasStationWithCoordinates(Double myLat, Double myLon, 
-    String gasolineType, String carSharing): List<GasStation>
-    +findGasStationWithoutCoordinates(String gasolinetype, 
-    String carsharing): List<GasStation>
+    +findByLatBetweenAndLonBetween(Double myLat_inf, Double myLat_sup, Double myLon_inf, Double myLon_sup): List<GasStation>
+    +findByDieselTrue(): List<GasStation>
+    +findBySuperTrue(): List<GasStation>
+    +findBySuperPlusTrue(): List<GasStation>
+    +findByGasTrue(): List<GasStation>
+    +findByMethaneTrue(): List<GasStation>
 }
 
 interface "PriceReportRepository" {
@@ -395,7 +395,8 @@ interface "PriceReportRepository" {
 
 interface "UserRepository" {
     +findUserById(Integer userId): User
-    +findUserByUserAndPass(String user, String pass): User
+    +findUserByAdminTrue(): User
+    +findByUsernameAndPassword(String username, String password): User
 }
 
 class "GasStationController" {
@@ -520,7 +521,7 @@ autonumber
 actor User
 
 GUI -> UserController: signUp()
-UserController -> GasStationService:saveUser()
+UserController -> GasStationService: saveUser()
 
 @enduml
 
@@ -534,7 +535,7 @@ autonumber
 actor Administrator
 
 GUI -> GasStationController: addGasStation()
-GasStationController -> GasStationService:saveGasStation()
+GasStationController -> GasStationService: saveGasStation()
 
 @enduml
 

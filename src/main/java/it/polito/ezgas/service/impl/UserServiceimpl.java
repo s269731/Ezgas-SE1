@@ -27,7 +27,6 @@ public class UserServiceimpl implements UserService {
 
 	@Override
 	public UserDto getUserById(Integer userId) throws InvalidUserException {
-		public UserDto getUserById(Integer userId) throws InvalidUserException {
 		User user = userRepository.findByUserId(userId);
 		if(user != null)
 			return UserConverter.toUserDto(user);
@@ -77,7 +76,7 @@ public class UserServiceimpl implements UserService {
 
 	@Override
 	public LoginDto login(IdPw credentials) throws InvalidLoginDataException {
-		User user = userRepository.findByUserNameAndPassword(credentials.getUser(), credentials.getPw());
+		User user = userRepository.findByEmailAndPassword(credentials.getUser(), credentials.getPw());
 		if(user != null) {
 			LoginDto login = new LoginDto();
 			login.setUserId(user.getUserId());

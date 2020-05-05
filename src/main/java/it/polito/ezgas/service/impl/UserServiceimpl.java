@@ -37,8 +37,22 @@ public class UserServiceimpl implements UserService {
 
 	@Override
 	public UserDto saveUser(UserDto userDto) {
-		// TODO Auto-generated method stub
-		return null;
+		UserDto dto;
+		if(userDto.getUserId() != null) {	// user already enrolled --> update
+			User user = userRepository.findByUserId(userDto.getUserId());
+			user.setUserName(userDto.getUserName());
+			user.setEmail(userDto.getEmail());
+			user.setPassword(userDto.getPassword());
+			userRepository.save(user);	
+			dto = UserConverter.toUserDto(user);
+		} else {	// new user --> insert
+			User u = new User(userDto.getUserName(), userDto.getPassword(), userDto.getEmail(), 5);
+			u.setAdmin(false);
+			userRepository.save(u);
+			dto = UserConverter.toUserDto(u);
+		}
+		
+		return dto;
 	}
 
 	@Override
@@ -52,8 +66,13 @@ public class UserServiceimpl implements UserService {
 
 	@Override
 	public Boolean deleteUser(Integer userId) throws InvalidUserException {
-		// TODO Auto-generated method stub
-		return null;
+		User user = userRepository.findByUserId(userId);
+        if (user != null) {
+        	userRepository.delete(user);
+        	return true;
+	}
+        else
+        	throw new InvalidUserException("User with Id: "+userId+" doesn't exist!");
 	}
 
 	@Override

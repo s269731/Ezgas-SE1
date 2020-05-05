@@ -27,8 +27,12 @@ public class UserServiceimpl implements UserService {
 
 	@Override
 	public UserDto getUserById(Integer userId) throws InvalidUserException {
-		// TODO Auto-generated method stub
-		return null;
+		public UserDto getUserById(Integer userId) throws InvalidUserException {
+		User user = userRepository.findByUserId(userId);
+		if(user != null)
+			return UserConverter.toUserDto(user);
+		else
+			throw new InvalidUserException("User with Id: "+userId+" doesn't exist!");
 	}
 
 	@Override
@@ -39,8 +43,11 @@ public class UserServiceimpl implements UserService {
 
 	@Override
 	public List<UserDto> getAllUsers() {
-		// TODO Auto-generated method stub
-		return null;
+		List<User> users = userRepository.findAll();
+		List<UserDto> usersDto = new ArrayList<UserDto>();
+		for(User user:users)
+			usersDto.add(UserConverter.toUserDto(user));
+		return usersDto;
 	}
 
 	@Override

@@ -20,6 +20,7 @@ public class GasStationConverter {
 		gasStationDto.setHasSuperPlus(gasStation.getHasSuperPlus());
 		gasStationDto.setHasGas(gasStation.getHasGas());
 		gasStationDto.setHasMethane(gasStation.getHasMethane());
+		gasStationDto.setCarSharing(gasStation.getCarSharing());
 		gasStationDto.setLat(gasStation.getLat());
 		gasStationDto.setLon(gasStation.getLon());
 		gasStationDto.setDieselPrice(gasStation.getDieselPrice());
@@ -31,8 +32,8 @@ public class GasStationConverter {
 		gasStationDto.setReportTimestamp(gasStation.getReportTimestamp());
 		gasStationDto.setReportDependability(gasStation.getReportDependability());
 		
-		UserDto userDto = UserConverter.toUserDto(gasStation.getUser());
-		gasStationDto.setUserDto(userDto);
+		/*UserDto userDto = UserConverter.toUserDto(gasStation.getUser());
+		gasStationDto.setUserDto(userDto);*/
 		
 		return gasStationDto;
 	}

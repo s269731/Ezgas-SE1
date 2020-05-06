@@ -27,31 +27,41 @@ public class UserServiceimpl implements UserService {
 
 	@Override
 	public UserDto getUserById(Integer userId) throws InvalidUserException {
-		User user = userRepository.findByUserId(userId);
-		if(user != null)
-			return UserConverter.toUserDto(user);
+		if (userId > 0) {
+			User user = userRepository.findByUserId(userId);
+			if (user != null)
+				return UserConverter.toUserDto(user);
+			else
+				return null;
+		}
 		else
-			throw new InvalidUserException("User with Id: "+userId+" doesn't exist!");
+			throw new InvalidUserException("UserId cannot be negative");
 	}
 
 	@Override
 	public UserDto saveUser(UserDto userDto) {
-		UserDto dto;
-		if(userDto.getUserId() != null) {	// user already enrolled --> update
-			User user = userRepository.findByUserId(userDto.getUserId());
+		User user;
+		if (userDto.getUserId() != null) {	// user already enrolled --> update
+			user = userRepository.findByUserId(userDto.getUserId());
+			if (user.getEmail() != userDto.getEmail()) {
+				User u = userRepository.findByEmail(userDto.getEmail());
+				if (u != null)
+					return null;
+			}
 			user.setUserName(userDto.getUserName());
 			user.setEmail(userDto.getEmail());
 			user.setPassword(userDto.getPassword());
-			userRepository.save(user);	
-			dto = UserConverter.toUserDto(user);
 		} else {	// new user --> insert
-			User u = new User(userDto.getUserName(), userDto.getPassword(), userDto.getEmail(), 5);
-			u.setAdmin(false);
-			userRepository.save(u);
-			dto = UserConverter.toUserDto(u);
+			User u = userRepository.findByEmail(userDto.getEmail());
+			if (u == null) {	// email not present in the database
+				user = new User(userDto.getUserName(), userDto.getPassword(), userDto.getEmail(), 5);
+				user.setAdmin(false);				
+			} else
+				return null;
 		}
+		userRepository.save(user);
 		
-		return dto;
+		return UserConverter.toUserDto(user);
 	}
 
 	@Override
@@ -65,54 +75,60 @@ public class UserServiceimpl implements UserService {
 
 	@Override
 	public Boolean deleteUser(Integer userId) throws InvalidUserException {
-		User user = userRepository.findByUserId(userId);
-        if (user != null) {
-        	userRepository.delete(user);
-        	return true;
-	}
-        else
-        	throw new InvalidUserException("User with Id: "+userId+" doesn't exist!");
+		if (userId > 0) {
+			User user = userRepository.findByUserId(userId);
+	        if (user != null) {
+	        	userRepository.delete(user);
+	        	return true;
+	        } else
+	        	return false;
+		} else
+			throw new InvalidUserException("UserId cannot be negative");
 	}
 
 	@Override
 	public LoginDto login(IdPw credentials) throws InvalidLoginDataException {
 		User user = userRepository.findByEmailAndPassword(credentials.getUser(), credentials.getPw());
-		if(user != null) {
+		if (user != null) {
 			LoginDto login = new LoginDto();
 			login.setUserId(user.getUserId());
 			login.setUserName(user.getUserName());
 			login.setEmail(user.getEmail());
 			login.setReputation(user.getReputation());
 			login.setAdmin(user.getAdmin());
-			
 			return login;
-			
 		} else 	
 			throw new InvalidLoginDataException("Invalid login");
 	}
 
 	@Override
 	public Integer increaseUserReputation(Integer userId) throws InvalidUserException {
-		User user = userRepository.findByUserId(userId);
-		if(user != null) {
-			if(user.getReputation() < 5) {
-				user.setReputation(user.getReputation()+1);
-			}
-			return user.getReputation();
-		} else 
-			throw new InvalidUserException("User with Id: "+userId+" doesn't exist!");
+		if (userId > 0) {
+			User user = userRepository.findByUserId(userId);
+			if (user != null) {
+				if(user.getReputation() < 5) {
+					user.setReputation(user.getReputation()+1);
+				}
+				return user.getReputation();
+			} else
+				return null;
+		} else
+			throw new InvalidUserException("UserId cannot be negative");
 	}
 
 	@Override
 	public Integer decreaseUserReputation(Integer userId) throws InvalidUserException {
-		User user = userRepository.findByUserId(userId);
-		if(user != null) {
-			if(user.getReputation() > -5) {
-				user.setReputation(user.getReputation()-1);
-			}
-			return user.getReputation();
+		if (userId > 0) {
+			User user = userRepository.findByUserId(userId);
+			if (user != null) {
+				if(user.getReputation() > -5) {
+					user.setReputation(user.getReputation()-1);
+				}
+				return user.getReputation();
+			} else
+				return null;
 		} else
-			throw new InvalidUserException("User with Id: "+userId+" doesn't exist!");
+			throw new InvalidUserException("UserId cannot be negative");
 	}
 	
 }

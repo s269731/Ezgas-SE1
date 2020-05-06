@@ -28,14 +28,43 @@ public class GasStationServiceimpl implements GasStationService {
 
 	@Override
 	public GasStationDto getGasStationById(Integer gasStationId) throws InvalidGasStationException {
-		// TODO Auto-generated method stub
-		return null;
+		if (gasStationId > 0) {
+			GasStation gasStation = gasStationRepository.findByGasStationId(gasStationId);
+			if (gasStation != null)
+				return GasStationConverter.toGasStationDto(gasStation);
+			else
+				return null;
+		} else
+			throw new InvalidGasStationException("GasStationId cannot be negative");
 	}
 
 	@Override
 	public GasStationDto saveGasStation(GasStationDto gasStationDto) throws PriceException, GPSDataException {
-		// TODO Auto-generated method stub
-		return null;
+		GasStation gasStation;
+		if (gasStationDto.getGasStationId() != null) {	// gas station already inserted --> update
+			gasStation = gasStationRepository.findByGasStationId(gasStationDto.getGasStationId());
+		} else {	// new gas station --> insert
+			gasStation = new GasStation();
+		}
+		gasStation.setGasStationName(gasStationDto.getGasStationName());
+		gasStation.setGasStationAddress(gasStationDto.getGasStationAddress());
+		if (gasStationDto.getLat() > 0)
+			gasStation.setLat(gasStationDto.getLat());
+		else
+			throw new GPSDataException("Latitude value cannot be negative");
+		if (gasStationDto.getLon() > 0)
+			gasStation.setLon(gasStationDto.getLon());
+		else
+			throw new GPSDataException("Longitude value cannot be negative");
+		gasStation.setCarSharing(gasStationDto.getCarSharing());
+		gasStation.setHasDiesel(gasStationDto.getHasDiesel());
+		gasStation.setHasSuper(gasStationDto.getHasSuper());
+		gasStation.setHasSuperPlus(gasStationDto.getHasSuperPlus());
+		gasStation.setHasGas(gasStationDto.getHasGas());
+		gasStation.setHasMethane(gasStationDto.getHasMethane());			
+		gasStationRepository.save(gasStation);
+		
+		return GasStationConverter.toGasStationDto(gasStation);
 	}
 
 	@Override

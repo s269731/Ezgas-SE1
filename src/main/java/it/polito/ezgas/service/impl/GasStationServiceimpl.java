@@ -40,14 +40,24 @@ public class GasStationServiceimpl implements GasStationService {
 
 	@Override
 	public List<GasStationDto> getAllGasStations() {
-		// TODO Auto-generated method stub
-		return null;
+		List<GasStation> gasStations = gasStationRepository.findAll();
+		List<GasStationDto> gasStationsDto = new ArrayList<GasStationDto>();
+		for(GasStation gasStation:gasStations)
+			gasStationsDto.add(GasStationConverter.toGasStationDto(gasStation));
+		return gasStationsDto;
 	}
 
 	@Override
 	public Boolean deleteGasStation(Integer gasStationId) throws InvalidGasStationException {
-		// TODO Auto-generated method stub
-		return null;
+		if (gasStationId > 0) {
+			GasStation gasStation = gasStationRepository.findByGasStationId(gasStationId);
+	        if (gasStation != null) {
+	        	gasStationRepository.delete(gasStation);
+	        	return true;
+	        } else
+	        	return false;
+		} else
+			throw new InvalidGasStationException("GasStationId cannot be negative");
 	}
 
 	@Override

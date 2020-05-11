@@ -1,5 +1,8 @@
 package it.polito.ezgas.converter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import it.polito.ezgas.dto.GasStationDto;
@@ -36,5 +39,13 @@ public class GasStationConverter {
 		gasStationDto.setUserDto(userDto);*/
 		
 		return gasStationDto;
+	}
+	
+	public static List<GasStationDto> toGasStationDto(List<GasStation> gasStations) {
+		List<GasStationDto> gasStationsDto = new ArrayList<GasStationDto>();
+		for(GasStation gasStation:gasStations)
+			gasStationsDto.add(GasStationConverter.toGasStationDto(gasStation));
+		
+		return gasStationsDto;
 	}
 }

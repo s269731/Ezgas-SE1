@@ -43,7 +43,7 @@ public class UserServiceimpl implements UserService {
 		User user;
 		if (userDto.getUserId() != null) {	// user already enrolled --> update
 			user = userRepository.findByUserId(userDto.getUserId());
-			if (user.getEmail() != userDto.getEmail()) {
+			if (user.getEmail().compareTo(userDto.getEmail()) != 0) {
 				User u = userRepository.findByEmail(userDto.getEmail());
 				if (u != null)
 					return null;
@@ -108,6 +108,7 @@ public class UserServiceimpl implements UserService {
 			if (user != null) {
 				if(user.getReputation() < 5) {
 					user.setReputation(user.getReputation()+1);
+					userRepository.save(user);
 				}
 				return user.getReputation();
 			} else
@@ -123,6 +124,7 @@ public class UserServiceimpl implements UserService {
 			if (user != null) {
 				if(user.getReputation() > -5) {
 					user.setReputation(user.getReputation()-1);
+					userRepository.save(user);
 				}
 				return user.getReputation();
 			} else

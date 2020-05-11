@@ -77,10 +77,8 @@ public class GasStationServiceimpl implements GasStationService {
 	@Override
 	public List<GasStationDto> getAllGasStations() {
 		List<GasStation> gasStations = gasStationRepository.findAll();
-		List<GasStationDto> gasStationsDto = new ArrayList<GasStationDto>();
-		for(GasStation gasStation:gasStations)
-			gasStationsDto.add(GasStationConverter.toGasStationDto(gasStation));
-		return gasStationsDto;
+
+		return GasStationConverter.toGasStationDto(gasStations);
 	}
 
 	@Override
@@ -127,8 +125,7 @@ public class GasStationServiceimpl implements GasStationService {
 		if (lat < -90 || lat > 90 || lon < -180 || lon > 180)
 			throw new GPSDataException("Invalid GPS coordinates");	
 		else {
-			//values that i will need later
-			
+			//values that i will need later		
 			double MIN_LAT = Math.toRadians(-90d);  // -PI/2
 			double MAX_LAT = Math.toRadians(90d);   //  PI/2
 			double MIN_LON = Math.toRadians(-180d); // -PI
@@ -313,5 +310,4 @@ public class GasStationServiceimpl implements GasStationService {
 		return GasStationConverter.toGasStationDto(gasStations);
 	}
 	
-
 }

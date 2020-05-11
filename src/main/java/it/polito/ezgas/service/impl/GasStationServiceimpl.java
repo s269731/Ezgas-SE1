@@ -124,8 +124,83 @@ public class GasStationServiceimpl implements GasStationService {
 
 	@Override
 	public List<GasStationDto> getGasStationsByProximity(double lat, double lon) throws GPSDataException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		if (lat < -90 || lat > 90 || lon < -180 || lon > 180)
+			throw new GPSDataException("Invalid GPS coordinates");	
+		else {
+			//values that i will need later
+			
+			double MIN_LAT = Math.toRadians(-90d);  // -PI/2
+			double MAX_LAT = Math.toRadians(90d);   //  PI/2
+			double MIN_LON = Math.toRadians(-180d); // -PI
+			double MAX_LON = Math.toRadians(180d);  //  PI
+
+			//lat e lon are an in degrees, convert to radians
+			double radLat = Math.toRadians(lat);
+			double radLon = Math.toRadians(lon);
+			
+			//earth radius and max distance allowed (bound) in km
+			double radius= 6371.01; 
+			double bound= 1.0;
+			
+			//Define a square that contains the "circle of search" of radius bound to avoid doing more calculations than needed
+			// (minLat, minLon) and (maxLat, maxLon) are opposite corners of a bounding rectangle.
+			 
+			double radDist = bound / radius; // angular distance in radians on a great circle
+
+			double minLat = radLat - radDist;
+			double maxLat = radLat + radDist;
+
+			double minLon, maxLon;
+			if (minLat > MIN_LAT && maxLat < MAX_LAT) {
+				double deltaLon = Math.asin(Math.sin(radDist) /Math.cos(radLat));
+				minLon = radLon - deltaLon;
+				if (minLon < MIN_LON) 
+					minLon += 2 * Math.PI;
+				maxLon = radLon + deltaLon;
+				if (maxLon > MAX_LON) 
+					maxLon -= 2 * Math.PI;
+			} 
+			else {
+				// a pole is within the distance
+				minLat = Math.max(minLat, MIN_LAT);
+				maxLat = Math.min(maxLat, MAX_LAT);
+				minLon = MIN_LON;
+				maxLon = MAX_LON;
+			}
+			
+			//Initialise gas station array of results in the square
+			List<GasStation> gasStations = gasStationRepository.findByLatBetweenAndLonBetween(Math.toDegrees(minLat), Math.toDegrees(maxLat), Math.toDegrees(minLon), Math.toDegrees(maxLon));
+			List<GasStationDto> gasStationsDto = new ArrayList<GasStationDto>();
+			double gsradLat, gsradLon, distance;
+			
+			//begin search
+			for(GasStation gasStation:gasStations) {
+				
+				//get gasStation coordinates in radians
+				gsradLat=Math.toRadians(gasStation.getLat());
+				gsradLon=Math.toRadians(gasStation.getLon());
+				
+				//calculate deltas  for lat and lon
+				double dlat=gsradLat-radLat;
+				double dlon=gsradLon-radLon;
+				
+				//calculate distance from input location to gasStation
+				double a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(radLat) * Math.cos(gsradLat) * Math.pow(Math.sin(dlon / 2),2);
+				double b = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+				distance= radius*b;
+				
+				//analise distance
+				if (distance<=bound) {
+					this.updateDependabilities(Arrays.asList(gasStation));
+					gasStationsDto.add(GasStationConverter.toGasStationDto(gasStation));
+				}		
+			}
+			return gasStationsDto;
+			
+			//https://stackoverflow.com/questions/19412462/getting-distance-between-two-points-based-on-latitude-longitude
+			//http://janmatuschek.de/LatitudeLongitudeBoundingCoordinates		
+		}
 	}
 
 	@Override
@@ -199,7 +274,14 @@ public class GasStationServiceimpl implements GasStationService {
 
 	@Override
 	public List<GasStationDto> getGasStationByCarSharing(String carSharing) {
-		// TODO Auto-generated method stub
-		return null;
+		List<GasStation> gasStations;
+		if (carSharing != null) {
+			gasStations = gasStationRepository.findByCarSharing(carSharing);
+		} else
+			return null;
+			
+		this.updateDependabilities(gasStations);
+		return GasStationConverter.toGasStationDto(gasStations);
+	}	
 	
 }

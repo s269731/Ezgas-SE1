@@ -15,5 +15,6 @@ public interface GasStationRepository extends JpaRepository<GasStation, Integer>
 	List<GasStation> findByHasSuperPlusTrue();
 	List<GasStation> findByHasGasTrue();
 	List<GasStation> findByHasMethaneTrue();
+	List<GasStation> findByCarSharing(String carSharing);
 	
 }

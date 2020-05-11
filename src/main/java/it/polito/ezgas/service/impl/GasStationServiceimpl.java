@@ -124,7 +124,6 @@ public class GasStationServiceimpl implements GasStationService {
 
 	@Override
 	public List<GasStationDto> getGasStationsByProximity(double lat, double lon) throws GPSDataException {
-		
 		if (lat < -90 || lat > 90 || lon < -180 || lon > 180)
 			throw new GPSDataException("Invalid GPS coordinates");	
 		else {
@@ -206,16 +205,46 @@ public class GasStationServiceimpl implements GasStationService {
 	@Override
 	public List<GasStationDto> getGasStationsWithCoordinates(double lat, double lon, String gasolinetype,
 			String carsharing) throws InvalidGasTypeException, GPSDataException {
-		// TODO Auto-generated method stub
-		return null;
+		List<GasStationDto> gasStations = new ArrayList<GasStationDto>();
+			if (lat < -90 || lat > 90 || lon < -180 || lon > 180)
+				throw new GPSDataException("Invalid GPS coordinates");
+			else {
+				List<GasStationDto> gasStations1 = getGasStationsByProximity(lat, lon);
+				if ((gasolinetype.compareTo("null") != 0 && carsharing.compareTo("null") != 0)) {
+					List<GasStationDto> gasStations2 = getGasStationsWithoutCoordinates(gasolinetype, carsharing);
+					gasStations1.retainAll(gasStations2);
+					gasStations.addAll(gasStations1);
+				} else if (gasolinetype.compareTo("null") != 0 && carsharing.compareTo("null") == 0) {
+					List<GasStationDto> gasStations2 = getGasStationsByGasolineType(gasolinetype);
+					gasStations1.retainAll(gasStations2);
+					gasStations.addAll(gasStations1);
+				} else if (carsharing.compareTo("null") != 0 && gasolinetype.compareTo("null") == 0) {
+					List<GasStationDto> gasStations2 = getGasStationByCarSharing(carsharing);
+					gasStations1.retainAll(gasStations2);
+					gasStations.addAll(gasStations1);
+				} else {
+					gasStations.addAll(gasStations1);
+				}
+			}
+			
+		return gasStations;
 	}
 
 
 	@Override
 	public List<GasStationDto> getGasStationsWithoutCoordinates(String gasolinetype, String carsharing)
 			throws InvalidGasTypeException {
-		// TODO Auto-generated method stub
-		return null;
+		List<GasStationDto> gasStationDtos = new ArrayList<GasStationDto>();
+		if (gasolinetype.compareTo("null") != 0) {
+			List<GasStationDto> gasStations = getGasStationsByGasolineType(gasolinetype);
+			for (GasStationDto dto:gasStations) {
+				if (dto.getCarSharing().compareTo(carsharing) == 0)
+					gasStationDtos.add(dto);
+			}
+		} else
+			throw new InvalidGasTypeException("Invalid gasoline type");
+		
+		return gasStationDtos;
 	}
 
 	@Override
@@ -282,6 +311,7 @@ public class GasStationServiceimpl implements GasStationService {
 			
 		this.updateDependabilities(gasStations);
 		return GasStationConverter.toGasStationDto(gasStations);
-	}	
+	}
 	
+
 }

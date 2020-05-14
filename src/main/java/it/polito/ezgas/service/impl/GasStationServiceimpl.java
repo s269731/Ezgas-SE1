@@ -55,11 +55,11 @@ public class GasStationServiceimpl implements GasStationService {
 		}
 		gasStation.setGasStationName(gasStationDto.getGasStationName());
 		gasStation.setGasStationAddress(gasStationDto.getGasStationAddress());
-		if (gasStationDto.getLat() > -90 && gasStationDto.getLat() < 90)
+		if (gasStationDto.getLat() > -90 || gasStationDto.getLat() < 90)
 			gasStation.setLat(gasStationDto.getLat());
 		else
 			throw new GPSDataException("Latitude value cannot be negative");
-		if (gasStationDto.getLon() > -180 && gasStationDto.getLon() < 180)
+		if (gasStationDto.getLon() > -180 || gasStationDto.getLon() < 180)
 			gasStation.setLon(gasStationDto.getLon());
 		else
 			throw new GPSDataException("Longitude value cannot be negative");
@@ -99,19 +99,19 @@ public class GasStationServiceimpl implements GasStationService {
 		List<GasStation> gasStations;
 		switch (gasolinetype) {
 		case "Diesel":
-			gasStations = gasStationRepository.findByHasDieselTrue();
+			gasStations = gasStationRepository.findByHasDieselTrueOrderByDieselPriceAsc();
 			break;
 		case "Super":
-			gasStations = gasStationRepository.findByHasSuperTrue();
+			gasStations = gasStationRepository.findByHasSuperTrueOrderBySuperPriceAsc();
 			break;
 		case "SuperPlus":
-			gasStations = gasStationRepository.findByHasSuperPlusTrue();
+			gasStations = gasStationRepository.findByHasSuperPlusTrueOrderBySuperPlusPriceAsc();
 			break;
 		case "Gas":
-			gasStations = gasStationRepository.findByHasGasTrue();
+			gasStations = gasStationRepository.findByHasGasTrueOrderByGasPriceAsc();
 			break;
 		case "Methane":
-			gasStations = gasStationRepository.findByHasMethaneTrue();
+			gasStations = gasStationRepository.findByHasMethaneTrueOrderByMethanePriceAsc();
 			break;
 		default:
 			throw new InvalidGasTypeException("Invalid gasoline type");
@@ -209,12 +209,12 @@ public class GasStationServiceimpl implements GasStationService {
 				List<GasStationDto> gasStations1 = getGasStationsByProximity(lat, lon);
 				if ((gasolinetype.compareTo("null") != 0 && carsharing.compareTo("null") != 0)) {
 					List<GasStationDto> gasStations2 = getGasStationsWithoutCoordinates(gasolinetype, carsharing);
-					gasStations1.retainAll(gasStations2);
-					gasStations.addAll(gasStations1);
+					gasStations2.retainAll(gasStations1);
+					gasStations.addAll(gasStations2);
 				} else if (gasolinetype.compareTo("null") != 0 && carsharing.compareTo("null") == 0) {
 					List<GasStationDto> gasStations2 = getGasStationsByGasolineType(gasolinetype);
-					gasStations1.retainAll(gasStations2);
-					gasStations.addAll(gasStations1);
+					gasStations2.retainAll(gasStations1);
+					gasStations.addAll(gasStations2);
 				} else if (carsharing.compareTo("null") != 0 && gasolinetype.compareTo("null") == 0) {
 					List<GasStationDto> gasStations2 = getGasStationByCarSharing(carsharing);
 					gasStations1.retainAll(gasStations2);
@@ -258,8 +258,8 @@ public class GasStationServiceimpl implements GasStationService {
 			gasPrice=0;
 		if(methanePrice==-1)
 			methanePrice=0;
-		if(dieselPrice < 0 || superPrice < 0 || superPlusPrice < 0 || gasPrice < 0 || methanePrice < 0)
-			throw new PriceException("Price cannot be negative");
+		if(dieselPrice <= 0 || superPrice <= 0 || superPlusPrice <= 0 || gasPrice <= 0 || methanePrice <= 0)
+			throw new PriceException("Price cannot be negative or null");
 		if(userId > 0) {
 			if(gasStationId > 0) {
 				GasStation gasStation = gasStationRepository.findByGasStationId(gasStationId);

@@ -30,6 +30,188 @@ However, for the scope of this document we chose specific methods per class to t
 
 
 
+### **Class *GasStation* - method *setGasStationId( Integer gasStationId )***
+
+**Criteria for method *setGasStationId(Integer gasStationId)*:**
+	
+- Type of gasStationId
+- Range of gasStationId
+
+**Predicates for method *setGasStationId(Integer gasStationId)*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| Type of gasStationId |     Integer      |
+|                |     Others      |
+|    Range of gasStationId  |     >=-32768 and <=32767     |
+|          |     > 32767      |
+|          |    < -32768      |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|   Type of gasStationId   |   None   |
+|     Range of gasStationId  |  -32768, -32769, -32767, 32767, 32768, 32766  |
+
+**Combination of predicates**:
+
+| Type of gasStationId | Range of gasStationId | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|-------|
+| Integer | >=-32768 and <=32767 | Valid | GasStation gs = new GasStation(); <br/> gs.setGasStationId(5); | it.polito.ezgas.GasStationTest.testSetGasStationId() |
+| | > 32767 | Invalid | GasStation gs = new GasStation(); <br/> gs.setGasStationId(45000) -> error | it.polito.ezgas.GasStationTest.testSetGasStationId() |
+| | < -32768 | Invalid | GasStation gs = new GasStation(); <br/> gs.setGasStationId(-45000) -> error | it.polito.ezgas.GasStationTest.testSetGasStationId() |
+| Others | - | Invalid | GasStation gs = new GasStation(); <br/> gs.setGasStationId("abc") -> error | it.polito.ezgas.GasStationTest.testSetGasStationId() |
+
+
+
+### **Class *GasStation* - method *getGasStationId()***
+
+**Criteria for method *getGasStationId()*:**
+
+ - Type of output
+ 
+**Predicates for method *getGasStationId()*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| Type of output | Integer |
+|| Others |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|   Type of output  |   None   |
+
+**Combination of predicates**:
+
+| Type of output | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|
+| Integer | Valid | GasStation gs = new GasStation(); <br/> gs.setGasStationId(); <br/> Integer id = gs.getGasStationId(); | it.polito.ezgas.GasStationTest.testGetGasStationId() |
+| Other | Invalid | GasStation gs = new GasStation(); <br/> gs.setGasStationId(); <br/> Integer id = gs.getGasStationId();-> error (if the type of output is not Integer) | it.polito.ezgas.GasStationTest.testGetGasStationId() |
+
+
+
+### **Class *GasStation* - method *setGasStationName(String gasStationName)***
+
+**Criteria for method setGasStationName(String gasStationName):**
+	
+ - Type of gasStationName
+ - Length of gasStationName
+
+**Predicates for method setGasStationName(String gasStationName):**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| Type of gasStationName |   String   |
+|                |   Others   |
+| Length of gasStationName | >= 0 and <= maxValue |
+|                    | > maxValue |
+
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|   Type of gasStationName   |   None   |
+|   Length of gasStationName | 0, maxValue, maxValue+1 |
+
+
+**Combination of predicates**:
+
+
+| Type of gasStationName | Length of gasStationName | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|-------|
+| String | >= 0 and <= maxValue | Valid | GasStation gasStation = new GasStation(); <br/> gasStation.setGasStationName("GasStationTest"); | it.polito.ezgas.GasStationTest.testSetGasStationName() |
+| String | > maxValue | Invalid | GasStation gasStation = new GasStation(); <br/> gasStation.setGasStationName(("abcde...") -> error (because I try to set a string whose length is > maxValue) | it.polito.ezgas.GasStationTest.testSetGasStationName() |
+| Others | - | Invalid |  GasStation gasStation = new GasStation(); <br/> gasStation.setGasStationName(23.5) -> error | it.polito.ezgas.GasStationTest.testSetGasStationName() |
+
+
+
+### **Class *GasStation* - method *getGasStationName()***
+
+
+**Criteria for method getGasStationName():**
+	
+ - Type of output
+
+**Predicates for method getGasStationName():**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| Type of output |     String      |
+|                |     Others      |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|   Type of output   |   None   |
+
+**Combination of predicates**:
+
+| Type of output |  Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|-------|
+| String |  Valid | GasStation gasStation = new GasStation(); <br/> gasStation.setGasStationName("GasStationTest"); <br/> String gs = gasStation.getGasStationName(); | it.polito.ezgas.GasStationTest.testGetGasStationName() |
+| Others |  Invalid |  GasStation gasStation = new GasStation(); <br/> gasStation.setGasStationName("GasStationTest"); <br/> String gs = gasStation.getGasStationName() -> error (if the type of output is not String) | it.polito.ezgas.GasStationTest.testGetGasStationName() |
+
+
+
+### **Class *GasStation* - method *setHasDiesel(Boolean hasDiesel)***
+
+**Criteria for method *setHasDiesel(Boolean hasDiesel)*:**
+	
+ - Type of hasDiesel
+
+**Predicates for method *setHasDiesel(Boolean hasDiesel)*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| Type of hasDiesel | Boolean |
+|          | Others |
+
+**Boundaries**:
+
+| Criteria | Boundary values|
+| -------- | ---------------|
+| Type of hasDiesel | None |
+
+**Combination of predicates**:
+
+| Type of hasDiesel | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|
+| Boolean | Valid | GasStation gs = new GasStation(); <br/>gs.setHasDiesel(true); | it.polito.ezgas.GasStationTest.testSetHasDiesel()|
+| Others | Invalid | GasStation gs = new GasStation(); <br/> gs.setHasDiesel(5) -> error | it.polito.ezgas.GasStationTest.testSetHasDiesel()
+
+
+### **Class *GasStation* - method *getHasDiesel()***
+
+**Criteria for method *getHasDiesel()*:**
+	
+ - Type of output
+
+**Predicates for method *getHasDiesel()*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| Type of output | Boolean |
+|          | Others |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+| Type of output | None |
+
+**Combination of predicates**:
+
+| Types of output | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|
+| Boolean | Valid | GasStation gs = new GasStation(); <br/> gs.setHasDiesel(true); <br/> Boolean bool = gs.getHasDiesel();|it.polito.ezgas.GasStationTest.testGetHasDiesel()|
+| Other | Invalid | GasStation gs = new GasStation(); <br/> gs.setHasDiesel(true); <br/> Boolean bool = gs.getHasDiesel() -> error (if the type of output is not Boolean) | it.polito.ezgas.GasStationTest.testGetHasDiesel() |
+
+
 
 ### **Class *GasStation* - method *setDieselPrice(double dieselPrice)***
 
@@ -64,8 +246,6 @@ However, for the scope of this document we chose specific methods per class to t
 | |  > maxDouble | Invalid |  GasStation gasStation = new GasStation(); <br/> gasStation.setDieselPrice(maxDouble+1) -> error | it.polito.ezgas.GasStationTest.testSetDieselPrice() |
 | | < minDouble  | Invalid |  GasStation gasStation = new GasStation(); <br/> gasStation.setDieselPrice(minDouble-1) -> error | it.polito.ezgas.GasStationTest.testSetDieselPrice() |
 | Others | - | Invalid | GasStation gasStation = new GasStation(); <br/> gasStation.setDieselPrice("too much") -> error | it.polito.ezgas.GasStationTest.testSetDieselPrice() |
-
-
 
 ### **Class *GasStation* - method *getDieselPrice()***
 

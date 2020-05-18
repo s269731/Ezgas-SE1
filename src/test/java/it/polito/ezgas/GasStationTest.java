@@ -171,4 +171,287 @@ public class GasStationTest {
 		assertEquals("getHasMethane() fails", hasMethane, result);
 	}
 	
+	@Test
+	public void testSetCarSharing() {
+		
+		GasStation gs = new GasStation();
+		String carSharing = "Enjoy";
+		gs.setCarSharing(carSharing);
+		
+		assertEquals("setCarSharing() fails", carSharing, gs.getCarSharing());
+	}
+	
+	@Test
+	public void testGetCarSharing() {
+		
+		GasStation gs = new GasStation();
+		String carSharing = "Enjoy";
+		gs.setCarSharing(carSharing);
+		String result = gs.getCarSharing();
+		
+		assertEquals("getCarSharing() fails", carSharing, result);
+		
+	}
+	
+	@Test
+	public void testSetLat() {
+		
+		 GasStation gs = new GasStation();
+		 double lat = 45.5517866;
+		 gs.setLat(lat);
+		 
+		 assertEquals("setLat() fails", lat, gs.getLat(), 0);
+
+	}
+	
+	@Test
+	public void testGetLat() {
+		
+		GasStation gs = new GasStation();
+		double lat = 45.5517866;
+		gs.setLat(lat);
+		double result = gs.getLat();
+		
+		assertEquals("getLat() fails", lat, result, 0);
+	}
+	
+	@Test
+	public void testSetLon() {
+		
+		GasStation gs = new GasStation();
+		double lon = 8.050702;
+		gs.setLon(lon);
+		 
+		assertEquals("setLon() fails", lon, gs.getLon(), 0);
+		
+	}
+	
+	@Test
+	public void testGetLon() {
+		
+		GasStation gs = new GasStation();
+		double lon = 8.050702;
+		gs.setLon(lon);
+		double result = gs.getLon();
+		
+		assertEquals("getLon() fails", lon, result, 0);
+	}
+	
+	@Test
+	public void testSetDieselPrice() {
+		
+		GasStation gs = new GasStation();
+		double dieselPrice = 1.50;
+		gs.setDieselPrice(dieselPrice);
+		 
+		assertEquals("setDieselPrice() fails", dieselPrice, gs.getDieselPrice(), 0);
+		
+	}
+	
+	@Test
+	public void testGetDieselPrice() {
+		
+		GasStation gs = new GasStation();
+		double dieselPrice = 1.50;
+		gs.setDieselPrice(dieselPrice);;
+		double result = gs.getDieselPrice();
+		
+		assertEquals("getDieselPrice() fails", dieselPrice, result, 0);
+	}
+	
+	@Test
+	public void testSetSuperPrice() {
+		
+		GasStation gs = new GasStation();
+		double superPrice = 1.50;
+		gs.setSuperPrice(superPrice);
+		 
+		assertEquals("setSuperPrice() fails", superPrice, gs.getSuperPrice(), 0);
+		
+	}
+	
+	@Test
+	public void testGetSuperPrice() {
+		
+		GasStation gs = new GasStation();
+		double superPrice = 1.50;
+		gs.setSuperPrice(superPrice);;
+		double result = gs.getSuperPrice();
+		
+		assertEquals("getSuperPrice() fails", superPrice, result, 0);
+	}
+	
+	@Test
+	public void testSetSuperPlusPrice() {
+		
+		GasStation gs = new GasStation();
+		double superPlusPrice = 1.50;
+		gs.setSuperPlusPrice(superPlusPrice);
+		 
+		assertEquals("setSuperPlusPrice() fails", superPlusPrice, gs.getSuperPlusPrice(), 0);
+		
+	}
+	
+	@Test
+	public void testGetSuperPlusPrice() {
+		
+		GasStation gs = new GasStation();
+		double superPlusPrice = 1.50;
+		gs.setSuperPlusPrice(superPlusPrice);;
+		double result = gs.getSuperPlusPrice();
+		
+		assertEquals("getSuperPlusPrice() fails", superPlusPrice, result, 0);
+	}
+	
+	@Test
+	public void testSetGasPrice() {
+		
+		GasStation gs = new GasStation();
+		double gasPrice = 1.50;
+		gs.setGasPrice(gasPrice);
+		 
+		assertEquals("setGasPrice() fails", gasPrice, gs.getGasPrice(), 0);
+		
+	}
+	
+	@Test
+	public void testGetGasPrice() {
+		
+		GasStation gs = new GasStation();
+		double gasPrice = 1.50;
+		gs.setGasPrice(gasPrice);;
+		double result = gs.getGasPrice();
+		
+		assertEquals("getGasPrice() fails", gasPrice, result, 0);
+	}
+	
+	@Test
+	public void testSetMethanePrice() {
+		
+		GasStation gs = new GasStation();
+		double methanePrice = 1.50;
+		gs.setMethanePrice(methanePrice);
+		 
+		assertEquals("setMethanePrice() fails", methanePrice, gs.getMethanePrice(), 0);
+		
+	}
+	
+	@Test
+	public void testGetMethanePrice() {
+		
+		GasStation gs = new GasStation();
+		double methanePrice = 1.50;
+		gs.setMethanePrice(methanePrice);;
+		double result = gs.getMethanePrice();
+		
+		assertEquals("getMethanePrice() fails", methanePrice, result, 0);
+	}
+	
+	@Test
+	public void testSetReportUser() {
+		
+		GasStation gs = new GasStation();
+		Integer reportUser = 10;
+		gs.setReportUser(reportUser);
+		
+		assertTrue("setReportUser() fails", reportUser.equals(gs.getReportUser()));
+	}
+	
+	@Test
+	public void testGetReportUser() {
+		GasStation gs = new GasStation();
+		Integer reportUser = 10;
+		gs.setReportUser(reportUser);
+		Integer result = gs.getReportUser();
+		
+		assertTrue("getReportUser() fails", result.equals(reportUser));
+	}
+	
+	@Test
+	public void testSetReportTimestamp() {
+		
+		GasStation gs = new GasStation();
+		String reportTimestamp = "2020/05/17-18:30:17";
+		gs.setReportTimestamp(reportTimestamp);
+		
+		assertEquals("setRepotTimestamp() fails", reportTimestamp, gs.getReportTimestamp());
+	}
+	
+	@Test
+	public void testGetReportTimestamp() {
+		
+		GasStation gs = new GasStation();
+		String reportTimestamp = "2020/05/17-18:30:17";
+		gs.setReportTimestamp(reportTimestamp);
+		String result = gs.getReportTimestamp();
+		
+		assertEquals("getReportTimestamp() fails", reportTimestamp, result);
+		
+	}
+	
+	@Test
+	public void testSetReportDependality() {
+		
+		GasStation gs = new GasStation();
+		double reportDependability = 3.0;
+		gs.setReportDependability(reportDependability);
+		 
+		assertEquals("setReportDependability() fails", reportDependability, gs.getReportDependability(), 0);
+		
+	}
+	
+	@Test
+	public void testGetReportDependability() {
+		
+		GasStation gs = new GasStation();
+		double reportDependability = 3.0;
+		gs.setReportDependability(reportDependability);;
+		double result = gs.getReportDependability();
+		
+		assertEquals("getReportDependability() fails", reportDependability, result, 0);
+	}
+	
+	@Test
+	public void testGasStationConstructor() {
+		final String gasStationName = "testName";
+		final String gasStationAddress= "testAddress";
+		final boolean hasDiesel = true;
+		final boolean hasSuper=false;
+		final boolean hasSuperPlus=false;
+		final boolean hasGas=true;
+		final boolean hasMethane=true;
+		final String carSharing="Enjoy"; 
+		final double lat=1.23;
+		final double lon=3.34; 
+		final double dieselPrice=1.23; 
+		final double superPrice=1.34; 
+		final double superPlusPrice=1.45; 
+		final double gasPrice=1.56; 
+		final double methanePrice=1.67;
+		final Integer reportUser=4; 
+		final String reportTimestamp="17/05/2020-21:34:45"; 
+		final double reportDependability=4.0;
+		
+		GasStation gs = new GasStation(gasStationName, gasStationAddress,  hasDiesel,  hasSuper,  hasSuperPlus,  hasGas,  hasMethane,  carSharing,  lat,  lon,  dieselPrice,  superPrice,  superPlusPrice,  gasPrice,  methanePrice,  reportUser,  reportTimestamp,  reportDependability);
+		
+		assertEquals(gasStationName, gs.getGasStationName());
+		assertEquals(gasStationAddress, gs.getGasStationAddress());
+		assertEquals(hasDiesel, gs.getHasDiesel());
+		assertEquals(hasSuper, gs.getHasSuper());
+		assertEquals(hasSuperPlus, gs.getHasSuperPlus());
+		assertEquals(hasGas, gs.getHasGas());
+		assertEquals(hasMethane, gs.getHasMethane());
+		assertEquals(carSharing, gs.getCarSharing());
+		assertEquals(lat, gs.getLat(),0);
+		assertEquals(lon, gs.getLon(),0);
+		assertEquals(dieselPrice, gs.getDieselPrice(),0);
+		assertEquals(superPrice, gs.getSuperPrice(),0);
+		assertEquals(superPlusPrice, gs.getSuperPlusPrice(),0);
+		assertEquals(gasPrice, gs.getGasPrice(),0);
+		assertEquals(methanePrice, gs.getMethanePrice(),0);
+		assertTrue(reportUser.equals(gs.getReportUser()));
+		assertEquals(reportTimestamp, gs.getReportTimestamp());
+		assertEquals(reportDependability, gs.getReportDependability(),0);
+	}
+
 }

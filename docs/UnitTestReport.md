@@ -30,6 +30,221 @@ However, for the scope of this document we chose specific methods per class to t
 
 
 
+ ### **Class *User* - method *setUserId(Integer userId)***
+
+**Criteria for method setUserId(Integer userId):**
+	
+ - Type of userId
+ - Range of userId
+
+**Predicates for method setUserId(Integer userId):**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| Type of userId |     Integer      |
+|                |     Others      |
+|    Range of userId  |     >=-32768 and <=32767     |
+|          |     > 32767      |
+|          |    < -32768      |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|   Type of userId   |   None   |
+|     Range of userId   |  -32768, -32769, -32767, 32767, 32768, 32766  |
+
+**Combination of predicates**:
+
+| Type of userId | Range of userId | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|-------|
+| Integer | >=-32768 and <=32767 | Valid | User user = new User(); <br/> user.setUserId(5); | it.polito.ezgas.UserTest.testSetUserId() |
+| | > 32767 | Invalid | User user = new User(); <br/> user.setUserId(45000) -> error | it.polito.ezgas.UserTest.testSetUserId() |
+| | < -32768 | Invalid | User user = new User(); <br/> user.setUserId(-45000) -> error | it.polito.ezgas.UserTest.testSetUserId() |
+| Others | - | Invalid | User user = new User(); <br/> user.setUserId("abcde") -> error | it.polito.ezgas.UserTest.testSetUserId() |
+
+
+
+### **Class *User* - method *getUserId()***
+
+**Criteria for method *getUserId()*:**
+
+ - Type of output
+ 
+**Predicates for method *getUserId()*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| Type of output | Integer |
+|| Others |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|   Type of output  |   None   |
+
+**Combination of predicates**:
+
+| Type of output | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|
+| Integer | Valid | User user = new User(); <br/> user.setUserId(5); <br/> Integer id = user.getUserId(); | it.polito.ezgas.UserTest.testGetUserId() |
+| Other | Invalid | User user = new User(); <br/> user.setUserId(5); <br/> Integer id = user.getUserId() -> error (if the type of output is not Integer) | it.polito.ezgas.UserTest.testGetUserId() |
+
+
+
+### **Class *User* - method *setAdmin(Boolean admin)***
+
+**Criteria for method *setAdmin(Boolean admin)*:**
+	
+ - Type of admin
+
+**Predicates for method *setAdmin(Boolean admin)*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| Types of admin | Boolean |
+|          | Others |
+
+**Boundaries**:
+
+| Criteria | Boundary values|
+| -------- | ---------------|
+| Type of admin | None |
+
+**Combination of predicates**:
+
+| Type of admin | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|
+Boolean | Valid | User user = new User(); <br/> user.setAdmin(true); | it.polito.ezgas.UserTest.testSetAdmin()|
+Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error | it.polito.ezgas.UserTest.testSetAdmin() |
+
+
+
+### **Class *User* - method *getAdmin()***
+
+**Criteria for method *getAdmin()*:**
+	
+ - Type of output
+
+**Predicates for method *getAdmin()*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| Type of output | Boolean |
+|          | Others |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+| Type of output | None |
+
+**Combination of predicates**:
+
+| Types of output | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|
+| Boolean | Valid | User user = new User(); <br/> user.setAdmin(true); <br/> Boolean a = user.getAdmin(); |it.polito.ezgas.UserTest.testGetAdmin()|
+| Others | Invalid | User user = new User(); <br/> user.setAdmin(true); <br/> Boolean a = user.getAdmin() -> error (if the type of output is not Boolean) | it.polito.ezgas.UserTest.testGetAdmin() |
+
+
+
+### **Class *User* - method *setUserName(String userName)***
+
+**Criteria for method setUserName(String userName):**
+	
+ - Type of userName
+ - Length of userName
+
+**Predicates for method setUserName(String userName):**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| Type of userName |     String      |
+|                |     Others      |
+| Length of userName | >= 0 and <= maxValue |
+|                    | > maxValue |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|   Type of userName   |   None   |
+| Length of userName | 0, maxValue, maxValue+1 |
+
+
+**Combination of predicates**:
+
+| Type of userName | Length of userName | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|-------|
+| String | >=0 and <= maxValue |  Valid | User user = new User(); <br/> user.setUserName("Mario"); | it.polito.ezgas.UserTest.testSetUserName() |
+|  | > maxValue |  Invalid | User user = new User(); <br/> user.setUserName("abcde...") -> error (because I try to set a string whose length is > maxValue) | it.polito.ezgas.UserTest.testSetUserName() |
+| Others | - | Invalid |  User user = new User(); <br/> user.setUserName(5)  -> error | it.polito.ezgas.UserTest.testSetUserName() |
+
+
+
+### **Class *User* - method *getUserName()***
+
+**Criteria for method getUserName():**
+	
+ - Type of output
+
+**Predicates for method getUserName():**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| Type of output |     String      |
+|                |     Others      |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|   Type of output   |   None   |
+
+**Combination of predicates**:
+
+
+| Type of output |  Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|-------|
+| String |  Valid | User user = new User(); <br/> user.setUserName("Mario"); <br/> String name = user.getUserName(); | it.polito.ezgas.UserTest.testGetUserName() |
+| Others |  Invalid | User user = new User(); <br/> user.setUserName("Mario"); <br/> String name = user.getUserName() -> error (if the type of output is not String) | it.polito.ezgas.UserTest.testGetUserName() |
+
+
+
+ ### **Class *User* - method *User(String userName, String password, String email, Integer reputation)***
+
+**Criteria for method *User(String userName, String password, String email, Integer reputation)*:**
+	
+ - Number of parameters
+ - Types of input sequence
+
+**Predicates for method *User(String userName, String password, String email, Integer reputation)*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| Number of parameters | 4 |
+|          | Different from 4 |
+| Types of input sequence | String, String, String, Integer |
+|          | Other combinations |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+| Number of parameters | None |
+| Types of input sequence | None |
+
+**Combination of predicates**:
+
+| Number of parameters | Types of input sequence | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|-------|
+| 4 | String, String, String, Integer | Valid | User user = new User("Mario", "Rossi", "mario@ezgas.com", 5); | it.polito.ezgas.UserTest.testUserConstructor() |
+|| Other combinations | Invalid | User user = new User(5, "Mario", "Rossi", "mario@ezgas.com") -> error | it.polito.ezgas.UserTest.testUserConstructor() |
+| Different from 4 | - | Invalid | User user = new User(5) -> error | it.polito.ezgas.UserTest.testUserConstructor() |
+
+
+
 ### **Class *GasStation* - method *setGasStationId( Integer gasStationId )***
 
 **Criteria for method *setGasStationId(Integer gasStationId)*:**
@@ -226,7 +441,7 @@ However, for the scope of this document we chose specific methods per class to t
 | -------- | --------- |
 | Type of dieselPrice |     Double      |
 |                |     Others      |
-|    Range    |     >=minDouble and <=maxDouble     |
+|    Range    |     >= minDouble and <= maxDouble     |
 |          |     > maxDouble      |
 |          |    < minDouble      |
 
@@ -242,19 +457,18 @@ However, for the scope of this document we chose specific methods per class to t
 
 | Type of dieselPrice | Range | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|-------|
-| Double |  >=minDouble and <=maxDouble  | Valid | GasStation gasStation = new GasStation(); <br/> gasStation.setDieselPrice(1.678); | it.polito.ezgas.GasStationTest.testSetDieselPrice() |
+| Double |  >= minDouble and <= maxDouble  | Valid | GasStation gasStation = new GasStation(); <br/> gasStation.setDieselPrice(1.678); | it.polito.ezgas.GasStationTest.testSetDieselPrice() |
 | |  > maxDouble | Invalid |  GasStation gasStation = new GasStation(); <br/> gasStation.setDieselPrice(maxDouble+1) -> error | it.polito.ezgas.GasStationTest.testSetDieselPrice() |
 | | < minDouble  | Invalid |  GasStation gasStation = new GasStation(); <br/> gasStation.setDieselPrice(minDouble-1) -> error | it.polito.ezgas.GasStationTest.testSetDieselPrice() |
 | Others | - | Invalid | GasStation gasStation = new GasStation(); <br/> gasStation.setDieselPrice("too much") -> error | it.polito.ezgas.GasStationTest.testSetDieselPrice() |
 
-### **Class *GasStation* - method *getDieselPrice()***
 
+
+### **Class *GasStation* - method *getDieselPrice()***
 
 **Criteria for method getDieselPrice():**
 	
  - Type of output
-
-
 
 **Predicates for method getDieselPrice():**
 
@@ -263,13 +477,11 @@ However, for the scope of this document we chose specific methods per class to t
 | Type of output |     Double      |
 |                |     Others      |
 
-
 **Boundaries**:
 
 | Criteria | Boundary values |
 | -------- | --------------- |
 |   Type of output  |   None   |
-
 
 **Combination of predicates**:
 
@@ -350,6 +562,7 @@ However, for the scope of this document we chose specific methods per class to t
     <Add here the screenshot report of the statement and branch coverage obtained using
     the Eclemma tool. >
 
+![](./eclemma_screenshot.png)
 
 ### Loop coverage analysis
 

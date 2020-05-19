@@ -19,7 +19,7 @@ Version: 1
 ## Note from Authors
 
 In it.polito.ezgas.GasStationTest and it.polito.ezgas.UserTest you can find tests for all setters, getters and Constructors.
-However, for the scope of this document we chose specific methods per class to test. Specifically, for each class we tested the Constructor and one getter and setter per type of field (getter ad setter for a field of type Integer, getter and setter for a field of type Boolean, etc.).</br>
+However, for the scope of this document we chose specific methods per class to test. Specifically, for each class we tested the Constructor and one getter and setter per type of field (getter and setter for a field of type Integer, getter and setter for a field of type Boolean, etc.).</br>
 Note that invalid test cases cannot actually be tested in the code because the system reports errors just at compile time.
 
     <Define here criteria, predicates and the combination of predicates for each function of each class.

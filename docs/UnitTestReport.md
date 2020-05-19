@@ -19,7 +19,8 @@ Version: 1
 ## Note from Authors
 
 In it.polito.ezgas.GasStationTest and it.polito.ezgas.UserTest you can find tests for all setters, getters and Constructors.
-However, for the scope of this document we chose specific methods per class to test. Specifically, for each class we tested the Constructor and one getter and setter per type of field (getter ad setter for a field of type Integer, getter and setter for a field of type Boolean, etc.).
+However, for the scope of this document we chose specific methods per class to test. Specifically, for each class we tested the Constructor and one getter and setter per type of field (getter ad setter for a field of type Integer, getter and setter for a field of type Boolean, etc.).</br>
+Note that invalid test cases cannot actually be tested in the code because the system reports errors just at compile time.
 
     <Define here criteria, predicates and the combination of predicates for each function of each class.
     Define test cases to cover all equivalence classes and boundary conditions.
@@ -59,9 +60,9 @@ However, for the scope of this document we chose specific methods per class to t
 | Type of userId | Range of userId | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|-------|
 | Integer | >=-32768 and <=32767 | Valid | User user = new User(); <br/> user.setUserId(5); | it.polito.ezgas.UserTest.testSetUserId() |
-| | > 32767 | Invalid | User user = new User(); <br/> user.setUserId(45000) -> error | it.polito.ezgas.UserTest.testSetUserId() |
-| | < -32768 | Invalid | User user = new User(); <br/> user.setUserId(-45000) -> error | it.polito.ezgas.UserTest.testSetUserId() |
-| Others | - | Invalid | User user = new User(); <br/> user.setUserId("abcde") -> error | it.polito.ezgas.UserTest.testSetUserId() |
+| | > 32767 | Invalid | User user = new User(); <br/> user.setUserId(45000) -> error |  |
+| | < -32768 | Invalid | User user = new User(); <br/> user.setUserId(-45000) -> error |  |
+| Others | - | Invalid | User user = new User(); <br/> user.setUserId("abcde") -> error |  |
 
 
 
@@ -89,7 +90,7 @@ However, for the scope of this document we chose specific methods per class to t
 | Type of output | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|
 | Integer | Valid | User user = new User(); <br/> user.setUserId(5); <br/> Integer id = user.getUserId(); | it.polito.ezgas.UserTest.testGetUserId() |
-| Other | Invalid | User user = new User(); <br/> user.setUserId(5); <br/> Integer id = user.getUserId() -> error (if the type of output is not Integer) | it.polito.ezgas.UserTest.testGetUserId() |
+| Others | Invalid | User user = new User(); <br/> user.setUserId(5); <br/> Integer id = user.getUserId() -> error (if the type of output is not Integer) |  |
 
 
 
@@ -117,7 +118,7 @@ However, for the scope of this document we chose specific methods per class to t
 | Type of admin | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|
 Boolean | Valid | User user = new User(); <br/> user.setAdmin(true); | it.polito.ezgas.UserTest.testSetAdmin()|
-Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error | it.polito.ezgas.UserTest.testSetAdmin() |
+Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error |  |
 
 
 
@@ -145,7 +146,7 @@ Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error | it.
 | Types of output | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|
 | Boolean | Valid | User user = new User(); <br/> user.setAdmin(true); <br/> Boolean a = user.getAdmin(); |it.polito.ezgas.UserTest.testGetAdmin()|
-| Others | Invalid | User user = new User(); <br/> user.setAdmin(true); <br/> Boolean a = user.getAdmin() -> error (if the type of output is not Boolean) | it.polito.ezgas.UserTest.testGetAdmin() |
+| Others | Invalid | User user = new User(); <br/> user.setAdmin(true); <br/> Boolean a = user.getAdmin() -> error (if the type of output is not Boolean) |  |
 
 
 
@@ -178,8 +179,8 @@ Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error | it.
 | Type of userName | Length of userName | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|-------|
 | String | >=0 and <= maxValue |  Valid | User user = new User(); <br/> user.setUserName("Mario"); | it.polito.ezgas.UserTest.testSetUserName() |
-|  | > maxValue |  Invalid | User user = new User(); <br/> user.setUserName("abcde...") -> error (because I try to set a string whose length is > maxValue) | it.polito.ezgas.UserTest.testSetUserName() |
-| Others | - | Invalid |  User user = new User(); <br/> user.setUserName(5)  -> error | it.polito.ezgas.UserTest.testSetUserName() |
+|  | > maxValue |  Invalid | User user = new User(); <br/> user.setUserName("abcde...") -> error (because I try to set a string whose length is > maxValue) |  |
+| Others | - | Invalid |  User user = new User(); <br/> user.setUserName(5)  -> error |  |
 
 
 
@@ -208,7 +209,7 @@ Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error | it.
 | Type of output |  Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|-------|
 | String |  Valid | User user = new User(); <br/> user.setUserName("Mario"); <br/> String name = user.getUserName(); | it.polito.ezgas.UserTest.testGetUserName() |
-| Others |  Invalid | User user = new User(); <br/> user.setUserName("Mario"); <br/> String name = user.getUserName() -> error (if the type of output is not String) | it.polito.ezgas.UserTest.testGetUserName() |
+| Others |  Invalid | User user = new User(); <br/> user.setUserName("Mario"); <br/> String name = user.getUserName() -> error (if the type of output is not String) |  |
 
 
 
@@ -240,8 +241,8 @@ Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error | it.
 | Number of parameters | Types of input sequence | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|-------|
 | 4 | String, String, String, Integer | Valid | User user = new User("Mario", "Rossi", "mario@ezgas.com", 5); | it.polito.ezgas.UserTest.testUserConstructor() |
-|| Other combinations | Invalid | User user = new User(5, "Mario", "Rossi", "mario@ezgas.com") -> error | it.polito.ezgas.UserTest.testUserConstructor() |
-| Different from 4 | - | Invalid | User user = new User(5) -> error | it.polito.ezgas.UserTest.testUserConstructor() |
+|| Other combinations | Invalid | User user = new User(5, "Mario", "Rossi", "mario@ezgas.com") -> error |  |
+| Different from 4 | - | Invalid | User user = new User(5) -> error |  |
 
 
 
@@ -274,9 +275,9 @@ Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error | it.
 | Type of gasStationId | Range of gasStationId | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|-------|
 | Integer | >=-32768 and <=32767 | Valid | GasStation gs = new GasStation(); <br/> gs.setGasStationId(5); | it.polito.ezgas.GasStationTest.testSetGasStationId() |
-| | > 32767 | Invalid | GasStation gs = new GasStation(); <br/> gs.setGasStationId(45000) -> error | it.polito.ezgas.GasStationTest.testSetGasStationId() |
-| | < -32768 | Invalid | GasStation gs = new GasStation(); <br/> gs.setGasStationId(-45000) -> error | it.polito.ezgas.GasStationTest.testSetGasStationId() |
-| Others | - | Invalid | GasStation gs = new GasStation(); <br/> gs.setGasStationId("abc") -> error | it.polito.ezgas.GasStationTest.testSetGasStationId() |
+| | > 32767 | Invalid | GasStation gs = new GasStation(); <br/> gs.setGasStationId(45000) -> error |  |
+| | < -32768 | Invalid | GasStation gs = new GasStation(); <br/> gs.setGasStationId(-45000) -> error |  |
+| Others | - | Invalid | GasStation gs = new GasStation(); <br/> gs.setGasStationId("abc") -> error |  |
 
 
 
@@ -304,7 +305,7 @@ Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error | it.
 | Type of output | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|
 | Integer | Valid | GasStation gs = new GasStation(); <br/> gs.setGasStationId(); <br/> Integer id = gs.getGasStationId(); | it.polito.ezgas.GasStationTest.testGetGasStationId() |
-| Other | Invalid | GasStation gs = new GasStation(); <br/> gs.setGasStationId(); <br/> Integer id = gs.getGasStationId();-> error (if the type of output is not Integer) | it.polito.ezgas.GasStationTest.testGetGasStationId() |
+| Other | Invalid | GasStation gs = new GasStation(); <br/> gs.setGasStationId(); <br/> Integer id = gs.getGasStationId();-> error (if the type of output is not Integer) |  |
 
 
 
@@ -339,8 +340,8 @@ Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error | it.
 | Type of gasStationName | Length of gasStationName | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|-------|
 | String | >= 0 and <= maxValue | Valid | GasStation gasStation = new GasStation(); <br/> gasStation.setGasStationName("GasStationTest"); | it.polito.ezgas.GasStationTest.testSetGasStationName() |
-| String | > maxValue | Invalid | GasStation gasStation = new GasStation(); <br/> gasStation.setGasStationName(("abcde...") -> error (because I try to set a string whose length is > maxValue) | it.polito.ezgas.GasStationTest.testSetGasStationName() |
-| Others | - | Invalid |  GasStation gasStation = new GasStation(); <br/> gasStation.setGasStationName(23.5) -> error | it.polito.ezgas.GasStationTest.testSetGasStationName() |
+| String | > maxValue | Invalid | GasStation gasStation = new GasStation(); <br/> gasStation.setGasStationName(("abcde...") -> error (because I try to set a string whose length is > maxValue) |  |
+| Others | - | Invalid |  GasStation gasStation = new GasStation(); <br/> gasStation.setGasStationName(23.5) -> error |  |
 
 
 
@@ -369,7 +370,7 @@ Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error | it.
 | Type of output |  Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|-------|
 | String |  Valid | GasStation gasStation = new GasStation(); <br/> gasStation.setGasStationName("GasStationTest"); <br/> String gs = gasStation.getGasStationName(); | it.polito.ezgas.GasStationTest.testGetGasStationName() |
-| Others |  Invalid |  GasStation gasStation = new GasStation(); <br/> gasStation.setGasStationName("GasStationTest"); <br/> String gs = gasStation.getGasStationName() -> error (if the type of output is not String) | it.polito.ezgas.GasStationTest.testGetGasStationName() |
+| Others |  Invalid |  GasStation gasStation = new GasStation(); <br/> gasStation.setGasStationName("GasStationTest"); <br/> String gs = gasStation.getGasStationName() -> error (if the type of output is not String) |  |
 
 
 
@@ -397,7 +398,7 @@ Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error | it.
 | Type of hasDiesel | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|
 | Boolean | Valid | GasStation gs = new GasStation(); <br/>gs.setHasDiesel(true); | it.polito.ezgas.GasStationTest.testSetHasDiesel()|
-| Others | Invalid | GasStation gs = new GasStation(); <br/> gs.setHasDiesel(5) -> error | it.polito.ezgas.GasStationTest.testSetHasDiesel()
+| Others | Invalid | GasStation gs = new GasStation(); <br/> gs.setHasDiesel(5) -> error |  |
 
 
 ### **Class *GasStation* - method *getHasDiesel()***
@@ -424,7 +425,7 @@ Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error | it.
 | Types of output | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|
 | Boolean | Valid | GasStation gs = new GasStation(); <br/> gs.setHasDiesel(true); <br/> Boolean bool = gs.getHasDiesel();|it.polito.ezgas.GasStationTest.testGetHasDiesel()|
-| Other | Invalid | GasStation gs = new GasStation(); <br/> gs.setHasDiesel(true); <br/> Boolean bool = gs.getHasDiesel() -> error (if the type of output is not Boolean) | it.polito.ezgas.GasStationTest.testGetHasDiesel() |
+| Other | Invalid | GasStation gs = new GasStation(); <br/> gs.setHasDiesel(true); <br/> Boolean bool = gs.getHasDiesel() -> error (if the type of output is not Boolean) |  |
 
 
 
@@ -458,9 +459,9 @@ Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error | it.
 | Type of dieselPrice | Range | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|-------|
 | Double |  >= minDouble and <= maxDouble  | Valid | GasStation gasStation = new GasStation(); <br/> gasStation.setDieselPrice(1.678); | it.polito.ezgas.GasStationTest.testSetDieselPrice() |
-| |  > maxDouble | Invalid |  GasStation gasStation = new GasStation(); <br/> gasStation.setDieselPrice(maxDouble+1) -> error | it.polito.ezgas.GasStationTest.testSetDieselPrice() |
-| | < minDouble  | Invalid |  GasStation gasStation = new GasStation(); <br/> gasStation.setDieselPrice(minDouble-1) -> error | it.polito.ezgas.GasStationTest.testSetDieselPrice() |
-| Others | - | Invalid | GasStation gasStation = new GasStation(); <br/> gasStation.setDieselPrice("too much") -> error | it.polito.ezgas.GasStationTest.testSetDieselPrice() |
+| |  > maxDouble | Invalid |  GasStation gasStation = new GasStation(); <br/> gasStation.setDieselPrice(maxDouble+1) -> error |  |
+| | < minDouble  | Invalid |  GasStation gasStation = new GasStation(); <br/> gasStation.setDieselPrice(minDouble-1) -> error |  |
+| Others | - | Invalid | GasStation gasStation = new GasStation(); <br/> gasStation.setDieselPrice("too much") -> error |  |
 
 
 
@@ -489,7 +490,7 @@ Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error | it.
 | Type of output | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|-------|
 | Double |   Valid | GasStation gasStation = new GasStation(); <br/> gasStation.setDieselPrice(1.678); <br/> Double price = gasStation.getDieselPrice() | it.polito.ezgas.GasStationTest.testGetDieselPrice() |
-| Others | Invalid | GasStation gasStation = new GasStation(); <br/> gasStation.setDieselPrice(1.678);  <br/> Double dieselPrice = gasStation.getDieselPrice() -> error (if the type of output is not Double) | it.polito.ezgas.GasStationTest.testGetDieselPrice() |
+| Others | Invalid | GasStation gasStation = new GasStation(); <br/> gasStation.setDieselPrice(1.678);  <br/> Double dieselPrice = gasStation.getDieselPrice() -> error (if the type of output is not Double) |  |
 
 
 
@@ -521,8 +522,8 @@ Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error | it.
 | Number of parameters | Types of input sequence | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|-------|-------|
 |18|String, String, boolean, boolean, boolean, boolean, boolean, String, double, double, double, double, double, double, double, Integer, String, double|Valid|Gas Station gs = new GasStation("Esso", "Viale Macallè 15 Piemont Italy", true, true, false, true, true, "Enjoy", 45.5517866, 8.050702, 1.50, 1.30, 0, 1.30, 1.20, 10, "2020/05/17-18:30:17", 5) |it.polito.ezgas.GasStationTest.testGasStationConstructor()||
-||Other combinations|Invalid|Gas Station gs = new GasStation(*5*, "Viale Macallè 15 Piemont Italy", true, true, false, true, true, "Enjoy", 45.5517866, 8.050702, 1.50, 1.30, 0, 1.30, 1.20, 10, "2020/05/17-18:30:17", 5) -> error | it.polito.ezgas.GasStationTest.testGasStationConstructor() |
-|Different from 18 | - | Invalid | GasStation gs = new GasStation(5) -> error | it.polito.ezgas.GasStationTest.testGasStationConstructor() |
+||Other combinations|Invalid|Gas Station gs = new GasStation(*5*, "Viale Macallè 15 Piemont Italy", true, true, false, true, true, "Enjoy", 45.5517866, 8.050702, 1.50, 1.30, 0, 1.30, 1.20, 10, "2020/05/17-18:30:17", 5) -> error |  |
+|Different from 18 | - | Invalid | GasStation gs = new GasStation(5) -> error |  |
 
 
 

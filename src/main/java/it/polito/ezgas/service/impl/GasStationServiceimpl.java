@@ -55,14 +55,14 @@ public class GasStationServiceimpl implements GasStationService {
 		}
 		gasStation.setGasStationName(gasStationDto.getGasStationName());
 		gasStation.setGasStationAddress(gasStationDto.getGasStationAddress());
-		if (gasStationDto.getLat() > -90 || gasStationDto.getLat() < 90)
+		if (gasStationDto.getLat() > -90 && gasStationDto.getLat() < 90)
 			gasStation.setLat(gasStationDto.getLat());
 		else
-			throw new GPSDataException("Latitude value cannot be negative");
-		if (gasStationDto.getLon() > -180 || gasStationDto.getLon() < 180)
+			throw new GPSDataException("Invalid latitude value");
+		if (gasStationDto.getLon() > -180 && gasStationDto.getLon() < 180)
 			gasStation.setLon(gasStationDto.getLon());
 		else
-			throw new GPSDataException("Longitude value cannot be negative");
+			throw new GPSDataException("Invalid longitude value");
 		gasStation.setCarSharing(gasStationDto.getCarSharing());
 		gasStation.setHasDiesel(gasStationDto.getHasDiesel());
 		gasStation.setHasSuper(gasStationDto.getHasSuper());
@@ -249,15 +249,15 @@ public class GasStationServiceimpl implements GasStationService {
 			double gasPrice, double methanePrice, Integer userId)
 			throws InvalidGasStationException, PriceException, InvalidUserException {
 		if(dieselPrice==-1)
-			dieselPrice=0;
+			dieselPrice=5;
 		if(superPrice==-1)
-			superPrice=0;
+			superPrice=5;
 		if(superPlusPrice==-1)
-			superPlusPrice=0;
+			superPlusPrice=5;
 		if(gasPrice==-1)
-			gasPrice=0;
+			gasPrice=5;
 		if(methanePrice==-1)
-			methanePrice=0;
+			methanePrice=5;
 		if(dieselPrice <= 0 || superPrice <= 0 || superPlusPrice <= 0 || gasPrice <= 0 || methanePrice <= 0)
 			throw new PriceException("Price cannot be negative or null");
 		if(userId > 0) {

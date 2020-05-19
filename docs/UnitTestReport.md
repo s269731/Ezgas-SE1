@@ -19,7 +19,7 @@ Version: 1
 ## Note from Authors
 
 In it.polito.ezgas.GasStationTest and it.polito.ezgas.UserTest you can find tests for all setters, getters and Constructors.
-However, for the scope of this document we chose specific methods per class to test. Specifically, for each class we tested the Constructor and one getter and setter per type of field (getter and setter for a field of type Integer, getter and setter for a field of type Boolean, etc.).</br>
+However, for the scope of this document we chose specific methods per class to test. Specifically, for each class we tested the Constructor and one getter and setter per type of field (getter ad setter for a field of type Integer, getter and setter for a field of type Boolean, etc.).</br>
 Note that invalid test cases cannot actually be tested in the code because the system reports errors just at compile time.
 
     <Define here criteria, predicates and the combination of predicates for each function of each class.
@@ -207,7 +207,7 @@ Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error |  |
 
 
 | Type of output |  Valid / Invalid | Description of the test case | JUnit test case |
-|-------|-------|-------|-------|-------|
+|-------|-------|-------|-------|
 | String |  Valid | User user = new User(); <br/> user.setUserName("Mario"); <br/> String name = user.getUserName(); | it.polito.ezgas.UserTest.testGetUserName() |
 | Others |  Invalid | User user = new User(); <br/> user.setUserName("Mario"); <br/> String name = user.getUserName() -> error (if the type of output is not String) |  |
 
@@ -368,7 +368,7 @@ Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error |  |
 **Combination of predicates**:
 
 | Type of output |  Valid / Invalid | Description of the test case | JUnit test case |
-|-------|-------|-------|-------|-------|
+|-------|-------|-------|-------|
 | String |  Valid | GasStation gasStation = new GasStation(); <br/> gasStation.setGasStationName("GasStationTest"); <br/> String gs = gasStation.getGasStationName(); | it.polito.ezgas.GasStationTest.testGetGasStationName() |
 | Others |  Invalid |  GasStation gasStation = new GasStation(); <br/> gasStation.setGasStationName("GasStationTest"); <br/> String gs = gasStation.getGasStationName() -> error (if the type of output is not String) |  |
 
@@ -442,7 +442,7 @@ Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error |  |
 | -------- | --------- |
 | Type of dieselPrice |     Double      |
 |                |     Others      |
-|    Range    |     >= minDouble and <= maxDouble     |
+|    Range of dieselPrice  |     >= minDouble and <= maxDouble     |
 |          |     > maxDouble      |
 |          |    < minDouble      |
 
@@ -456,7 +456,7 @@ Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error |  |
 **Combination of predicates**:
 
 
-| Type of dieselPrice | Range | Valid / Invalid | Description of the test case | JUnit test case |
+| Type of dieselPrice | Range of dieselPrice | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|-------|
 | Double |  >= minDouble and <= maxDouble  | Valid | GasStation gasStation = new GasStation(); <br/> gasStation.setDieselPrice(1.678); | it.polito.ezgas.GasStationTest.testSetDieselPrice() |
 | |  > maxDouble | Invalid |  GasStation gasStation = new GasStation(); <br/> gasStation.setDieselPrice(maxDouble+1) -> error |  |
@@ -488,7 +488,7 @@ Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error |  |
 
 
 | Type of output | Valid / Invalid | Description of the test case | JUnit test case |
-|-------|-------|-------|-------|-------|
+|-------|-------|-------|-------|
 | Double |   Valid | GasStation gasStation = new GasStation(); <br/> gasStation.setDieselPrice(1.678); <br/> Double price = gasStation.getDieselPrice() | it.polito.ezgas.GasStationTest.testGetDieselPrice() |
 | Others | Invalid | GasStation gasStation = new GasStation(); <br/> gasStation.setDieselPrice(1.678);  <br/> Double dieselPrice = gasStation.getDieselPrice() -> error (if the type of output is not Double) |  |
 
@@ -520,7 +520,7 @@ Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error |  |
 **Combination of predicates**:
 
 | Number of parameters | Types of input sequence | Valid / Invalid | Description of the test case | JUnit test case |
-|-------|-------|-------|-------|-------|-------|
+|-------|-------|-------|-------|-------|
 |18|String, String, boolean, boolean, boolean, boolean, boolean, String, double, double, double, double, double, double, double, Integer, String, double|Valid|Gas Station gs = new GasStation("Esso", "Viale Macallè 15 Piemont Italy", true, true, false, true, true, "Enjoy", 45.5517866, 8.050702, 1.50, 1.30, 0, 1.30, 1.20, 10, "2020/05/17-18:30:17", 5) |it.polito.ezgas.GasStationTest.testGasStationConstructor()||
 ||Other combinations|Invalid|Gas Station gs = new GasStation(*5*, "Viale Macallè 15 Piemont Italy", true, true, false, true, true, "Enjoy", 45.5517866, 8.050702, 1.50, 1.30, 0, 1.30, 1.20, 10, "2020/05/17-18:30:17", 5) -> error |  |
 |Different from 18 | - | Invalid | GasStation gs = new GasStation(5) -> error |  |

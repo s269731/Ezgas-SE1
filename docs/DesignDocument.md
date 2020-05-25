@@ -3,9 +3,16 @@
 
 Authors: Cao Peng, Finocchiaro Loredana, Marino Matteo, Mc Mahon Shannon
 
-Date: 02/05/2020
+Date: 19/05/2020
 
-Version: 1
+Version: 2
+
+Change history
+
+| Version | Changes | 
+| ----------------- |:-----------|
+| 2 | Fixed Verification Sequence Diagrams |
+| | Added some methods in Repository interfaces and Converter classes |
 
 
 # Contents
@@ -142,7 +149,6 @@ package "it.polito.ezgas.entity" {
 
 package "it.polito.ezgas.repository" {
     interface "GasStationRepository"
-    interface "PriceReportRepository"
     interface "UserRepository"
 }
 
@@ -231,6 +237,8 @@ Contains Service classes that implement the Service Interfaces in the Service pa
 ```plantuml
 @startuml
 
+scale 1024 width
+
 package "it.polito.ezgas.entity" {
     class "GasStation"
     class "PriceReport"
@@ -264,7 +272,6 @@ package "it.polito.ezgas.converter" {
 
 package "it.polito.ezgas.repository" {
     interface "GasStationRepository"
-    interface "PriceReportRepository"
     interface "UserRepository"
 }
 
@@ -369,6 +376,7 @@ class "IdPw" {
 
 class "GasStationConverter" {
     +toGasStationDto(GasStation gasStation): GasStationDto
+    +toGasStationDto(List<GasStation> gasStations): List<GasStationDto>
 }
 
 class "PriceReportConverter" {
@@ -382,21 +390,19 @@ class "UserConverter" {
 interface "GasStationRepository" {
     +findGasStationById(Integer gasStationId): GasStation
     +findByLatBetweenAndLonBetween(Double myLat_inf, Double myLat_sup, Double myLon_inf, Double myLon_sup): List<GasStation>
-    +findByDieselTrue(): List<GasStation>
-    +findBySuperTrue(): List<GasStation>
-    +findBySuperPlusTrue(): List<GasStation>
-    +findByGasTrue(): List<GasStation>
-    +findByMethaneTrue(): List<GasStation>
-}
-
-interface "PriceReportRepository" {
-    +findPriceReportById(Integer PriceReportId): PriceReport
+    +findByDieselTrueOrderByDieselPriceAsc(): List<GasStation>
+    +findBySuperTrueOrderBySuperPriceAsc(): List<GasStation>
+    +findBySuperPlusTrueOrderBySuperPlusPriceAsc(): List<GasStation>
+    +findByGasTrueOrderByGasPriceAsc(): List<GasStation>
+    +findByMethaneTrueOrderByMethanePriceAsc(): List<GasStation>
+    +findByCarSharing(String carSharing): List<GasStation>
 }
 
 interface "UserRepository" {
     +findUserById(Integer userId): User
     +findUserByAdminTrue(): User
-    +findByUsernameAndPassword(String username, String password): User
+    +findByEmailAndPassword(String email, String password): User
+    +findByEmail(String email): User
 }
 
 class "GasStationController" {
@@ -476,10 +482,8 @@ LoginDto --> UserController
 GasStationDto --> GasStationController
 UserService -up-> UserRepository
 GasStationService -up-> GasStationRepository
-GasStationService -up-> PriceReportRepository
 User -left-> UserRepository
 GasStation -left-> GasStationRepository
-PriceReport -left-> PriceReportRepository
 
 @enduml
 ```
@@ -521,11 +525,28 @@ autonumber
 actor User
 
 GUI -> UserController: signUp()
-UserController -> GasStationService: saveUser()
+activate UserController
+UserController -> UserService: saveUser()
+deactivate UserController
+activate UserService
+note right: Note that we are considering the nominal scenario, \nin which the user is not registered to EZGas. \nWe should check whether the email is not already \npresent in the database with the findByEmail() \nmethod of UserRepository before executing the \nfollowing actions. 
+UserService -> UserEntity: setUsername()
+activate UserEntity
+UserService -> UserEntity: setEmail()
+UserService -> UserEntity: setPassword()
+UserService -> UserEntity: setAdmin()
+deactivate UserEntity
+UserService -> UserRepository: save()
+UserService -> UserConverter: toUserDto()
+UserService -> UserController: return userDto
+deactivate UserService
+
 
 @enduml
 
 ```
+
+
 ### Use case 4, UC4 - Create Gas Station 
 
 ```plantuml
@@ -535,11 +556,31 @@ autonumber
 actor Administrator
 
 GUI -> GasStationController: addGasStation()
+activate GasStationController
 GasStationController -> GasStationService: saveGasStation()
+deactivate GasStationController
+activate GasStationService
+GasStationService -> GasStationEntity: setGasStationName()
+activate GasStationEntity
+GasStationService -> GasStationEntity: setGasStationAddress()
+GasStationService -> GasStationEntity: setLon()
+GasStationService -> GasStationEntity: setLat()
+GasStationService -> GasStationEntity: setCarSharing()
+GasStationService -> GasStationEntity: setHasDiesel()
+GasStationService -> GasStationEntity: setHasSuper()
+GasStationService -> GasStationEntity: setHasSuperPlus()
+GasStationService -> GasStationEntity: setHasGas()
+GasStationService -> GasStationEntity: setHasMethane()
+deactivate GasStationEntity
+GasStationService -> GasStationRepository: save()
+GasStationService -> GasStationConverter: toGasStationDto()
+GasStationService -> GasStationController: return gasStationDto
+deactivate GasStationService
 
 @enduml
 
 ```
+
 
 ### Use case 7, UC7 - Report fuel price for a gas station
 ```plantuml
@@ -548,12 +589,28 @@ GasStationController -> GasStationService: saveGasStation()
 
 autonumber
 actor User
-GUI -> GasStationController: selectGasStation()
+GUI -> GasStationController: newReport()
+activate GasStationController
 GasStationController -> GasStationService: setGasStationReport()
+deactivate GasStationController
+activate GasStationService
+GasStationService -> GasStationRepository: findByGasStationId()
+GasStationService -> GasStationEntity: setDieselPrice()
+activate GasStationEntity
+GasStationService -> GasStationEntity: setSuperPrice()
+GasStationService -> GasStationEntity: setSuperPlusPrice()
+GasStationService -> GasStationEntity: setGasPrice()
+GasStationService -> GasStationEntity: setMethanePrice()
+GasStationService -> GasStationEntity: setReportUser()
+GasStationService -> GasStationEntity: setReportTimestamp()
+deactivate GasStationEntity
+GasStationService -> GasStationRepository: save()
+deactivate GasStationService
 
 @enduml
 
 ```
+
 
 ### Use case 8, UC8 - Obtain price of fuel for gas stations in a certain geographic area
 
@@ -562,14 +619,21 @@ GasStationController -> GasStationService: setGasStationReport()
 @startuml
 autonumber
 actor AnonymousUser
-
-GUI -> GasStationController: searchGasStation()
-GasStationController -> GasStationService:getGasStationsByProximity()
-note right: This is the nominal scenario, the other variants present in\n the requirement document can be obtained by simply \nsubstituting "getGasStationsByProximity()" with the following options: \n "getGasStationsByGasolineType()", \n"getGasStationsWithCoordinates()" \n"getGasStationsWithoutCoordinates()",\n "getGasStationByCarSharing()".
+GUI -> GasStationController: searchGasStations()
+activate GasStationController
+GasStationController -> GasStationService: getGasStationsByProximity()
+activate GasStationService
+GasStationService -> GasStationRepository: findByLatBetweenAndLonBetween()
+GasStationService -> GasStationConverter: toGasStationDto()
+GasStationService -> GasStationController: return List<GasStationDto>
+deactivate GasStationService
+deactivate GasStationController
+note right: This is the nominal scenario, the other variants present in\n the requirement document can be obtained by simply \nsubstituting "getGasStationsByProximity()" with the following options: \n"getGasStationsByGasolineType()", \n"getGasStationByCarSharing()",\n"getGasStationsWithoutCoordinates()",\n"getGasStationsWithCoordinates()".
 
 @enduml
 
 ```
+
 
 ### Use case 10, UC10 - Evaluate price
 
@@ -581,18 +645,25 @@ note right: This is the nominal scenario, the other variants present in\n the re
 
 autonumber
 actor User
-GUI -> GasStationController: selectGasStation()
-activate GasStationController
-activate GUI
 GUI -> GasStationController: evaluatePriceOk()
-deactivate GasStationController
-deactivate GUI
+activate GasStationController
 GasStationController -> UserService: increaseUserReputation()
+activate UserService
+UserService -> UserRepository: findByUserId()
+UserService -> UserEntity: getReputation()
+activate UserEntity
+UserService -> UserEntity: setReputation()
+deactivate UserEntity
+UserService -> UserRepository: save()
+UserService -> GasStationController: return getReputation()
+deactivate UserService
+deactivate GasStationController
 note right: If the reputation of the User is lower than 5, it will be \nincremented by 1; if it is already equal to 5, it will not \nbe incremented.
 
 @enduml
 
 ```
+
 
 ##### Scenario 10.2 
 
@@ -602,17 +673,21 @@ note right: If the reputation of the User is lower than 5, it will be \nincremen
 
 autonumber
 actor User
-GUI -> GasStationController: selectGasStation()
-activate GasStationController
-activate GUI
 GUI -> GasStationController: evaluatePriceWrong()
-deactivate GasStationController
-deactivate GUI
+activate GasStationController
 GasStationController -> UserService: decreaseUserReputation()
+activate UserService
+UserService -> UserRepository: findByUserId()
+UserService -> UserEntity: getReputation()
+activate UserEntity
+UserService -> UserEntity: setReputation()
+deactivate UserEntity
+UserService -> UserRepository: save()
+UserService -> GasStationController: return getReputation()
+deactivate UserService
+deactivate GasStationController
 note right: If the reputation of the User is greater than -5, it will be \ndecremented by 1; if it is already equal to -5, it will not \nbe decremented.
 
 @enduml
 
 ```
-
-

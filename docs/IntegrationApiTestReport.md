@@ -91,8 +91,8 @@ GasStationService --> GasStationDto
 
 For Integration testing, we adopted a mixed approach, since we followed the bottom up method, but applied also Mockito. </br>
 
-step1: class UserConverter, GasStationConverter, UserRepository, GasStationRepository</br>
-step2: class UserServiceimpl + UserConverter, GasStationServiceimpl + GasStationConverter</br>
+step1: class UserConverter, GasStationConverter, UserRepository, GasStationRepository </br>
+step2: class UserServiceimpl + UserConverter, GasStationServiceimpl + GasStationConverter </br>
 step3: class UserServiceimpl + UserConverter + UserRepository, GasStationServiceimpl + GasStationConverter + GasStationRepository </br>
 
 In the step1, we tested Converter and Repository classes singularly: in particular, for Repository we worked with TestEntityManager and @DataJpaTest, in order to avoid affecting the real database. </br>
@@ -137,6 +137,187 @@ In the step 2, we mocked the Repository methods.
 
 <If needed, define here additional scenarios for the application. Scenarios should be named
  referring the UC they detail>
+
+## Scenario UC2.1
+
+| Scenario |  name |
+| ------------- |:-------------:| 
+| Description | User U updates his account by changing his e-mail with another one (not already associated to another account) |
+|  Precondition     | Account U exists |
+|  Post condition     | -  |
+| Step#        | Description  |
+|  1     | User U modifies his details |  
+|  2     | The system checks if the inserted e-mail is already associated to another user account |
+|  3     | Update occurs |
+
+## Scenario UC2.2
+
+| Scenario |  name |
+| ------------- |:-------------:| 
+| Description | User U updates his account by changing his e-mail with another one already associated to another account |
+|  Precondition     | Account U exists |
+|  Post condition     | -  |
+| Step#        | Description  |
+|  1     | User U modifies his details |  
+|  2     | The system checks if the inserted e-mail is already associated to another user account |
+|  3     | Update doesn't occur |
+
+## Scenario UC3.1
+
+| Scenario |  name |
+| ------------- |:-------------:| 
+|  Precondition     | - |
+|  Post condition     | InvalidUserException |
+| Step#        | Description  |
+|  1     | User U tries to delete an account by inserting a negative userId |  
+|  2     | InvalidUserException is thrown |
+
+## Scenario UC4.1
+
+| Scenario |  name |
+| ------------- |:-------------:| 
+|  Precondition     | - |
+|  Post condition     | GPSDataException |
+| Step#        | Description  |
+|  1     | Administrator creates a new gas station by inserting out of bounds values for latitude and/or longitude |  
+|  2     | GPSDataException is thrown |
+
+## Scenario UC4.2
+
+| Scenario |  name |
+| ------------- |:-------------:| 
+|  Precondition     | - |
+|  Post condition     | GasStation not added |
+| Step#        | Description  |
+|  1     | Administrator creates a new gas station by inserting values of address, latitude and longitude equal to those of a gas station already in the database |  
+|  2     | Creation doesn't occur |
+
+## Scenario UC4.3
+
+| Scenario |  name |
+| ------------- |:-------------:| 
+|  Precondition     | - |
+|  Post condition     | PriceException |
+| Step#        | Description  |
+|  1     | Administrator creates a new gas station with one or more prices of gasoline lower than pr equal to 0 |  
+|  2     | PriceException is thrown |
+
+## Scenario UC5.1
+
+| Scenario |  name |
+| ------------- |:-------------:| 
+|  Precondition     | - |
+|  Post condition     | GPSDataException |
+| Step#        | Description  |
+|  1     | Administrator modifies a gas station by inserting out of bounds values for latitude and/or longitude |  
+|  2     | GPSDataException is thrown |
+
+## Scenario UC5.2
+
+| Scenario |  name |
+| ------------- |:-------------:| 
+|  Precondition     | - |
+|  Post condition     | GasStation not updated |
+| Step#        | Description  |
+|  1     | Administrator modifies a gas station by inserting values of address, latitude and longitude equal to those of a gas station already in the database |  
+|  2     | Update doesn't occur |
+
+## Scenario UC5.3
+
+| Scenario |  name |
+| ------------- |:-------------:| 
+|  Precondition     | - |
+|  Post condition     | PriceException |
+| Step#        | Description  |
+|  1     | Administrator modifies a new gas station with one or more prices of gasoline lower than or equal to 0 |  
+|  2     | PriceException is thrown |
+
+## Scenario UC6.1
+
+| Scenario |  name |
+| ------------- |:-------------:| 
+|  Precondition     | - |
+|  Post condition     | InvalidGasStationException |
+| Step#        | Description  |
+|  1     | User U tries to delete a gas station by inserting a negative gasStationId |  
+|  2     | InvalidGasStationException is thrown |
+
+## Scenario UC7.1
+
+| Scenario |  name |
+| ------------- |:-------------:| 
+| Precondition     |   -   |
+| Post condition   |  PriceException  |
+| Step#        | Description  |
+|  1     | The user U selects a gas station G |  
+|  2     | The system prompts the user with the list of possible fuels provided by the gas station |
+|  3     | User U inserts prices that are lower than or equal to 0 |
+|  4     | PriceException is thrown |
+
+## Scenario UC7.2
+
+| Scenario |  name |
+| ------------- |:-------------:| 
+|  Precondition     | - |
+|  Post condition     | InvalidUserException |
+| Step#        | Description  |
+|  1     | The user U selects a gas station G |  
+|  2     | The system prompts the user with the list of possible fuels provided by the gas station |
+|  3     | The reportUser is set to a negative value |
+|  4     | InvalidUserException is thrown | 
+
+## Scenario UC7.3
+
+| Scenario |  name |
+| ------------- |:-------------:| 
+|  Precondition     | - |
+|  Post condition     | InvalidGasStationException |
+| Step#        | Description  |
+|  1     | The user U selects a gas station G |  
+|  2     | The system prompts the user with the list of possible fuels provided by the gas station |
+|  3     | The gasStationId is set to a negative value |
+|  4     | InvalidGasStationException is thrown | 
+
+## Scenario UC8.1
+
+| Scenario |  name |
+| ------------- |:-------------:| 
+|  Precondition     | - |
+|  Post condition     | GPSDataException |
+| Step#        | Description  |
+|  1     | Anonymous user U tries to perfom a search by inserting out of bounds values for latitude and/or longitude |  
+|  2     | GPSDataException is thrown |
+
+## Scenario UC8.2
+
+| Scenario |  name |
+| ------------- |:-------------:| 
+|  Precondition     | - |
+|  Post condition     | InvalidGasTypeException |
+| Step#        | Description  |
+|  1     | Anonymous user U tries to perfom a search by inserting invalid value for gasoline type |  
+|  2     | InvalidGasTypeException is thrown |
+
+## Scenario UC10.3
+
+| Scenario |  name |
+| ------------- |:-------------:| 
+|  Precondition     | - |
+|  Post condition     | InvalidUserException |
+| Step#        | Description  |
+|  1     | User U tries to increase/decrease the reputation of a user by inserting a negative userId |  
+|  2     | InvalidUserException is thrown |
+
+## Scenario 11 (referred to FR1.4)
+
+| Scenario |  name |
+| ------------- |:-------------:| 
+| Description | User U performs a search of users by userId (negative userId) |
+|  Precondition     | - |
+|  Post condition     | InvalidUserException |
+| Step#        | Description  |
+|  1     | User U searches by inserting a negative userId |  
+|  2     | InvalidUserException is thrown |
 
 ## Scenario UCx.y
 

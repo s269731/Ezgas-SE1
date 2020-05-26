@@ -278,4 +278,32 @@ public class GasStationRepositoryTest {
 		assertTrue(results.size() == 0);
 	}
 	
+	@Test
+	public void testFindByGasStationAddressAndLatAndLon() {
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Enjoy", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, null, 45.05, 8.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		
+		entityManager.persist(gasStation1);
+		entityManager.persist(gasStation2);
+		entityManager.persist(gasStation3);
+		
+		GasStation result = gasStationRepository.findByGasStationAddressAndLatAndLon("Address2", 45.65, 8.25);
+		assertTrue(result.getGasStationId().equals(gasStation2.getGasStationId()));
+	}
+	
+	@Test
+	public void testFindByGasStationAddressAndLatAndLonNull() {
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Enjoy", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, null, 45.05, 8.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		
+		entityManager.persist(gasStation1);
+		entityManager.persist(gasStation2);
+		entityManager.persist(gasStation3);
+		
+		GasStation result = gasStationRepository.findByGasStationAddressAndLatAndLon("Address2", 45.555, 8.15);
+		assertTrue(result == null);
+	}
+
 }

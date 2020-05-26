@@ -1,5 +1,7 @@
 package it.polito.ezgas.dto;
 
+import java.util.Objects;
+
 public class LoginDto {
 	Integer userId;
     String userName;
@@ -55,4 +57,19 @@ public class LoginDto {
     	this.admin = admin;
     }
     
+	@Override
+	public boolean equals(Object o) {
+	    // self check
+	    if (this == o)
+	        return true;
+	    // null check
+	    if (o == null)
+	        return false;
+	    // type check and cast
+	    if (getClass() != o.getClass())
+	        return false;
+	    LoginDto user = (LoginDto) o;
+	    // field comparison
+	    return Objects.equals(userId, user.getUserId());
+	}
 }

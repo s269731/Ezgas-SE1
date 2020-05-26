@@ -1,5 +1,7 @@
 package it.polito.ezgas.dto;
 
+import java.util.Objects;
+
 /**
  * Created by softeng on 27/4/2020.
  */
@@ -76,6 +78,22 @@ public class UserDto {
 	}
 	public void setAdmin(Boolean admin) {
 		this.admin = admin;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+	    // self check
+	    if (this == o)
+	        return true;
+	    // null check
+	    if (o == null)
+	        return false;
+	    // type check and cast
+	    if (getClass() != o.getClass())
+	        return false;
+	    UserDto user = (UserDto) o;
+	    // field comparison
+	    return Objects.equals(userId, user.getUserId());
 	}
 	
 }

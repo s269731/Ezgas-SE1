@@ -1,10 +1,10 @@
 # CR - Change Request Poll
 
-Authors:
+Authors: Finocchiaro Loredana, Marino Matteo, Mc Mahon Shannon
 
-Date:
+Date: 26/05/2020
 
-Version:
+Version: 1
 
 
 
@@ -23,11 +23,10 @@ update of documents. Consider only effort on the back end (changes to all packag
 
 |   CR          | Priority (1 lowest 5 highest)       |          Effort (person hours) |   
 | ----------- | ------------------------------- | ---------------------------- | 
-| CR1   | | |          
-| CR2   | | | 
-| CR3   | | | 
-| CR4   | | | 
-| CR5   | | | 
-| CR6   | | | 
-| CR7   | | | 
-| CR8   | | | 
+| CR1   | 4 | 15 ph |          
+| CR2   | 3 | 25 ph | 
+| CR3   | 2 | 30 ph | 
+| CR4   | 5 | 3 ph | 
+| CR5   | 1 | 35 ph | 
+| CR6   | 1 | 40 ph | 
+| CR7   | 5 | 5 ph | 

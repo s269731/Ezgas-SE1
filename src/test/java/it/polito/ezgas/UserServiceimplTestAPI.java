@@ -41,7 +41,6 @@ public class UserServiceimplTestAPI {
 		UserDto userDto = new UserDto (user.getUserId(), "Alice", "HelloWorld", "alice@ezgas.com", 5);
 		
 		assert(userServiceimpl.getUserById(user.getUserId()).equals(userDto));
-		
 	}
 	
 	@Test
@@ -64,8 +63,35 @@ public class UserServiceimplTestAPI {
 	}
 	
 	@Test
-	public void testSaveUserUpdate() {
+	public void testSaveUserNewUserEmailNotPresent() {
+		//Iscrizione nuovo utente senza problematiche
+		User user = new User("Alex", "password", "alex@ezgas.com", 0);
+		entityManager.persist(user);
+		Integer size1 = userRepository.findAll().size();
+		UserDto userDtoIn = new UserDto(null,"Luigi","password", "luigi@ezgas.com", 0);
+		UserServiceimpl userServiceimpl = new UserServiceimpl(userRepository);
+		userServiceimpl.saveUser(userDtoIn);
+		Integer size2 = userRepository.findAll().size();
+				
+		assert(size2==size1+1);
+		
+	}
 	
+	@Test
+	public void testSaveUserFails() {
+		//Nuovo utente con e-mail di altro utente già iscritto -> return null DONE
+		User user = new User("Alex", "password", "alex@ezgas.com", 0);
+		entityManager.persist(user);
+		UserDto userDtoIn = new UserDto(null, "Mario", "password", "alex@ezgas.com", 0);
+		
+		UserServiceimpl userServiceimpl = new UserServiceimpl(userRepository);
+		UserDto result = userServiceimpl.saveUser(userDtoIn);
+		assert(result ==null);
+	}
+	
+	@Test
+	public void testSaveUserUpdate() {
+		//Aggiornamento di un utente (esempio in cui aggiorna password) DONE
 		User user = new User("Maria", "password","maria@ezgas.com", 0);
 		entityManager.persist(user);
 		UserDto userDto = new UserDto(user.getUserId(), "Maria", "newPassword", "maria@ezgas.com", 0);
@@ -78,6 +104,7 @@ public class UserServiceimplTestAPI {
 	
 	@Test
 	public void testSaveUserUpdateReturnNull() {
+		//Aggiornamento di un utente con inserimento di e-mail di altro utente già iscritto -> return null DONE
 		
 		User user1 = new User("Viviana", "password", "vivana@ezgas.com",0);
 		entityManager.persist(user1);
@@ -89,32 +116,6 @@ public class UserServiceimplTestAPI {
 		UserDto result = userServiceimpl.saveUser(userDto);
 
 		assert(result == null);
-	}
-	
-	@Test
-	public void testSaveUserNewUserEmailNotPresent() {
-		
-		Integer size1 = userRepository.findAll().size();
-		UserDto userDtoIn = new UserDto(null,"Luigi","passord", "luigi@ezgas.com", 0);
-		UserServiceimpl userServiceimpl = new UserServiceimpl(userRepository);
-		userServiceimpl.saveUser(userDtoIn);
-		Integer size2 = userRepository.findAll().size();
-				
-		assert(size2==size1+1);
-		
-	}
-	
-	@Test
-	public void testSaveUserFails() {
-		
-		User user = new User("Alex", "password", "alex@ezgas.com", 0);
-		entityManager.persist(user);
-		UserDto userDtoIn = new UserDto(null, "Mario", "password", "alex@ezgas.com", 0);
-		
-		UserServiceimpl userServiceimpl = new UserServiceimpl(userRepository);
-		UserDto result = userServiceimpl.saveUser(userDtoIn);
-		
-		assert(result ==null);
 	}
 	
 	@Test

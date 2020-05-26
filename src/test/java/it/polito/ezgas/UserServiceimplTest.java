@@ -76,54 +76,17 @@ public class UserServiceimplTest {
 	}
 	
 	@Test
-	public void testSaveUserUpdate() {
-		
-		UserRepository URmock = mock (UserRepository.class);
-		
-		UserDto userDto = new UserDto(1, "Alice", "HelloWorld", "alice@ezgas.com", 0);
-		User user = new User(userDto.getUserName(), userDto.getPassword(), userDto.getEmail(), 0);
-		user.setUserId(1);
-
-		when(URmock.findByUserId(1)).thenReturn(user);
-		when(URmock.save(any(User.class))).thenReturn(user);
-		
-		UserServiceimpl userServiceimpl = new UserServiceimpl(URmock);
-		UserDto result = userServiceimpl.saveUser(userDto);
-		
-		assert(result.equals(userDto));
-	}
-	
-	@Test
-	public void testSaveUserUpdateReturnNull() {
-		
-		UserRepository URmock = mock (UserRepository.class);
-		
-		UserDto userDto = new UserDto(1, "Alice", "HelloWorld", "alice@ezgas.com", 0);
-		User u= new User (userDto.getUserName(), userDto.getPassword(), "alice@ezgas.com", 0);
-		u.setUserId(1);
-		User user = new User(userDto.getUserName(), userDto.getPassword(), "camilla@ezgas.com", 0);
-		user.setUserId(1);
-
-		when(URmock.findByEmail(anyString())).thenReturn(u);
-		when(URmock.findByUserId(1)).thenReturn(user);
-		when(URmock.save(any(User.class))).thenReturn(user);
-		
-		UserServiceimpl userServiceimpl = new UserServiceimpl(URmock);
-		UserDto result = userServiceimpl.saveUser(userDto);
-		
-		assert(result == null);
-	}
-	
-	@Test
 	public void testSaveUserNewUserEmailNotPresent() {
 		
+		//Iscrizione nuovo utente senza problematiche DONE
 		UserRepository URmock = mock (UserRepository.class);
 		
 		UserDto userDtoIn = new UserDto(null, "Alice", "HelloWorld", "alice@ezgas.com", 0);
-		User user = new User(userDtoIn.getUserName(), userDtoIn.getPassword(), userDtoIn.getEmail(), 0);
+		
+		User user = new User("Alice", "HelloWorld", "alice@ezgas.com", 0);
 		user.setAdmin(false);
-		user.setUserId(null);
-		UserDto userDtoOut = new UserDto(null, "Alice", "HelloWorld", "alice@ezgas.com", 0);
+		user.setUserId(1);
+		UserDto userDtoOut = new UserDto(1, "Alice", "HelloWorld", "alice@ezgas.com", 0);
 		userDtoOut.setAdmin(false);
 
 		when(URmock.findByEmail("alice@ezgas.com")).thenReturn(null);
@@ -139,16 +102,63 @@ public class UserServiceimplTest {
 	@Test
 	public void testSaveUserFails() {
 		
+		//Nuovo utente con e-mail di altro utente già iscritto -> return null DONE
 		UserRepository URmock = mock (UserRepository.class);
 		
-		UserDto userDtoIn = new UserDto(null, "Shan", "HelloWorld", "shan@ezgas.com", 0);
-		User user = new User("Mario", "Rossi", "shan@ezgas.com", 0);
-		user.setUserId(5);
+		UserDto userDtoIn = new UserDto(null, "Shan", "pass1", "shan@ezgas.com", 0);
+		User user = new User("Mario", "pass2", "shan@ezgas.com", 0);
 		
 		when(URmock.findByEmail("shan@ezgas.com")).thenReturn(user);
 		
 		UserServiceimpl userServiceimpl = new UserServiceimpl(URmock);
 		UserDto result = userServiceimpl.saveUser(userDtoIn);
+		assert(result == null);
+	}
+	
+	@Test
+	public void testSaveUserUpdate() {
+		//Aggiornamento di un utente (esempio in cui aggiorna password) DONE
+		UserRepository URmock = mock (UserRepository.class);
+		
+		UserDto userDtoIn = new UserDto(1, "Alice", "pass2", "alice@ezgas.com", 0);
+		User user = new User(userDtoIn.getUserName(), userDtoIn.getPassword(), userDtoIn.getEmail(), 0);
+		user.setUserId(1);
+		user.setAdmin(false);
+		
+		User userOriginal = new User("Alice", "pass1", "alice@ezgas.com", 0);
+		userOriginal.setUserId(1);
+		userOriginal.setAdmin(false);
+
+		//when(URmock.findByEmail("alice@ezgas.com")).thenReturn(null);
+		when(URmock.findByUserId(1)).thenReturn(userOriginal);
+		when(URmock.save(any(User.class))).thenReturn(user);
+		
+		UserServiceimpl userServiceimpl = new UserServiceimpl(URmock);
+		UserDto result = userServiceimpl.saveUser(userDtoIn);
+		
+		assert(result.equals(userDtoIn));
+	}
+	
+	@Test
+	public void testSaveUserUpdateReturnNull() {
+		//Aggiornamento di un utente con inserimento di e-mail di altro utente già iscritto -> return null DONE
+		UserRepository URmock = mock (UserRepository.class);
+		
+		//Alice è gia Iscritta, vuole aggiornare la sua mail con quella di un altro user
+		UserDto userDtoIn = new UserDto(1, "Alice", "HelloWorld", "camilla@ezgas.com", 0);
+		//I dati vecchi di Alice sono:
+		User user= new User ("Alice", "HelloWorld", "alice@ezgas.com", 0);
+		user.setUserId(1);
+		//Camilla è la user che possiede già quella mail
+		User u = new User("Camilla", "password", "camilla@ezgas.com", 0);
+		u.setUserId(5);
+
+		when(URmock.findByUserId(1)).thenReturn(user);
+		when(URmock.findByEmail("camilla@ezgas.com")).thenReturn(u);
+		
+		UserServiceimpl userServiceimpl = new UserServiceimpl(URmock);
+		UserDto result = userServiceimpl.saveUser(userDtoIn);
+		
 		assert(result == null);
 	}
 	

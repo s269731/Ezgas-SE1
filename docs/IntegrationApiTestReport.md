@@ -23,7 +23,6 @@ Version: 1
 
 # Dependency graph 
 
-     <report the here the dependency graph of the classes in it/polito/Ezgas, using plantuml>
    
 ```plantuml
 @startuml
@@ -84,10 +83,6 @@ GasStationService --> GasStationDto
      
 # Integration approach
 
-    <Write here the integration sequence you adopted, in general terms (top down, bottom up, mixed) and as sequence
-    (ex: step1: class A, step 2: class A+B, step 3: class A+B+C, etc)> 
-    <The last integration step corresponds to API testing at level of Service package>
-    <Tests at level of Controller package will be done later>
 
 For Integration testing, we adopted a mixed approach, since we followed the bottom up method, but applied also Mockito. </br>
 
@@ -101,8 +96,6 @@ In the step3, we used again TestEntityManager and @DataJpaTest.
 
 #  Tests
 
-   <define below a table for each integration step. For each integration step report the group of classes under test, and the names of
-     JUnit test cases applied to them>
 
 ## Step 1
 | Classes  | JUnit test cases |
@@ -123,7 +116,6 @@ In the step 2, we mocked the Repository methods.
 
 ## Step 3 API Tests
 
-   <The last integration step  should correspond to API testing, or tests applied to all classes implementing the APIs defined in the Service package>
 
 | Classes  | JUnit test cases |
 |--|--|
@@ -136,8 +128,6 @@ In the step 2, we mocked the Repository methods.
 # Scenarios
 
 
-<If needed, define here additional scenarios for the application. Scenarios should be named
- referring the UC they detail>
 
 ## Scenario UC2.1
 
@@ -193,16 +183,6 @@ In the step 2, we mocked the Repository methods.
 |  1     | Administrator creates a new gas station by inserting values of address, latitude and longitude equal to those of a gas station already in the database |  
 |  2     | Creation doesn't occur |
 
-## Scenario UC4.3
-
-| Scenario |  name |
-| ------------- |:-------------:| 
-|  Precondition     | - |
-|  Post condition     | PriceException |
-| Step#        | Description  |
-|  1     | Administrator creates a new gas station with one or more prices of gasoline lower than pr equal to 0 |  
-|  2     | PriceException is thrown |
-
 ## Scenario UC5.1
 
 | Scenario |  name |
@@ -222,16 +202,6 @@ In the step 2, we mocked the Repository methods.
 | Step#        | Description  |
 |  1     | Administrator modifies a gas station by inserting values of address, latitude and longitude equal to those of a gas station already in the database |  
 |  2     | Update doesn't occur |
-
-## Scenario UC5.3
-
-| Scenario |  name |
-| ------------- |:-------------:| 
-|  Precondition     | - |
-|  Post condition     | PriceException |
-| Step#        | Description  |
-|  1     | Administrator modifies a new gas station with one or more prices of gasoline lower than or equal to 0 |  
-|  2     | PriceException is thrown |
 
 ## Scenario UC6.1
 
@@ -320,22 +290,10 @@ In the step 2, we mocked the Repository methods.
 |  1     | User U searches by inserting a negative userId |  
 |  2     | InvalidUserException is thrown |
 
-## Scenario UCx.y
-
-| Scenario |  name |
-| ------------- |:-------------:| 
-|  Precondition     |  |
-|  Post condition     |   |
-| Step#        | Description  |
-|  1     |  ... |  
-|  2     |  ... |
-
 
 # Coverage of Scenarios and FR
 
 
-<Report in the following table the coverage of  scenarios (from official requirements and from above) vs FR. 
-Report also for each of the scenarios the (one or more) API JUnit tests that cover it. >
 
 
 
@@ -356,14 +314,11 @@ Report also for each of the scenarios the (one or more) API JUnit tests that cov
 |  | FR2 | it.polito.ezgas.UserServiceimplTestAPI.testLogin() |
 |  | FR2 | it.polito.ezgas.UserServiceimplTestAPI.testLoginInvalid() |
 | UC4   | FR3.1 | it.polito.ezgas.GasStationServiceimplTestAPI.testSaveGasStationNew() |
-| UC4.1 | FR3.1 | it.polito.ezgas.GasStationServiceimplTestAPI.testSaveGasStationLat() |
-| UC4.1 | FR3.1 | it.polito.ezgas.GasStationServiceimplTestAPI.testSaveGasStationLon() |       
-| UC4.2 | FR3.1 |  |
-| UC4.3 | FR3.1 |  |
-| UC5   | FR3.1 |  |
-| UC5.1 | FR3.1 |  |
-| UC5.2 | FR3.1 |  |
-| UC5.3 | FR3.1 |  |
+| UC4.1 | FR3.1 | it.polito.ezgas.GasStationServiceimplTestAPI.testSaveGasStationInvalidLat() |  
+| UC4.2 | FR3.1 | it.polito.ezgas.GasStationServiceimplTestAPI.testSaveGasStationNewReturnNull() |
+| UC5   | FR3.1 | it.polito.ezgas.GasStationServiceimplTestAPI.testSaveGasStationUpdate() |
+| UC5.1 | FR3.1 | it.polito.ezgas.GasStationServiceimplTestAPI.testSaveGasStationInvalidLon() |
+| UC5.2 | FR3.1 | it.polito.ezgas.GasStationServiceimplTestAPI.testSaveGasStationUpdateReturnNull |
 | UC6 | FR3.2 | it.polito.ezgas.GasStationServiceimplTestAPI.testDeleteRegisteredGasStation |
 | UC6.1 | FR3.2 | it.polito.ezgas.GasStationServiceimplTestAPI.testDeleteGasStationInvalidId() |
 |  | FR3.3 | it.polito.ezgas.GasStationServiceimplTestAPI.testGetAllGasStation() |
@@ -401,8 +356,6 @@ Report also for each of the scenarios the (one or more) API JUnit tests that cov
 
 # Coverage of Non Functional Requirements
 
-
-<Report in the following table the coverage of the Non Functional Requirements of the application - only those that can be tested with automated testing frameworks.>
 
 
 ### 

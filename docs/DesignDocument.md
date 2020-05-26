@@ -1,16 +1,17 @@
 # Design Document 
 
 
-Authors: Cao Peng, Finocchiaro Loredana, Marino Matteo, Mc Mahon Shannon
+Authors: Finocchiaro Loredana, Marino Matteo, Mc Mahon Shannon
 
-Date: 19/05/2020
+Date: 26/05/2020
 
-Version: 2
+Version: 3
 
 Change history
 
 | Version | Changes | 
 | ----------------- |:-----------|
+| 3 | Fixed low level design|
 | 2 | Fixed Verification Sequence Diagrams |
 | | Added some methods in Repository interfaces and Converter classes |
 
@@ -389,13 +390,15 @@ class "UserConverter" {
 
 interface "GasStationRepository" {
     +findGasStationById(Integer gasStationId): GasStation
-    +findByLatBetweenAndLonBetween(Double myLat_inf, Double myLat_sup, Double myLon_inf, Double myLon_sup): List<GasStation>
+    +findByLatBetweenAndLonBetween(Double myLat_inf, Double myLat_sup, 
+    Double myLon_inf, Double myLon_sup): List<GasStation>
     +findByDieselTrueOrderByDieselPriceAsc(): List<GasStation>
     +findBySuperTrueOrderBySuperPriceAsc(): List<GasStation>
     +findBySuperPlusTrueOrderBySuperPlusPriceAsc(): List<GasStation>
     +findByGasTrueOrderByGasPriceAsc(): List<GasStation>
     +findByMethaneTrueOrderByMethanePriceAsc(): List<GasStation>
     +findByCarSharing(String carSharing): List<GasStation>
+	+findByGasStationAddressAndLatAndLon: GasStation
 }
 
 interface "UserRepository" {
@@ -464,26 +467,24 @@ interface "UserService" {
     +login(IdPw credentials): LoginDto
 }
 
-GasStation -left-> User
-PriceReport -left-> User
+GasStation --> User
+PriceReport --> User
 GasStationDto --> UserDto
 GasStationDto --> PriceReportDto
 GasStationController --> GasStationService
-UserController -down-> UserService
-GasStation --> GasStationConverter
+UserController --> UserService
+GasStationConverter --> GasStation
 GasStationConverter --> GasStationDto
-PriceReport --> PriceReportConverter
+PriceReportConverter --> PriceReport
 PriceReportConverter --> PriceReportDto
-User --> UserConverter
+UserConverter --> User
 UserConverter --> UserDto
-UserDto -down-> UserController
-IdPw --> UserController
-LoginDto --> UserController
-GasStationDto --> GasStationController
-UserService -up-> UserRepository
-GasStationService -up-> GasStationRepository
-User -left-> UserRepository
-GasStation -left-> GasStationRepository
+UserService --> UserRepository
+GasStationService --> GasStationRepository
+UserRepository --> User
+GasStationRepository --> GasStation
+UserService --> UserConverter
+GasStationService --> GasStationConverter
 
 @enduml
 ```

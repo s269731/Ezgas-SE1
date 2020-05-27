@@ -1,6 +1,6 @@
 # Unit Testing Documentation
 
-Authors: Cao Peng, Finocchiaro Loredana, Marino Matteo, Mc Mahon Shannon
+Authors: Finocchiaro Loredana, Marino Matteo, Mc Mahon Shannon
 
 Date: 18/05/2020
 
@@ -18,16 +18,11 @@ Version: 1
 
 ## Note from Authors
 
-In it.polito.ezgas.GasStationTest and it.polito.ezgas.UserTest you can find tests for all setters, getters and Constructors.
+In it.polito.ezgas.GasStationTest, it.polito.ezgas.UserTest you can find tests for all setters, getters and Constructors related to the Entity package.</br>
 However, for the scope of this document we chose specific methods per class to test. Specifically, for each class we tested the Constructor and one getter and setter per type of field (getter and setter for a field of type Integer, getter and setter for a field of type Boolean, etc.).</br>
-Note that invalid test cases cannot actually be tested in the code because the system reports errors just at compile time.
-
-    <Define here criteria, predicates and the combination of predicates for each function of each class.
-    Define test cases to cover all equivalence classes and boundary conditions.
-    In the table, report the description of the black box test case and (traceability) the correspondence with the JUnit test case writing the 
-    class and method name that contains the test case>
-    <JUnit test classes must be in src/test/java/it/polito/ezgas   You find here, and you can use  class EZGasApplicationTests.java that is executed before 
-    the set up of all Spring components>
+Note that invalid test cases cannot actually be tested in the code because the system reports errors just at compile time. </br> 
+For the Black Box analysis, we assumed that even negative values for both userId and gasStationId are accepted; in the coding, the check will be performed by service functions that will call these methods (setters and getters), so negative values will never be set. </br>
+In it.polito.ezgas.GasStationDtoTest, it.polito.ezgas.UserDtoTest, it.polito.ezgas.oginDtoAndIdPwTest you can find tests for all setters, getters and Constructors related to the Dto package. We chose not to analyze them in this document as they are conceptually the same to the entity tests.
 
 
 
@@ -531,10 +526,7 @@ Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error |  |
 # White Box Unit Tests
 
 ### Test cases definition
-    
-    <JUnit test classes must be in src/test/java/it/polito/ezgas>
-    <Report here all the created JUnit test cases, and the units/classes under test >
-    <For traceability write the class and method name that contains the test case>
+
 
 
 | Unit name | JUnit test case |
@@ -560,15 +552,11 @@ Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error |  |
 
 ### Code coverage report
 
-    <Add here the screenshot report of the statement and branch coverage obtained using
-    the Eclemma tool. >
 
 ![](./eclemma_screenshot.png)
 
 ### Loop coverage analysis
 
-    <Identify significant loops in the units and reports the test cases
-    developed to cover zero, one or multiple iterations >
 
 |Unit name | Loop rows | Number of iterations | JUnit test case |
 |---|---|---|---|
@@ -576,5 +564,6 @@ Others | Invalid | User user = new User(); <br/> user.setAdmin(5) -> error |  |
 |||||
 ||||||
 
+Not relevant, since there are no loops.
 
 

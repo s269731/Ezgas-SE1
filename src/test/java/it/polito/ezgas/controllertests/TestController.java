@@ -24,6 +24,17 @@ import it.polito.ezgas.dto.UserDto;
 
 public class TestController {
     
+    @Test
+	public void testGetAllUsers() throws ClientProtocolException, IOException {
+		HttpUriRequest request = new HttpGet("http://localhost:8080/user/getAllUsers");
+		HttpResponse response =HttpClientBuilder.create().build().execute(request);
+		String jsonFromResponse = EntityUtils.toString(response.getEntity());
+		ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
+		UserDto[] userArray= mapper.readValue(jsonFromResponse, UserDto[].class);
+		
+		assert(userArray.length==7);
+	}
+    
 	@Test
 	public void testSaveUser() throws ClientProtocolException, IOException {
 		HttpPost request = new HttpPost("http://localhost:8080/user/saveUser");
@@ -35,6 +46,22 @@ public class TestController {
 		
 		HttpResponse response = HttpClientBuilder.create().build().execute(request);
 		assert(response.getStatusLine().getStatusCode() == 200); 
+	}
+	
+	@Test
+	public void testIncreaseUserReputation() throws ClientProtocolException, IOException {
+		HttpPost request = new HttpPost("http://localhost:8080/user/increaseUserReputation/3");
+		HttpResponse response = HttpClientBuilder.create().build().execute(request);
+		
+		assert(response.getStatusLine().getStatusCode() == 200);
+	}
+	
+	@Test
+	public void testDecreaseUserReputation() throws ClientProtocolException, IOException {
+		HttpPost request = new HttpPost("http://localhost:8080/user/decreaseUserReputation/3");
+		HttpResponse response = HttpClientBuilder.create().build().execute(request);
+		
+		assert(response.getStatusLine().getStatusCode() == 200);
 	}
 	
 	@Test
@@ -63,12 +90,36 @@ public class TestController {
     }
     
     @Test
+	public void testSaveGasStation() throws ClientProtocolException, IOException {
+		HttpPost request = new HttpPost("http://localhost:8080/gasstation/saveGasStation");
+		String json = "{\"gasStationId\":null,\"gasStationName\":\"Ip\",\"gasStationAddress\":\"Corso Trapani 79 Turin Piemont Italy\",\"hasDiesel\":true,\"hasSuper\":true,\"hasSuperPlus\":false,\"hasGas\":false,\"hasMethane\":false, \"carSharing\":\"Enjoy\",\"lat\":45.0692404,\"lon\": 7.6391213,\"dieselPrice\": 1.457, \"superPrice\": 1.768, \"superPlusPrice\":5,\"gasPrice\":5,\"methanePrice\":5,\"reportUser\": null,\"reportTimestamp\":null,\"reportDependability\":null}";
+		StringEntity entity = new StringEntity(json);
+		request.setEntity(entity); 
+		request.setHeader("Accept", "application/json, text/plain, */*");
+		request.setHeader("Content-type", "application/json;charset=UTF-8");
+		
+		HttpResponse response = HttpClientBuilder.create().build().execute(request);
+		assert(response.getStatusLine().getStatusCode() == 200);
+	}
+    
+    @Test
     public void testDeleteGasStation() throws ClientProtocolException, IOException {
     	HttpUriRequest request = new HttpDelete("http://localhost:8080/gasstation/deleteGasStation/6");
     	HttpResponse response = HttpClientBuilder.create().build().execute(request);
     	
     	assert(response.getStatusLine().getStatusCode() == 200);
     }
+    
+    @Test
+	public void testGetGasStationsByGasolineType() throws ClientProtocolException, IOException {
+		HttpUriRequest request = new HttpGet("http://localhost:8080/gasstation/searchGasStationByGasolineType/Diesel");
+		HttpResponse response =HttpClientBuilder.create().build().execute(request);
+		String jsonFromResponse = EntityUtils.toString(response.getEntity());
+		ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
+		GasStationDto[] gs= mapper.readValue(jsonFromResponse, GasStationDto[].class);
+		
+		assert(gs.length==5);
+	}
   
     @Test
     public void testGetGasStationsByProximity() throws ClientProtocolException, IOException {

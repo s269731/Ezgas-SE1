@@ -23,6 +23,19 @@ import it.polito.ezgas.dto.UserDto;
 //Note that the following tests may fail if you try to run them without using our database file.
 
 public class TestController {
+	
+    @Test
+    public void testGetUserById() throws ClientProtocolException, IOException {
+    	Integer userId = 3;
+    	
+    	HttpUriRequest request = new HttpGet("http://localhost:8080/user/getUser/"+userId);
+    	HttpResponse response = HttpClientBuilder.create().build().execute(request);
+    	String jsonFromResponse =EntityUtils.toString(response.getEntity());
+    	ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    	UserDto result = mapper.readValue(jsonFromResponse, UserDto.class);
+    
+    	assert(result.getUserId()==userId);
+    }
     
     @Test
 	public void testGetAllUsers() throws ClientProtocolException, IOException {
@@ -47,6 +60,15 @@ public class TestController {
 		HttpResponse response = HttpClientBuilder.create().build().execute(request);
 		assert(response.getStatusLine().getStatusCode() == 200); 
 	}
+    
+	@Test
+    public void testDeleteUser() throws ClientProtocolException, IOException {
+		String userId="5";
+		HttpUriRequest request = new HttpDelete("http://localhost:8080/user/deleteUser/" + userId);
+    	HttpResponse response = HttpClientBuilder.create().build().execute(request);
+    	
+    	assert(response.getStatusLine().getStatusCode() == 200);
+    }
 	
 	@Test
 	public void testIncreaseUserReputation() throws ClientProtocolException, IOException {
@@ -90,6 +112,18 @@ public class TestController {
     }
     
     @Test
+    public void testGetAllGasStations() throws ClientProtocolException, IOException {
+    	HttpUriRequest request = new HttpGet("http://localhost:8080/gasstation/getAllGasStations");
+    	HttpResponse response = HttpClientBuilder.create().build().execute(request); 
+    	
+    	String jsonFromResponse = EntityUtils.toString(response.getEntity());
+    	ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    	GasStationDto[] gasStationArray = mapper.readValue(jsonFromResponse, GasStationDto[].class);
+    	
+    	assert(gasStationArray.length == 6);
+    }
+    
+    @Test
 	public void testSaveGasStation() throws ClientProtocolException, IOException {
 		HttpPost request = new HttpPost("http://localhost:8080/gasstation/saveGasStation");
 		String json = "{\"gasStationId\":null,\"gasStationName\":\"Ip\",\"gasStationAddress\":\"Corso Trapani 79 Turin Piemont Italy\",\"hasDiesel\":true,\"hasSuper\":true,\"hasSuperPlus\":false,\"hasGas\":false,\"hasMethane\":false, \"carSharing\":\"Enjoy\",\"lat\":45.0692404,\"lon\": 7.6391213,\"dieselPrice\": 1.457, \"superPrice\": 1.768, \"superPlusPrice\":5,\"gasPrice\":5,\"methanePrice\":5,\"reportUser\": null,\"reportTimestamp\":null,\"reportDependability\":null}";
@@ -128,4 +162,29 @@ public class TestController {
     	
     	assert(response.getStatusLine().getStatusCode() == 200);
     }
+    
+    @Test
+    public void testGetGasStationsWithCoordinates() throws ClientProtocolException, IOException {
+    	/*Consider starting location of Via Magenta 52/D Turin Piedmont*/
+    	String myLat="/45.0757537";
+    	String myLon="/7.6573574";
+    	String gasolineType="/Methane";
+    	String carSharing="/Enjoy";
+    	HttpUriRequest request = new HttpGet("http://localhost:8080/gasstation/getGasStationsWithCoordinates"+myLat+myLon+gasolineType+carSharing);
+    	HttpResponse response = HttpClientBuilder.create().build().execute(request);
+    	String jsonFromResponse =EntityUtils.toString(response.getEntity());
+    	ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    	GasStationDto[] gasStationArray = mapper.readValue(jsonFromResponse, GasStationDto[].class);
+    	
+    	/* Should return Eni Station */
+    	assert(gasStationArray.length==1);
+    }
+    
+	@Test
+	public void testSetGasStationReport() throws IOException {
+	    HttpPost request = new HttpPost("http://localhost:8080/gasstation/setGasStationReport/3/1.10/-1/1.20/-1/1.30/3");	
+		HttpResponse response = HttpClientBuilder.create().build().execute(request);
+		
+		assert(response.getStatusLine().getStatusCode() == 200);
+	}
 }

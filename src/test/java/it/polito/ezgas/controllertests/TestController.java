@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.ezgas.dto.GasStationDto;
 import it.polito.ezgas.dto.UserDto;
 
-//For the Controller tests, we used a database file that you can find on GitLab, in the GUI folder.
+//For the Controller tests, we used a database file that you can find on GitLab, in the GUITests folder.
 //Note that the following tests may fail if you try to run them without using our database file.
 
 public class TestController {

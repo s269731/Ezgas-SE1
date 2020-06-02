@@ -1,10 +1,10 @@
 # GUI  Testing Documentation 
 
-Authors:
+Authors: Finocchiaro Loredana, Marino Matteo, Mc Mahon Shannon
 
-Date:
+Date: 01/06/2020
 
-Version:
+Version: 1
 
 # GUI testing
 
@@ -12,20 +12,32 @@ This part of the document reports about testing at the GUI level. Tests are end 
 
 ## Coverage of Scenarios and FR
 
-```
-<Complete this table (from IntegrationApiTestReport.md) with the column on the right. In the GUI Test column, report the name of the .py  file with the test case you created.>
-```
+For the GUI tests we used a pre-filled database that can be found in GUITests folder.
+Names of the GUI tests refer to .py files.
 
 ### 
 
 | Scenario ID | Functional Requirements covered | GUI Test(s) |
-| ----------- | ------------------------------- | ----------- | 
-| 1           | FRx                             |             |             
-| 2           | FRy                             |             |             
-| ...         |                                 |             |         
-| ...         |                                 |             |             
-| ...         |                                 |             |             
-| ...         |                                 |             |             
+|:-----------:|:-------------------------------:| ----------- | 
+| UC1 | FR1.1 | Signup |       
+|     |  | CreateAccount_admin |  
+| No UC | FR2 | Login |       
+| UC2 | FR1.1 | UpdateAccount |        
+|     |  | UpdateAccount_admin |       
+| UC3 | FR1.2 | DeleteUser |         
+| UC4 | FR3.1 | CreateGS |             
+| UC5 | FR3.1 | UpdateGS |             
+| UC6 | FR3.2 | DeleteGS |     
+| UC7 | FR5.1 | SetReport |  
+|     |     | SetReportOverwritten |       
+| UC8 | FR4   | SearchByProximity |     
+|     |     | SearchByGasType |
+|     |     | SearchByCarSh |
+|     |     | SearchWithCoordinates |        
+| UC9 | FR5.2 | UpdateDependability |             
+| UC10.1 | 5.3 | EvaluateRight |     
+| UC10.2| 5.3 | EvaluateWrong |         
+          
 
 
 # REST  API  Testing

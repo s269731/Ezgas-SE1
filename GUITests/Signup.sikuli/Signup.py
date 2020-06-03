@@ -1,0 +1,11 @@
+#Luigi creates an account and performs login
+click("1590593721937.png")
+click("1590594282685.png")
+type("1590594302233.png", "Luigi")
+type("1590594321135.png", "luigi@ezgas.com")
+type("1590594340902.png", "rossiluigi")
+click("1590594386395.png")
+type("1590593746199.png", "luigi@ezgas.com")
+type("1590593768463.png", "rossiluigi")
+click("1590593797683.png")
+wait("1590594890683.png")

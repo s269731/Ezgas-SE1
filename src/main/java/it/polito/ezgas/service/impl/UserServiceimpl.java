@@ -44,7 +44,7 @@ public class UserServiceimpl implements UserService {
 	@Override
 	public UserDto saveUser(UserDto userDto) {
 		User user;
-		if (userDto.getUserId() != null) {	// user already enrolled --> update
+		if (userDto.getUserId() != null && userRepository.findByUserId(userDto.getUserId()) != null) {	// user already enrolled --> update
 			user = userRepository.findByUserId(userDto.getUserId());
 			if (user.getEmail().compareTo(userDto.getEmail()) != 0) {
 				User u = userRepository.findByEmail(userDto.getEmail());

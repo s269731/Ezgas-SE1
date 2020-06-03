@@ -56,7 +56,7 @@ public class GasStationServiceimpl implements GasStationService {
 		if (gasStationDto.getLat() < -90 || gasStationDto.getLat() > 90 || gasStationDto.getLon() < -180 || gasStationDto.getLon() > 180)
 			throw new GPSDataException("Invalid GPS coordinates");	
 		GasStation gasStation;
-		if (gasStationDto.getGasStationId() != null) {	// gas station already inserted --> update
+		if (gasStationDto.getGasStationId() != null && gasStationRepository.findByGasStationId(gasStationDto.getGasStationId()) != null) {	// gas station already inserted --> update
 			gasStation = gasStationRepository.findByGasStationId(gasStationDto.getGasStationId());
 			if (gasStation.getGasStationAddress().compareTo(gasStationDto.getGasStationAddress()) != 0 
 					|| gasStation.getLat() != gasStationDto.getLat() || gasStation.getLon() != gasStationDto.getLon()) {

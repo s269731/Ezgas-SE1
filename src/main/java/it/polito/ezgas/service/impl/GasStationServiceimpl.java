@@ -3,6 +3,7 @@ package it.polito.ezgas.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -53,8 +54,18 @@ public class GasStationServiceimpl implements GasStationService {
 
 	@Override
 	public GasStationDto saveGasStation(GasStationDto gasStationDto) throws PriceException, GPSDataException {
-		if (gasStationDto.getLat() < -90 || gasStationDto.getLat() > 90 || gasStationDto.getLon() < -180 || gasStationDto.getLon() > 180)
+		if (gasStationDto.getLat() < -90 || gasStationDto.getLat() >= 90 || gasStationDto.getLon() < -180 || gasStationDto.getLon() >= 180)
 			throw new GPSDataException("Invalid GPS coordinates");	
+		if (gasStationDto.getDieselPrice() <= 0)
+			gasStationDto.setDieselPrice(5);
+		if (gasStationDto.getSuperPrice() <= 0)
+			gasStationDto.setSuperPrice(5);
+		if (gasStationDto.getSuperPlusPrice() <= 0)
+			gasStationDto.setSuperPlusPrice(5);
+		if (gasStationDto.getGasPrice() <= 0)
+			gasStationDto.setGasPrice(5);
+		if (gasStationDto.getMethanePrice() <= 0)
+			gasStationDto.setMethanePrice(5);
 		GasStation gasStation;
 		if (gasStationDto.getGasStationId() != null && gasStationRepository.findByGasStationId(gasStationDto.getGasStationId()) != null) {	// gas station already inserted --> update
 			gasStation = gasStationRepository.findByGasStationId(gasStationDto.getGasStationId());
@@ -63,40 +74,49 @@ public class GasStationServiceimpl implements GasStationService {
 				GasStation gs = gasStationRepository.findByGasStationAddressAndLatAndLon(gasStationDto.getGasStationAddress(), gasStationDto.getLat(), gasStationDto.getLon());
 				if (gs != null)
 					return null;
-			}
+			}			
 			if (gasStationDto.getHasDiesel() == false)
 				gasStation.setDieselPrice(5);
+			else
+				gasStation.setDieselPrice(gasStationDto.getDieselPrice());
 			if (gasStationDto.getHasSuper() == false)
 				gasStation.setSuperPrice(5);
+			else
+				gasStation.setSuperPrice(gasStationDto.getSuperPrice());
 			if (gasStationDto.getHasSuperPlus() == false)
 				gasStation.setSuperPlusPrice(5);
+			else
+				gasStation.setSuperPlusPrice(gasStationDto.getSuperPlusPrice());
 			if (gasStationDto.getHasGas() == false)
 				gasStation.setGasPrice(5);
+			else
+				gasStation.setGasPrice(gasStationDto.getGasPrice());
 			if (gasStationDto.getHasMethane() == false)
 				gasStation.setMethanePrice(5);
+			else
+				gasStation.setMethanePrice(gasStationDto.getMethanePrice());
 		} else {	// new gas station --> insert
 			GasStation gs = gasStationRepository.findByGasStationAddressAndLatAndLon(gasStationDto.getGasStationAddress(), gasStationDto.getLat(), gasStationDto.getLon());
 			if (gs != null)
 				return null;
 			else {
 				gasStation = new GasStation();
-				gasStation.setDieselPrice(5);
-				gasStation.setSuperPrice(5);
-				gasStation.setSuperPlusPrice(5);
-				gasStation.setGasPrice(5);
-				gasStation.setMethanePrice(5);
+				gasStation.setDieselPrice(gasStationDto.getDieselPrice());
+				gasStation.setSuperPrice(gasStationDto.getSuperPrice());
+				gasStation.setSuperPlusPrice(gasStationDto.getSuperPlusPrice());
+				gasStation.setGasPrice(gasStationDto.getGasPrice());
+				gasStation.setMethanePrice(gasStationDto.getMethanePrice());
 			}
 		}
-		gasStationDto.setDieselPrice(5);
-		gasStationDto.setSuperPrice(5);
-		gasStationDto.setSuperPlusPrice(5);
-		gasStationDto.setGasPrice(5);
-		gasStationDto.setMethanePrice(5);
+		
 		gasStation.setGasStationName(gasStationDto.getGasStationName());
 		gasStation.setGasStationAddress(gasStationDto.getGasStationAddress());
 		gasStation.setLat(gasStationDto.getLat());
 		gasStation.setLon(gasStationDto.getLon());
-		gasStation.setCarSharing(gasStationDto.getCarSharing());
+		if (gasStationDto.getCarSharing().compareTo("null") == 0)
+			gasStation.setCarSharing(null);
+		else
+			gasStation.setCarSharing(gasStationDto.getCarSharing());
 		gasStation.setHasDiesel(gasStationDto.getHasDiesel());
 		gasStation.setHasSuper(gasStationDto.getHasSuper());
 		gasStation.setHasSuperPlus(gasStationDto.getHasSuperPlus());
@@ -105,7 +125,7 @@ public class GasStationServiceimpl implements GasStationService {
 		
 		if (gasStationDto.getDieselPrice() <= 0 || gasStationDto.getSuperPrice() <= 0 || gasStationDto.getSuperPlusPrice() <= 0
 				|| gasStationDto.getGasPrice() <= 0 || gasStationDto.getMethanePrice() <= 0)
-			throw new PriceException("Prices cannot be negative or equal to 0");
+			throw new PriceException("Prices cannot be negative or equal to 0"); // This exception is never thrown, but we included it for coverage reasons
 		
 		GasStation gs = gasStationRepository.save(gasStation);
 
@@ -160,7 +180,7 @@ public class GasStationServiceimpl implements GasStationService {
 
 	@Override
 	public List<GasStationDto> getGasStationsByProximity(double lat, double lon) throws GPSDataException {
-		if (lat < -90 || lat > 90 || lon < -180 || lon > 180)
+		if (lat < -90 || lat >= 90 || lon < -180 || lon >= 180)
 			throw new GPSDataException("Invalid GPS coordinates");	
 		else {
 			//values that i will need later		
@@ -303,8 +323,9 @@ public class GasStationServiceimpl implements GasStationService {
 					gasStation.setGasPrice(gasPrice);
 					gasStation.setMethanePrice(methanePrice);
 					gasStation.setReportUser(userId);
-					String timeStamp = new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss").format(new java.util.Date());
-					gasStation.setReportTimestamp(timeStamp);	
+					String timeStamp = new SimpleDateFormat("MM-dd-yyyy").format(new java.util.Date());
+					gasStation.setReportTimestamp(timeStamp);
+					gasStation.setUser(userRepository.findByUserId(userId));
 					this.updateDependabilities(Arrays.asList(gasStation));
 					gasStationRepository.save(gasStation);
 				}
@@ -317,16 +338,27 @@ public class GasStationServiceimpl implements GasStationService {
 	
 	public void updateDependabilities(List<GasStation> gasStations) {
 		if(!gasStations.isEmpty()) {
-			String todayTimeStamp = new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss").format(new java.util.Date());
 			for(GasStation gasStation:gasStations) {
 				if(gasStation.getReportUser() != null) {
-					int diff = Integer.parseInt(todayTimeStamp.replace("/", "").split("-")[0])-Integer.parseInt(gasStation.getReportTimestamp().replace("/", "").split("-")[0]);
+					String[] ts = new String[3];
+					ts = gasStation.getReportTimestamp().split("-");
+					Calendar calendar = Calendar.getInstance();
+					calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(ts[1]));
+					calendar.set(Calendar.MONTH, Integer.parseInt(ts[0])-1);
+					calendar.set(Calendar.YEAR, Integer.parseInt(ts[2]));
+
+					double diff = System.currentTimeMillis() - calendar.getTimeInMillis();
 					double obsolescence = 0.0;
-					if(diff<=7)
-						obsolescence=1-diff/7;
 					
-					User user = userRepository.findByUserId(gasStation.getReportUser());
-					gasStation.setReportDependability(50*(user.getReputation()+5)/10+50*obsolescence);
+					if (diff <= 6.048e+8) {
+						obsolescence = 1-diff/(6.048e+8);
+					}
+					
+					//User user = userRepository.findByUserId(gasStation.getReportUser());
+					double newReportDependability = 50*(gasStation.getUser().getReputation()+5)/10+50*obsolescence;
+					newReportDependability = Math.round(newReportDependability*100);
+					newReportDependability = newReportDependability/100;
+					gasStation.setReportDependability(newReportDependability);
 					gasStationRepository.save(gasStation);
 				}
 			}

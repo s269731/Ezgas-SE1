@@ -35,8 +35,10 @@ public class GasStationConverter {
 		gasStationDto.setReportTimestamp(gasStation.getReportTimestamp());
 		gasStationDto.setReportDependability(gasStation.getReportDependability());
 		
-		/*UserDto userDto = UserConverter.toUserDto(gasStation.getUser());
-		gasStationDto.setUserDto(userDto);*/
+		if (gasStation.getUser() != null) {
+			UserDto userDto = UserConverter.toUserDto(gasStation.getUser());
+			gasStationDto.setUserDto(userDto);
+		}
 		
 		return gasStationDto;
 	}

@@ -632,7 +632,7 @@ public class GasStationServiceimplTest {
 	@Test
 	public void testSetReportNew() throws InvalidGasStationException, PriceException, InvalidUserException{
 		GasStationRepository testGsRepo=mock(GasStationRepository.class);
-		GasStation gs=new GasStation("test","testAddress",true,true,true,false,false,"enjoy",0.0,0.0,0.0,0.0,0.0,0.0,0.0,null,new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss").format(new java.util.Date()),25.0);	
+		GasStation gs=new GasStation("test","testAddress",true,true,true,false,false,"enjoy",0.0,0.0,0.0,0.0,0.0,0.0,0.0,null,new SimpleDateFormat("MM-dd-yyyy").format(new java.util.Date()),25.0);	
 		when(testGsRepo.findByGasStationId(any(Integer.class))).thenReturn(gs);
 		when(testGsRepo.save(any(GasStation.class))).thenReturn(gs);
 		User user = new User("TestName","123","test@ezgas.com",3);
@@ -641,14 +641,14 @@ public class GasStationServiceimplTest {
 		when(test.findByUserId(any(Integer.class))).thenReturn(user);  
 		
 		GasStationServiceimpl gasStationService = new GasStationServiceimpl(testGsRepo, test);
-		gasStationService.setReport(1, 1.22, 1.76, 1.78, 0.1, 0.1, 3);
+		gasStationService.setReport(1, 1.22, 1.76, 1.78, -1, -1, 3);
 		assert(gs.getDieselPrice()==1.22 && gs.getSuperPrice()==1.76 && gs.getSuperPlusPrice()==1.78 && gs.getReportUser()==3);
 	}
 	
 	@Test
 	public void testSetReportOverwritten() throws InvalidGasStationException, PriceException, InvalidUserException{
 		GasStationRepository testGsRepo=mock(GasStationRepository.class);
-		GasStation gs=new GasStation("test","testAddress",true,true,true,false,false,"enjoy",4.32,7.89,1.0,1.0,1.0,0.0,0.0,1,new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss").format(new java.util.Date()),25.0);	
+		GasStation gs=new GasStation("test","testAddress",true,true,true,false,false,"enjoy",4.32,7.89,1.0,1.0,1.0,0.0,0.0,1,new SimpleDateFormat("MM-dd-yyyy").format(new java.util.Date()),25.0);	
 		when(testGsRepo.findByGasStationId(any(Integer.class))).thenReturn(gs);
 		when(testGsRepo.save(any(GasStation.class))).thenReturn(gs);
 		User user = new User("TestName","123","test@ezgas.com",3);
@@ -657,7 +657,7 @@ public class GasStationServiceimplTest {
 		when(test.findByUserId(any(Integer.class))).thenReturn(user);  
 		
 		GasStationServiceimpl gasStationService = new GasStationServiceimpl(testGsRepo, test);
-		gasStationService.setReport(1, 1.22, 1.76, 1.78, 0.1, 0.1, 3);
+		gasStationService.setReport(1, 1.22, 1.76, 1.78, -1, -1, 3);
 		assert(gs.getDieselPrice()==1.22 && gs.getSuperPrice()==1.76 && gs.getSuperPlusPrice()==1.78 && gs.getReportUser()==3);
 	}
 	
@@ -682,7 +682,7 @@ public class GasStationServiceimplTest {
 	@Test
 	public void testUpdateDependabilitiesReportUserNull(){
 		UserRepository test=mock(UserRepository.class);
-		when(test.findByUserId(any(Integer.class))).thenReturn(new User());
+		//when(test.findByUserId(any(Integer.class))).thenReturn(new User());
 		ArrayList<GasStation> gsList=new ArrayList<GasStation>();
 		GasStation gs=new GasStation();
 		gs.setReportUser(null);
@@ -695,13 +695,14 @@ public class GasStationServiceimplTest {
 	// String carSharing, double lat, double lon, double dieselPrice, double superPrice, double superPlusPrice, double gasPrice, double methanePrice, Integer reportUser, String reportTimestamp, double reportDependability
 	@Test
 	public void testUpdateDependabilitiesObsolescencePositive(){
-		User user = new User("TestName","123","test@ezgas.com",3);
+		User user = new User("TestName","123","test@ezgas.com", 3);
 		user.setUserId(1);
 		UserRepository test=mock(UserRepository.class);
-		when(test.findByUserId(any(Integer.class))).thenReturn(user); 
+		//when(test.findByUserId(any(Integer.class))).thenReturn(user); 
 		
 		ArrayList<GasStation> gsList=new ArrayList<GasStation>();
-		GasStation gs=new GasStation("test","testAddress",true,true,true,false,false,"enjoy",4.32,7.89,1.0,1.0,1.0,0.0,0.0,1,new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss").format(new java.util.Date()),25.0);
+		GasStation gs=new GasStation("test","testAddress",true,true,true,false,false,"enjoy",4.32,7.89,1.0,1.0,1.0,0.0,0.0,1,new SimpleDateFormat("MM-dd-yyyy").format(new java.util.Date()),25.0);
+		gs.setUser(user);
 		gsList.add(gs);
 		
 		GasStationRepository testGsRepo=mock(GasStationRepository.class);

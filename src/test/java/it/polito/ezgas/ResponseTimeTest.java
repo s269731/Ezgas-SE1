@@ -56,10 +56,12 @@ public class ResponseTimeTest {
 		GasStation gs0 =new GasStation("Canterino", "Via Fratelli Rosselli 102", true, true, false, false, true, "Enjoy", 45.551897, 8.0477697, 5, 5, 5, 5, 5, null, null, 0);
 		entityManager.persist(gs0);
 		//GasStation nel raggio (distance = 0.78) 
-		GasStation gs1 = new GasStation("EnerCoop", "Via Macchieraldo 2 Biella", false, false, true, true, true, "Enjoy", 45.5549032, 8.0569401, 5, 5, 1.3, 1.4, 1.5, userId[6], new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss").format(new java.util.Date()), 25.0);
+		GasStation gs1 = new GasStation("EnerCoop", "Via Macchieraldo 2 Biella", false, false, true, true, true, "Enjoy", 45.5549032, 8.0569401, 5, 5, 1.3, 1.4, 1.5, userId[6], new SimpleDateFormat("MM-dd-yyyy").format(new java.util.Date()), 25.0);
+		gs1.setUser(userRepository.findByUserId(userId[6]));
 		entityManager.persist(gs1);
 		//GasStation in square, but not in radius (distance = 1.36)
-		GasStation gs2 = new GasStation("Esso", "Viale Roma Biella", true, true, true, false, false, "Car2Go", 45.5560598,8.0642756, 1.1, 1.2, 1.3, 5, 5, userId[7], new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss").format(new java.util.Date()), 25.0);
+		GasStation gs2 = new GasStation("Esso", "Viale Roma Biella", true, true, true, false, false, "Car2Go", 45.5560598,8.0642756, 1.1, 1.2, 1.3, 5, 5, userId[7], new SimpleDateFormat("MM-dd-yyyy").format(new java.util.Date()), 25.0);
+		gs2.setUser(userRepository.findByUserId(userId[7]));
 		entityManager.persist(gs2);
 		//GasStation outside alltogether (distance = 61.69)
 		GasStation gs3 = new GasStation("Eni", "Via Magenta 52 Torino", false, true, true, true, true, "null", 45.0671772,7.6639721, 1.1, 1.2, 1.3, 1.4, 1.5, null, null, 0);

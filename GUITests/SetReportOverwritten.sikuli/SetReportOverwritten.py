@@ -8,6 +8,8 @@ wait("fuel_list.png")
 click("lpg.png")
 click("1590682218881.png")
 wait("1590853061494.png")
+#Timestamp format was updated after acceptance testing
+#String "null" for Car Sharing disappeared after acceptance testing
 #Set new report overwriting the previous one
 click("1590852551381.png")
 type(Key.PAGE_DOWN)

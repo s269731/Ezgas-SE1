@@ -12,7 +12,6 @@ This part of the document reports about testing at the GUI level. Tests are end 
 
 ## Coverage of Scenarios and FR
 
-For the GUI tests we used a pre-filled database that can be found in GUITests folder.
 Names of the GUI tests refer to .py files.
 
 ### 

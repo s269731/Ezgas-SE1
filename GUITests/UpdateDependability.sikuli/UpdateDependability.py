@@ -8,6 +8,8 @@ wait("fuel_list.png")
 click("gasoline.png")
 click("1590682218881.png")
 wait("1590855145991.png")
+#Timestamp format was updated after acceptance testing
+#String "null" for Car Sharing disappeared after acceptance testing
 click("1590854978955.png")
 click("1590682218881.png")
 wait("1590855283399.png")

@@ -14,6 +14,7 @@ public class UserConverter {
 		userDto.setUserId(user.getUserId());
 		userDto.setUserName(user.getUserName());
 		userDto.setEmail(user.getEmail());
+		userDto.setPassword(user.getPassword());
 		userDto.setReputation(user.getReputation());
 		userDto.setAdmin(user.getAdmin());
 		

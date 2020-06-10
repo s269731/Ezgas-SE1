@@ -58,7 +58,7 @@ public class UserServiceimpl implements UserService {
 			User u = userRepository.findByEmail(userDto.getEmail());
 			if (u == null) {	// email not present in the database
 				user = new User(userDto.getUserName(), userDto.getPassword(), userDto.getEmail(), 0);
-				user.setAdmin(false);				
+				user.setAdmin(userDto.getAdmin());				
 			} else
 				return null;
 		}

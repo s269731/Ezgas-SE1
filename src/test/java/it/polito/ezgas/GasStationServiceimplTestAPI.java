@@ -605,7 +605,8 @@ public class GasStationServiceimplTestAPI {
 		entityManager.persist(user);
 		 
 		ArrayList<GasStation> gsList=new ArrayList<GasStation>();
-		GasStation gs=new GasStation("test","testAddress",true,true,true,false,false,"enjoy",4.32,7.89,1.0,1.0,1.0,0.0,0.0,user.getUserId(),new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss").format(new java.util.Date()),25.0);
+		GasStation gs=new GasStation("test","testAddress",true,true,true,false,false,"Enjoy",4.32,7.89,1.0,1.0,1.0,0.0,0.0,user.getUserId(),new SimpleDateFormat("MM-dd-yyyy").format(new java.util.Date()),25.0);
+		gs.setUser(user);
 		gsList.add(gs);
 				
 		GasStationServiceimpl gasStationService = new GasStationServiceimpl(gasStationRepository, userRepository);

@@ -11,6 +11,7 @@ import java.util.TreeMap;
 import org.springframework.stereotype.Service;
 
 import exception.GPSDataException;
+import exception.InvalidCarSharingException;
 import exception.InvalidGasStationException;
 import exception.InvalidGasTypeException;
 import exception.InvalidUserException;
@@ -183,6 +184,9 @@ public class GasStationServiceimpl implements GasStationService {
 		case "Methane":
 			gasStations = gasStationRepository.findByHasMethaneTrueOrderByMethanePriceAsc();
 			break;
+		case "PremiumDiesel":
+			gasStations = gasStationRepository.findByHasPremiumDieselTrueOrderByPremiumDieselPriceAsc();
+			break;
 		default:
 			throw new InvalidGasTypeException("Invalid gasoline type");
 		}
@@ -191,10 +195,14 @@ public class GasStationServiceimpl implements GasStationService {
 	}
 
 	@Override
-	public List<GasStationDto> getGasStationsByProximity(double lat, double lon) throws GPSDataException {
+	public List<GasStationDto> getGasStationsByProximity(double lat, double lon, int radius) throws GPSDataException {
 		if (lat < -90 || lat >= 90 || lon < -180 || lon >= 180)
 			throw new GPSDataException("Invalid GPS coordinates");	
 		else {
+			int bound = 1;
+			if (radius > 0)
+				bound = radius;
+			
 			//values that i will need later		
 			double MIN_LAT = Math.toRadians(-90d);  // -PI/2
 			double MAX_LAT = Math.toRadians(90d);   //  PI/2
@@ -206,13 +214,13 @@ public class GasStationServiceimpl implements GasStationService {
 			double radLon = Math.toRadians(lon);
 			
 			//earth radius and max distance allowed (bound) in km
-			double radius= 6371.01; 
-			double bound= 1.0;
+			double earth= 6371.01; 
+			//int bound= 1;
 			
 			//Define a square that contains the "circle of search" of radius bound to avoid doing more calculations than needed
 			// (minLat, minLon) and (maxLat, maxLon) are opposite corners of a bounding rectangle.
 			 
-			double radDist = bound / radius; // angular distance in radians on a great circle
+			double radDist = bound / earth; // angular distance in radians on a great circle
 
 			double minLat = radLat - radDist;
 			double maxLat = radLat + radDist;
@@ -254,7 +262,7 @@ public class GasStationServiceimpl implements GasStationService {
 				//calculate distance from input location to gasStation
 				double a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(radLat) * Math.cos(gsradLat) * Math.pow(Math.sin(dlon / 2),2);
 				double b = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-				distance= radius*b;
+				distance= earth*b;
 				
 				//analise distance
 				if (distance<=bound) {
@@ -272,25 +280,29 @@ public class GasStationServiceimpl implements GasStationService {
 	}
 
 	@Override
-	public List<GasStationDto> getGasStationsWithCoordinates(double lat, double lon, String gasolinetype,
-			String carsharing) throws InvalidGasTypeException, GPSDataException {
+	public List<GasStationDto> getGasStationsWithCoordinates(double lat, double lon, int radius, String gasolinetype, String carsharing)
+			throws InvalidGasTypeException, GPSDataException, InvalidCarSharingException {
 		List<GasStationDto> gasStations = new ArrayList<GasStationDto>();
-				List<GasStationDto> gasStations1 = getGasStationsByProximity(lat, lon);
-				if ((gasolinetype.compareTo("null") != 0 && carsharing.compareTo("null") != 0)) {
-					List<GasStationDto> gasStations2 = getGasStationsWithoutCoordinates(gasolinetype, carsharing);
-					gasStations2.retainAll(gasStations1);
-					gasStations.addAll(gasStations2);
-				} else if (gasolinetype.compareTo("null") != 0 && carsharing.compareTo("null") == 0) {
-					List<GasStationDto> gasStations2 = getGasStationsByGasolineType(gasolinetype);
-					gasStations2.retainAll(gasStations1);
-					gasStations.addAll(gasStations2);
-				} else if (carsharing.compareTo("null") != 0 && gasolinetype.compareTo("null") == 0) {
-					List<GasStationDto> gasStations2 = getGasStationByCarSharing(carsharing);
-					gasStations1.retainAll(gasStations2);
-					gasStations.addAll(gasStations1);
-				} else {
-					gasStations.addAll(gasStations1);
-				}
+			if (radius <= 0)
+				radius = 1;
+			List<GasStationDto> gasStations1 = getGasStationsByProximity(lat, lon, radius);
+			if ((gasolinetype.compareTo("null") != 0 && carsharing.compareTo("null") != 0)) {
+				List<GasStationDto> gasStations2 = getGasStationsWithoutCoordinates(gasolinetype, carsharing);
+				gasStations2.retainAll(gasStations1);
+				gasStations.addAll(gasStations2);
+			} else if (gasolinetype.compareTo("null") != 0 && carsharing.compareTo("null") == 0) {
+				List<GasStationDto> gasStations2 = getGasStationsByGasolineType(gasolinetype);
+				gasStations2.retainAll(gasStations1);
+				gasStations.addAll(gasStations2);
+			} else if (carsharing.compareTo("null") != 0 && gasolinetype.compareTo("null") == 0) {
+				if (carsharing.compareTo("Enjoy") != 0 && carsharing.compareTo("Car2Go") != 0)
+					throw new InvalidCarSharingException("Invalid carsharing");
+				List<GasStationDto> gasStations2 = getGasStationByCarSharing(carsharing);
+				gasStations1.retainAll(gasStations2);
+				gasStations.addAll(gasStations1);
+			} else {
+				gasStations.addAll(gasStations1);
+			}
 			
 		return gasStations;
 	}
@@ -298,11 +310,16 @@ public class GasStationServiceimpl implements GasStationService {
 
 	@Override
 	public List<GasStationDto> getGasStationsWithoutCoordinates(String gasolinetype, String carsharing)
-			throws InvalidGasTypeException {
+			throws InvalidGasTypeException, InvalidCarSharingException {
+		if(gasolinetype.compareTo("Diesel") != 0 && gasolinetype.compareTo("Super") != 0 && gasolinetype.compareTo("SuperPlus") != 0 
+				&& gasolinetype.compareTo("Gas") != 0 && gasolinetype.compareTo("Methane") != 0 && gasolinetype.compareTo("PremiumDiesel") != 0)
+			throw new InvalidGasTypeException("Invalid gasoline type");
+		if (carsharing.compareTo("Enjoy") != 0 && carsharing.compareTo("Car2Go") != 0)
+			throw new InvalidCarSharingException("Invalid carsharing");
 		List<GasStationDto> gasStationDtos = new ArrayList<GasStationDto>();
 		List<GasStationDto> gasStations = getGasStationsByGasolineType(gasolinetype);
 		for (GasStationDto dto:gasStations) {
-			if (dto.getCarSharing().compareTo(carsharing) == 0)
+			if (dto.getCarSharing() == null)
 				gasStationDtos.add(dto);
 		}
 		
@@ -310,37 +327,54 @@ public class GasStationServiceimpl implements GasStationService {
 	}
 
 	@Override
-	public void setReport(Integer gasStationId, double dieselPrice, double superPrice, double superPlusPrice,
-			double gasPrice, double methanePrice, Integer userId)
+	public void setReport(Integer gasStationId, Double dieselPrice, Double superPrice, Double superPlusPrice, Double gasPrice, Double methanePrice, Double premiumDieselPrice, Integer userId)
 			throws InvalidGasStationException, PriceException, InvalidUserException {
-		if(dieselPrice==-1)
-			dieselPrice=5;
-		if(superPrice==-1)
-			superPrice=5;
-		if(superPlusPrice==-1)
-			superPlusPrice=5;
-		if(gasPrice==-1)
-			gasPrice=5;
-		if(methanePrice==-1)
-			methanePrice=5;
-		if(dieselPrice <= 0 || superPrice <= 0 || superPlusPrice <= 0 || gasPrice <= 0 || methanePrice <= 0)
+		if((dieselPrice != null && dieselPrice <= 0) || (superPrice != null && superPrice <= 0) || 
+				(superPlusPrice != null && superPlusPrice <= 0) || (gasPrice != null && gasPrice <= 0) || 
+				(methanePrice != null && methanePrice <= 0) || (premiumDieselPrice != null && premiumDieselPrice <= 0))
 			throw new PriceException("Price cannot be negative or null");
 		if(userId > 0) {
 			if(gasStationId > 0) {
 				GasStation gasStation = gasStationRepository.findByGasStationId(gasStationId);
 				if(gasStation != null) {
-					gasStation.setDieselPrice(dieselPrice);
-					gasStation.setSuperPrice(superPrice);
-					gasStation.setSuperPlusPrice(superPlusPrice);
-					gasStation.setGasPrice(gasPrice);
-					gasStation.setMethanePrice(methanePrice);
-					gasStation.setReportUser(userId);
-					String timeStamp = new SimpleDateFormat("MM-dd-yyyy").format(new java.util.Date());
-					gasStation.setReportTimestamp(timeStamp);
-					gasStation.setUser(userRepository.findByUserId(userId));
-					this.updateDependabilities(Arrays.asList(gasStation));
-					gasStationRepository.save(gasStation);
-				}
+					User userNew = userRepository.findByUserId(userId);
+					if (gasStation.getReportUser() == null || (gasStation.getReportUser() != null && userNew.getReputation() >= gasStation.getUser().getReputation())) {
+							gasStation.setDieselPrice(dieselPrice);
+							gasStation.setSuperPrice(superPrice);
+							gasStation.setSuperPlusPrice(superPlusPrice);
+							gasStation.setGasPrice(gasPrice);
+							gasStation.setMethanePrice(methanePrice);
+							gasStation.setPremiumDieselPrice(premiumDieselPrice);
+							gasStation.setReportUser(userId);
+							String timeStamp = new SimpleDateFormat("MM-dd-yyyy").format(new java.util.Date());
+							gasStation.setReportTimestamp(timeStamp);
+							gasStation.setUser(userNew);
+							this.updateDependabilities(Arrays.asList(gasStation));
+							gasStationRepository.save(gasStation);
+						} else {
+							String[] ts = new String[3];
+							ts = gasStation.getReportTimestamp().split("-");
+							Calendar calendar = Calendar.getInstance();
+							calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(ts[1]));
+							calendar.set(Calendar.MONTH, Integer.parseInt(ts[0])-1);
+							calendar.set(Calendar.YEAR, Integer.parseInt(ts[2]));
+							double diff = System.currentTimeMillis() - calendar.getTimeInMillis();
+							if (diff > 3.456e+8) {
+								gasStation.setDieselPrice(dieselPrice);
+								gasStation.setSuperPrice(superPrice);
+								gasStation.setSuperPlusPrice(superPlusPrice);
+								gasStation.setGasPrice(gasPrice);
+								gasStation.setMethanePrice(methanePrice);
+								gasStation.setPremiumDieselPrice(premiumDieselPrice);
+								gasStation.setReportUser(userId);
+								String timeStamp = new SimpleDateFormat("MM-dd-yyyy").format(new java.util.Date());
+								gasStation.setReportTimestamp(timeStamp);
+								gasStation.setUser(userRepository.findByUserId(userId));
+								this.updateDependabilities(Arrays.asList(gasStation));
+								gasStationRepository.save(gasStation);
+							}	
+						}
+					}
 			} else
 				throw new InvalidGasStationException("GasStationId cannot be negative");
 		} else

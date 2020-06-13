@@ -27,10 +27,10 @@ public class UserAndGasStationConverterTest {
 	@Test
 	public void testToGasStationDtoObject() {
 		
-		GasStation gasStation = new GasStation("EnerCoop", "Via Macchieraldo 2 Biella", true, true, true, true, true, "Enjoy", 45.5549032, 8.0569401, 1.1, 1.2, 1.3, 1.4, 1.5, 5, "2020/05/17-18:30:17", 3.3);
+		GasStation gasStation = new GasStation("EnerCoop", "Via Macchieraldo 2 Biella", true, true, true, true, true, true, "Enjoy", 45.5549032, 8.0569401, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 5, "05-17-2020", 3.3);
 		Integer gasStationId = 5;
 		gasStation.setGasStationId(gasStationId);
-		GasStationDto gasStationDto = new GasStationDto(gasStationId,"EnerCoop", "Via Macchieraldo 2 Biella", true, true, true, true, true, "Enjoy", 45.5549032, 8.0569401, 1.1, 1.2, 1.3, 1.4, 1.5, 5, "2020/05/17-18:30:17", 3.3);
+		GasStationDto gasStationDto = new GasStationDto(gasStationId,"EnerCoop", "Via Macchieraldo 2 Biella", true, true, true, true, true, true, "Enjoy", 45.5549032, 8.0569401, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 5, "05-17-2020", 3.3);
 
 		GasStationDto result = GasStationConverter.toGasStationDto(gasStation);
 		assert(result.equals(gasStationDto));
@@ -41,9 +41,9 @@ public class UserAndGasStationConverterTest {
 		
 		List<GasStation> gasStations = new ArrayList<GasStation> ();
 		
-		GasStation gs1 = new GasStation("EnerCoop", "Via Falletti 15 Biella", true, true, true, true, true, "Enjoy", 45.542, 8.0569401, 1.1, 1.2, 1.3, 1.4, 1.5, 5, "2020/05/17-18:30:17", 3.3);
-		GasStation gs2 = new GasStation("Eni", "Via Macchieraldo 2 Biella", true, true, true, true, true, "Enjoy", 45.55, 8.0569401, 1.1, 1.2, 1.3, 1.4, 1.5, 5, "2020/05/17-18:30:17", 3.3);
-		GasStation gs3 = new GasStation("Esso", "Via Ivrea 16 Biella", true, true, true, true, true, "Enjoy", 45.56, 8.0569401, 1.1, 1.2, 1.3, 1.4, 1.5, 5, "2020/05/17-18:30:17", 3.3);
+		GasStation gs1 = new GasStation("EnerCoop", "Via Falletti 15 Biella", true, true, true, true, true, true, "Enjoy", 45.542, 8.0569401, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 5, "05-17-2020", 3.3);
+		GasStation gs2 = new GasStation("Eni", "Via Macchieraldo 2 Biella", true, true, true, true, true, true, "Enjoy", 45.55, 8.0569401, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 5, "05-17-2020", 3.3);
+		GasStation gs3 = new GasStation("Esso", "Via Ivrea 16 Biella", true, true, true, true, true, true, "Enjoy", 45.56, 8.0569401, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 5, "05-17-2020", 3.3);
 		gs1.setGasStationId(1);
 		gs2.setGasStationId(2);
 		gs3.setGasStationId(3);
@@ -53,9 +53,9 @@ public class UserAndGasStationConverterTest {
 		gasStations.add(gs3);
 		
 		List<GasStationDto> gasStationsDto = new ArrayList<GasStationDto> ();
-		GasStationDto gsDto1 = new GasStationDto(1,"EnerCoop", "Via Falletti 15 Biella", true, true, true, true, true, "Enjoy", 45.542, 8.0569401, 1.1, 1.2, 1.3, 1.4, 1.5, 5, "2020/05/17-18:30:17", 3.3);
-		GasStationDto gsDto2 = new GasStationDto(2,"Eni", "Via Macchieraldo 2 Biella", true, true, true, true, true, "Enjoy", 45.55, 8.0569401, 1.1, 1.2, 1.3, 1.4, 1.5, 5, "2020/05/17-18:30:17", 3.3);
-		GasStationDto gsDto3 = new GasStationDto(3,"Esso", "Via Ivrea 16 Biella", true, true, true, true, true, "Enjoy", 45.56, 8.0569401, 1.1, 1.2, 1.3, 1.4, 1.5, 5, "2020/05/17-18:30:17", 3.3);
+		GasStationDto gsDto1 = new GasStationDto(1,"EnerCoop", "Via Falletti 15 Biella", true, true, true, true, true, true, "Enjoy", 45.542, 8.0569401, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 5, "05-17-2020", 3.3);
+		GasStationDto gsDto2 = new GasStationDto(2,"Eni", "Via Macchieraldo 2 Biella", true, true, true, true, true, true, "Enjoy", 45.55, 8.0569401, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 5, "05-17-2020", 3.3);
+		GasStationDto gsDto3 = new GasStationDto(3,"Esso", "Via Ivrea 16 Biella", true, true, true, true, true, true, "Enjoy", 45.56, 8.0569401, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 5, "05-17-2020", 3.3);
 		
 		gasStationsDto.add(gsDto1);
 		gasStationsDto.add(gsDto2);

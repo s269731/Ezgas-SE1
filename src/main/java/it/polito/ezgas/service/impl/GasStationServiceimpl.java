@@ -57,17 +57,17 @@ public class GasStationServiceimpl implements GasStationService {
 	public GasStationDto saveGasStation(GasStationDto gasStationDto) throws PriceException, GPSDataException {
 		if (gasStationDto.getLat() < -90 || gasStationDto.getLat() >= 90 || gasStationDto.getLon() < -180 || gasStationDto.getLon() >= 180)
 			throw new GPSDataException("Invalid GPS coordinates");	
-		if (gasStationDto.getDieselPrice() != null && gasStationDto.getDieselPrice() <= 0)
+		if (gasStationDto.getDieselPrice() != null && gasStationDto.getDieselPrice() < 0)
 			gasStationDto.setDieselPrice(null);
-		if (gasStationDto.getSuperPrice() != null && gasStationDto.getSuperPrice() <= 0)
+		if (gasStationDto.getSuperPrice() != null && gasStationDto.getSuperPrice() < 0)
 			gasStationDto.setSuperPrice(null);
-		if (gasStationDto.getSuperPlusPrice() != null && gasStationDto.getSuperPlusPrice() <= 0)
+		if (gasStationDto.getSuperPlusPrice() != null && gasStationDto.getSuperPlusPrice() < 0)
 			gasStationDto.setSuperPlusPrice(null);
-		if (gasStationDto.getGasPrice() != null && gasStationDto.getGasPrice() <= 0)
+		if (gasStationDto.getGasPrice() != null && gasStationDto.getGasPrice() < 0)
 			gasStationDto.setGasPrice(null);
-		if (gasStationDto.getMethanePrice() != null && gasStationDto.getMethanePrice() <= 0)
+		if (gasStationDto.getMethanePrice() != null && gasStationDto.getMethanePrice() < 0)
 			gasStationDto.setMethanePrice(null);
-		if (gasStationDto.getPremiumDieselPrice() != null && gasStationDto.getPremiumDieselPrice() <= 0)
+		if (gasStationDto.getPremiumDieselPrice() != null && gasStationDto.getPremiumDieselPrice() < 0)
 			gasStationDto.setPremiumDieselPrice(null);
 		GasStation gasStation;
 		if (gasStationDto.getGasStationId() != null && gasStationRepository.findByGasStationId(gasStationDto.getGasStationId()) != null) {	// gas station already inserted --> update
@@ -78,44 +78,57 @@ public class GasStationServiceimpl implements GasStationService {
 				if (gs != null)
 					return null;
 			}			
-			if (gasStationDto.getHasDiesel() == false)
-				gasStation.setDieselPrice(null);
-			else
-				gasStation.setDieselPrice(gasStationDto.getDieselPrice());
-			if (gasStationDto.getHasSuper() == false)
-				gasStation.setSuperPrice(null);
-			else
-				gasStation.setSuperPrice(gasStationDto.getSuperPrice());
-			if (gasStationDto.getHasSuperPlus() == false)
-				gasStation.setSuperPlusPrice(null);
-			else
-				gasStation.setSuperPlusPrice(gasStationDto.getSuperPlusPrice());
-			if (gasStationDto.getHasGas() == false)
-				gasStation.setGasPrice(null);
-			else
-				gasStation.setGasPrice(gasStationDto.getGasPrice());
-			if (gasStationDto.getHasMethane() == false)
-				gasStation.setMethanePrice(null);
-			else
-				gasStation.setMethanePrice(gasStationDto.getMethanePrice());
-			if (gasStationDto.getHasPremiumDiesel() == false)
-				gasStation.setPremiumDieselPrice(null);
-			else
-				gasStation.setPremiumDieselPrice(gasStationDto.getPremiumDieselPrice());
+
 		} else {	// new gas station --> insert
 			GasStation gs = gasStationRepository.findByGasStationAddressAndLatAndLon(gasStationDto.getGasStationAddress(), gasStationDto.getLat(), gasStationDto.getLon());
 			if (gs != null)
 				return null;
 			else {
 				gasStation = new GasStation();
-				gasStation.setDieselPrice(gasStationDto.getDieselPrice());
-				gasStation.setSuperPrice(gasStationDto.getSuperPrice());
-				gasStation.setSuperPlusPrice(gasStationDto.getSuperPlusPrice());
-				gasStation.setGasPrice(gasStationDto.getGasPrice());
-				gasStation.setMethanePrice(gasStationDto.getMethanePrice());
-				gasStation.setPremiumDieselPrice(gasStationDto.getPremiumDieselPrice());
 			}
 		}
+		
+		if (gasStationDto.getHasDiesel() == false)
+			gasStation.setDieselPrice(null);
+		else if (gasStationDto.getHasDiesel() == true && gasStationDto.getDieselPrice() == null)
+			gasStation.setDieselPrice(0.0);
+		else
+			gasStation.setDieselPrice(gasStationDto.getDieselPrice());
+		
+		if (gasStationDto.getHasSuper() == false)
+			gasStation.setSuperPrice(null);
+		else if (gasStationDto.getHasSuper() == true && gasStationDto.getSuperPrice() == null)
+			gasStation.setSuperPrice(0.0);
+		else
+			gasStation.setSuperPrice(gasStationDto.getSuperPrice());
+		
+		if (gasStationDto.getHasSuperPlus() == false)
+			gasStation.setSuperPlusPrice(null);
+		else if (gasStationDto.getHasSuperPlus() == true && gasStationDto.getSuperPlusPrice() == null)
+			gasStation.setSuperPlusPrice(0.0);
+		else
+			gasStation.setSuperPlusPrice(gasStationDto.getSuperPlusPrice());
+		
+		if (gasStationDto.getHasGas() == false)
+			gasStation.setGasPrice(null);
+		else if (gasStationDto.getHasGas() == true && gasStationDto.getGasPrice() == null)
+			gasStation.setGasPrice(0.0);
+		else
+			gasStation.setGasPrice(gasStationDto.getGasPrice());
+		
+		if (gasStationDto.getHasMethane() == false)
+			gasStation.setMethanePrice(null);
+		else if (gasStationDto.getHasMethane() == true && gasStationDto.getMethanePrice() == null)
+			gasStation.setMethanePrice(0.0);
+		else
+			gasStation.setMethanePrice(gasStationDto.getMethanePrice());
+		
+		if (gasStationDto.getHasPremiumDiesel() == false)
+			gasStation.setPremiumDieselPrice(null);
+		else if (gasStationDto.getHasPremiumDiesel() == true && gasStationDto.getPremiumDieselPrice() == null)
+			gasStation.setPremiumDieselPrice(0.0);
+		else
+			gasStation.setPremiumDieselPrice(gasStationDto.getPremiumDieselPrice());
 		
 		gasStation.setGasStationName(gasStationDto.getGasStationName());
 		gasStation.setGasStationAddress(gasStationDto.getGasStationAddress());
@@ -132,12 +145,12 @@ public class GasStationServiceimpl implements GasStationService {
 		gasStation.setHasMethane(gasStationDto.getHasMethane());
 		gasStation.setHasPremiumDiesel(gasStationDto.getHasPremiumDiesel());
 		
-		if ((gasStationDto.getDieselPrice() != null && gasStationDto.getDieselPrice() <= 0) || 
-				(gasStationDto.getSuperPrice() != null && gasStationDto.getSuperPrice() <= 0) || 
-				(gasStationDto.getSuperPlusPrice() != null && gasStationDto.getSuperPlusPrice() <= 0) || 
-				(gasStationDto.getGasPrice() != null && gasStationDto.getGasPrice() <= 0) || 
-				(gasStationDto.getMethanePrice() != null && gasStationDto.getMethanePrice() <= 0) || 
-				(gasStationDto.getPremiumDieselPrice() != null && gasStationDto.getPremiumDieselPrice() <= 0))
+		if ((gasStationDto.getDieselPrice() != null && gasStationDto.getDieselPrice() < 0) || 
+				(gasStationDto.getSuperPrice() != null && gasStationDto.getSuperPrice() < 0) || 
+				(gasStationDto.getSuperPlusPrice() != null && gasStationDto.getSuperPlusPrice() < 0) || 
+				(gasStationDto.getGasPrice() != null && gasStationDto.getGasPrice() < 0) || 
+				(gasStationDto.getMethanePrice() != null && gasStationDto.getMethanePrice() < 0) || 
+				(gasStationDto.getPremiumDieselPrice() != null && gasStationDto.getPremiumDieselPrice() < 0))
 			throw new PriceException("Prices cannot be negative or equal to 0"); // This exception is never thrown, but we included it for coverage reasons
 		
 		GasStation gs = gasStationRepository.save(gasStation);

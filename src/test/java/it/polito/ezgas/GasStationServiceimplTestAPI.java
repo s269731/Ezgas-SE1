@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import exception.GPSDataException;
+import exception.InvalidCarSharingException;
 import exception.InvalidGasStationException;
 import exception.InvalidGasTypeException;
 import exception.InvalidUserException;
@@ -44,10 +45,10 @@ public class GasStationServiceimplTestAPI {
 		
 		GasStationServiceimpl gasStationServiceimpl = new GasStationServiceimpl(gasStationRepository, null);
 		
-		GasStation gasStation = new GasStation("ExpressGas", "Via Galimberti 6", true, true, true, true, true, "Enjoy", 45, 8, 1.1, 1.2, 1.3, 1.4, 1.5, 5, "2020/05/17-18:30:17", 3.3);
+		GasStation gasStation = new GasStation("ExpressGas", "Via Galimberti 6", true, true, true, true, true,true, "Enjoy", 45, 8, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, null, 0);
 		entityManager.persist(gasStation);
 		
-		GasStationDto gasStationDto = new GasStationDto(gasStation.getGasStationId(), "ExpressGas", "Via Galimberti 6", true, true, true, true, true, "Enjoy", 45, 8, 1.1, 1.2, 1.3, 1.4, 1.5, 5, "2020/05/17-18:30:17", 3.3);	
+		GasStationDto gasStationDto = new GasStationDto(gasStation.getGasStationId(), "ExpressGas", "Via Galimberti 6", true, true, true, true, true,true, "Enjoy", 45, 8, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, null, 0);	
 		
 		GasStationDto result=gasStationServiceimpl.getGasStationById(gasStation.getGasStationId());
 
@@ -76,24 +77,30 @@ public class GasStationServiceimplTestAPI {
 	}
 	
 	@Test
-	public void testSaveGasStationNew() throws PriceException, GPSDataException{ 
-		GasStation gs=new GasStation("test","testAddressGs",false,false,false,false,false,"enjoy",4.32,7.89,5.0,5.0,5.0,5.0,5.0,0,"",0.0);
+	public void testSaveGasStationNew() throws PriceException, GPSDataException { 
+		
+		//I create this gasStation to know what id number will be given to the following one that is added
+		GasStation gs=new GasStation("gs","addressGs",true,true,false,false,false,false,"Enjoy",4.00,7.00,0.0,0.0,null,null,null,null,null,null,0.0);
 		entityManager.persist(gs);
-		//equal coordinates but different address 
-		GasStationDto gsDtoIn=new GasStationDto(null,"test","testAddress",true,true,true,true,true,"enjoy",4.32,7.89,1.0,3.0,2.0,4.0,5.0,0,"2020/05/26-09:00",4.0);
+		
+		//Insert new gasStation 
+		GasStationDto gsDtoIn=new GasStationDto(null,"test0","testAddress0",true,false,false,false,false,false,"Car2Go",4.10,7.10,0.0,null,null,null,null,null,null,null,0.0);
 
-	    GasStationDto gsDtoOut=new GasStationDto(gs.getGasStationId()+1,"test","testAddress",false,false,false,false,false,"enjoy",4.32,7.89,5.0,5.0,5.0,5.0,5.0,0,"",0.0);
+	    GasStationDto gsDtoOut=new GasStationDto(gs.getGasStationId()+1,"test0","testAddress0",true,false,false,false,false,false,"Car2Go",4.10,7.10,0.0,null,null,null,null,null,null,null,0.0);
+
 		GasStationServiceimpl gasStationService = new GasStationServiceimpl(gasStationRepository, null);
-		GasStationDto result= gasStationService.saveGasStation(gsDtoIn);
+		GasStationDto result = gasStationService.saveGasStation(gsDtoIn);
 		assert(result.equals(gsDtoOut));
 	}
 	
 	@Test
-	public void testSaveGasStationNewReturnNull() throws PriceException, GPSDataException{ 
-		GasStation gs=new GasStation("test","testAddressGs",false,false,false,false,false,"enjoy",4.32,7.89,5.0,5.0,5.0,5.0,5.0,0,"",0.0);
+	public void testSaveGasStationNewReturnNull() throws PriceException, GPSDataException {
+		
+		GasStation gs= new GasStation("test1","testAddress1",true,true,false,false,false,false,"Enjoy",4.20,7.20,0.0,0.0,null,null,null,null,null,null,0.0);
 		entityManager.persist(gs);
-		//equal coordinates and address 
-		GasStationDto gsDtoIn=new GasStationDto(null,"test","testAddressGs",true,true,true,true,true,"enjoy",4.32,7.89,1.0,3.0,2.0,4.0,5.0,0,"2020/05/26-09:00",4.0);
+		
+		//Try to save a gas Station with the same coordinates and address -> returns null
+		GasStationDto gsDtoIn=new GasStationDto(null,"test1","testAddress1",true,true,false,false,false,false,"Enjoy",4.20,7.20,0.0,0.0,null,null,null,null,null,null,0.0);
 
 		GasStationServiceimpl gasStationService = new GasStationServiceimpl(gasStationRepository, null);
 		Assertions.assertNull(gasStationService.saveGasStation(gsDtoIn));
@@ -104,15 +111,11 @@ public class GasStationServiceimplTestAPI {
 		
 		GasStationServiceimpl gasStationServiceimpl = new GasStationServiceimpl(gasStationRepository, null);
 
-		//GasStation nel db con stesso Id
-		GasStation gasStation1 = new GasStation("EnerCoop", "Via Macchieraldo 2 Biella", true, true, true, true, true, "Enjoy", 45.7895214, 8.0568740, 1.1, 1.2, 1.3, 1.4, 1.5, 5, "2020/05/17-18:30:17", 3.3);	
-		GasStation gasStation2 = new GasStation("Starita", "Via Monti 3 Biella", true, true, true, true, true, "Car2Go", 45.5549032, 8.0569401, 1.1, 1.2, 1.3, 1.4, 1.5, 5, "2020/05/17-18:30:17", 3.3);	
+		GasStation gasStation1 = new GasStation("Starita", "Via Monti 3 Biella", true, true, true, true, true, true, "Car2Go", 45.5549032, 8.0569401, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, null, 0.0);	
 		entityManager.persist(gasStation1);
-		entityManager.persist(gasStation2);
 		
-		//GasStation di input con nuovi dati (che sarà anche la gasStation che mi aspetto ritornata)
-		GasStationDto gasStationDtoIn = new GasStationDto(gasStation2.getGasStationId(), "Starita", "Via Croce 3 Biella", true, true, true, true, true, "Enjoy", 45.5549040, 8.0569440, 1.1, 1.2, 1.3, 1.4, 1.5, 5, "2020/05/17-18:30:17", 3.3);	
-		
+		//GasStation di input con nuovo nome e carSharing (che sarà anche la gasStation che mi aspetto ritornata)
+		GasStationDto gasStationDtoIn = new GasStationDto(gasStation1.getGasStationId(), "NewStarita", "Via Monti 3 Biella", true, true, true, true, true, true, "Enjoy", 45.5549040, 8.0569440, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, null, 0.0);		
 		GasStationDto result = gasStationServiceimpl.saveGasStation(gasStationDtoIn);
 
 		assert(result.equals(gasStationDtoIn));
@@ -124,18 +127,16 @@ public class GasStationServiceimplTestAPI {
 		
 		GasStationServiceimpl gasStationServiceimpl = new GasStationServiceimpl(gasStationRepository, null);
 
-		//GasStation nel db con stesso Id
-		GasStation gasStation1 = new GasStation("EnerCoop", "Via Macchieraldo 2 Biella", false, true, false, true, true, "null", 45.7895214, 8.0568740, 1.1, 1.2, 1.3, 1.4, 1.5, 5, "2020/05/17-18:30:17", 3.3);	
-		GasStation gasStation2 = new GasStation("Starita", "Via Monti 3 Biella", true, true, true, true, true, "Car2Go", 45.5549032, 8.0569401, 1.1, 1.2, 1.3, 1.4, 1.5, 5, "2020/05/17-18:30:17", 3.3);	
+		//I save two gas Stations in DB
+		GasStation gasStation1 = new GasStation("EnerCoop", "Via Macchieraldo 2 Biella", false, true, false, true, true, true, "Enjoy", 45.7895214, 8.0568740, null, 0.0, null, 0.0, 0.0, 0.0, null, null, 0.0);	
+		GasStation gasStation2 = new GasStation("Starita", "Via Monti 3 Biella", true, true, true, true, true, true, "Car2Go", 45.5549032, 8.0569401, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, null, 0.0);	
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
 		
-		//GasStation di input con nuovi dati (GasStation already found in the db with same address/&lat&lon)
-		GasStationDto gasStationDtoIn = new GasStationDto(gasStation2.getGasStationId(), "Starita", "Via Macchieraldo 2 Biella", true, true, true, true, true, "Enjoy", 45.7895214, 8.0568740, 1.1, 1.2, 1.3, 1.4, 1.5, 5, "2020/05/17-18:30:17", 3.3);	
+		//I try to modify gasStation2 by putting new type of car sharing and the same coordinates and address of gasStation1 -> should return null
+		GasStationDto gasStationDtoIn = new GasStationDto(gasStation2.getGasStationId(), "Starita", "Via Macchieraldo 2 Biella", true, true, true, true, true, true, "Enjoy", 45.7895214, 8.0568740, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, null, 0.0);	
 		
-		GasStationDto result = gasStationServiceimpl.saveGasStation(gasStationDtoIn);
-
-		assert(result == null);
+		Assertions.assertNull(gasStationServiceimpl.saveGasStation(gasStationDtoIn));
 		
 	}
 	
@@ -144,7 +145,7 @@ public class GasStationServiceimplTestAPI {
 		
 		GasStationServiceimpl gasStationServiceimpl = new GasStationServiceimpl(gasStationRepository, null);
 		
-		GasStationDto gasStationDto = new GasStationDto( null, "EnerCoop", "Via Macchieraldo 2 Biella", true, true, true, true, true, "Enjoy", -100, 8.0569401, 1.1, 1.2, 1.3, 1.4, 1.5, 5, "2020/05/17-18:30:17", 3.3);	
+		GasStationDto gasStationDto = new GasStationDto( null, "EnerCoop", "Via Macchieraldo 2 Biella", true, true, true, true, true,true, "Enjoy", 200, 8, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, null, 0);	
 		Assertions.assertThrows(GPSDataException.class, () -> { gasStationServiceimpl.saveGasStation(gasStationDto);
 		} ) ;
 		
@@ -152,14 +153,14 @@ public class GasStationServiceimplTestAPI {
 	
 	@Test
 	public void testSaveGasStationInvalidLon()  {
-		GasStation gasStation1 = new GasStation("EnerCoop", "Via Macchieraldo 2 Biella", false, true, false, true, true, "null", 45.7895214, 8.0568740, 1.1, 1.2, 1.3, 1.4, 1.5, 5, "2020/05/17-18:30:17", 3.3);	
-		GasStation gasStation2 = new GasStation("Starita", "Via Monti 3 Biella", true, true, true, true, true, "Car2Go", 45.5549032, 8.0569401, 1.1, 1.2, 1.3, 1.4, 1.5, 5, "2020/05/17-18:30:17", 3.3);	
+		GasStation gasStation1 = new GasStation("EnerCoop", "Via Macchieraldo 2 Biella", false, true, false, true, true,true, "null", 45.7895214, 8.0568740, null, 0.0, 0.0, 0.0, 0.0, 0.0, null, null, 0);	
+		GasStation gasStation2 = new GasStation("Starita", "Via Monti 3 Biella", true, true, true, true, true, true, "Car2Go", 45.5549032, 8.0569401, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, null, null, 0);	
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
 		
 		GasStationServiceimpl gasStationServiceimpl = new GasStationServiceimpl(gasStationRepository, null);
 
-		GasStationDto gasStationDto = new GasStationDto(gasStation1.getGasStationId(), "EnerCoop", "Via Macchieraldo 2 Biella", true, true, true, true, true, "Enjoy", 45, 200, 1.1, 1.2, 1.3, 1.4, 1.5, 5, "2020/05/17-18:30:17", 3.3);	
+		GasStationDto gasStationDto = new GasStationDto(gasStation1.getGasStationId(), "EnerCoop", "Via Macchieraldo 2 Biella", true, true, true, true, true,true, "Enjoy", 45, 200, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, null, null, 0);	
 		Assertions.assertThrows(GPSDataException.class, () -> { gasStationServiceimpl.saveGasStation(gasStationDto);
 		} ) ;
 		
@@ -174,9 +175,9 @@ public class GasStationServiceimplTestAPI {
 	
 	@Test
 	public void testGetAllGasStation(){ //no empty repository 
-		GasStation gs1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gs2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Car2Go", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gs3 = new GasStation("Example3", "Address3", false, false, false, true, true, null, 45.05, 8.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gs1 = new GasStation("Example1", "Address2", false, true, false, true, true,true, "Enjoy", 45.7895214, 8.0568740, null, 0.0, null, 0.0, 0.0, 0.0, null, null, 0);	
+		GasStation gs2 = new GasStation("Example2", "Address2", false, true, false, true, true,true, "Car2Go", 45.9895214, 8.1568740, null, 0.0, null, 0.0, 0.0, 0.0, null, null, 0);	
+		GasStation gs3 = new GasStation("Example3", "Address3", false, true, false, true, true,true, "Enjoy", 45.3895214, 8.2568740, null, 0.0, null, 0.0, 0.0, 0.0, null, null, 0);	
 		
 		entityManager.persist(gs1);
 		entityManager.persist(gs2);
@@ -187,13 +188,11 @@ public class GasStationServiceimplTestAPI {
 		assert(result.size()==3);
 	}
 	
-  
-	
 	@Test
 	public void testDeleteUnregisteredGasStation() throws InvalidGasStationException{ 
-		GasStation gs1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gs2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Car2Go", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gs3 = new GasStation("Example3", "Address3", false, false, false, true, true, null, 45.05, 8.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gs1 = new GasStation("Example1", "Address1", true, false, true, true, false,true, "Enjoy", 45.55, 8.05, 0.0, null, 0.0, 0.0, null, 0.0, null, "null", 0);
+		GasStation gs2 = new GasStation("Example2", "Address2", true, true, false, true, false,true, "Car2Go", 45.65, 8.25, 0.0, 0.0, null, 0.0, null, 0.0, null, "null", 0);
+		GasStation gs3 = new GasStation("Example3", "Address3", false, false, false, true, true,true, null, 45.05, 8.15, null,null, null, 0.0, 0.0,0.0, null, "null", 0);
 		
 		entityManager.persist(gs1);
 		entityManager.persist(gs2);
@@ -210,12 +209,11 @@ public class GasStationServiceimplTestAPI {
 		Assertions.assertThrows(InvalidGasStationException.class,()->{gasStationService.deleteGasStation(gsId);});
 	}
 	
-	
 	@Test
 	public void testDeleteRegisteredGasStation() throws InvalidGasStationException{ 		
-		GasStation gs1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gs2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Car2Go", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gs3 = new GasStation("Example3", "Address3", false, false, false, true, true, null, 45.05, 8.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gs1 = new GasStation("Example1", "Address1", true, false, true, true, false,true, "Enjoy", 45.55, 8.05, 0.0, null, 0.0, 0.0, null, 0.0, null, "null", 0);
+		GasStation gs2 = new GasStation("Example2", "Address2", true, true, false, true, false, true, "Car2Go", 45.65, 8.25, 0.0, 0.0, null, 0.0, null, 0.0, null, "null", 0);
+		GasStation gs3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, null, 45.05, 8.15, null, null, null, 0.0, 0.0, 0.0, null, "null", 0);
 		
 		entityManager.persist(gs1);
 		entityManager.persist(gs2);
@@ -229,15 +227,15 @@ public class GasStationServiceimplTestAPI {
 	
 	@Test
 	public void testGetGasStationsByGasolineType() throws InvalidGasTypeException {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Car2Go", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, true, true, true, false, "Car2Go", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 45.55, 8.05, 0.0,null, 0.0, 0.0, null, 0.0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, true, "Car2Go", 45.65, 8.25, 0.0, 0.0, null, 0.0, null, 0.0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, true, true, true, false, true, "Car2Go", 45.65, 8.25, null, 0.0, 0.0, 0.0, null, 0.0, null, "null", 0);
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
 		entityManager.persist(gasStation3);
 		
-		GasStationDto gasStationDto1 = new GasStationDto(gasStation1.getGasStationId(), "Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStationDto gasStationDto2 = new GasStationDto(gasStation2.getGasStationId(), "Example2", "Address2", true, true, false, true, false, "Car2Go", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStationDto gasStationDto1 = new GasStationDto(gasStation1.getGasStationId(), "Example1", "Address1", true, false, true, true, false, true, "Enjoy", 45.55, 8.05, 0.0, null, 0.0, 0.0, null,0.0, null, "null", 0);
+		GasStationDto gasStationDto2 = new GasStationDto(gasStation2.getGasStationId(), "Example2", "Address2", true, true, false, true, false, true, "Car2Go", 45.55, 8.05, 0.0, 0.0,null, 0.0, null, 0.0, null, "null", 0);
 			
 		List<GasStationDto> gasStationDtos = new ArrayList<GasStationDto>();
 		gasStationDtos.add(gasStationDto1);
@@ -252,9 +250,9 @@ public class GasStationServiceimplTestAPI {
 	
 	@Test
 	public void testGetGasStationsByGasolineTypeNullList() throws InvalidGasTypeException {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", false, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", false, true, false, true, false, "Car2Go", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, true, true, true, false, "Car2Go", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation1 = new GasStation("Example1", "Address1", false, false, true, true, false, true, "Enjoy", 45.55, 8.05, null,null,0.0, 0.0, null, 0.0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", false, true, false, true, false, true, "Car2Go", 45.65, 8.25, null, 0.0, null, 0.0, null, 0.0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, true, true, true, false, true, "Car2Go", 45.65, 8.25, null, 0.0, 0.0, 0.0, null, 0.0, null, "null", 0);
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
 		entityManager.persist(gasStation3);
@@ -279,8 +277,7 @@ public class GasStationServiceimplTestAPI {
 	public void testGetGasStationByProximityLatException() {
 		
 		GasStationServiceimpl gasStationServiceimpl = new GasStationServiceimpl(gasStationRepository, null);
-		
-		Assertions.assertThrows(GPSDataException.class, () -> { gasStationServiceimpl.getGasStationsByProximity(-100, 0);
+		Assertions.assertThrows(GPSDataException.class, () -> { gasStationServiceimpl.getGasStationsByProximity(-100, 0, 1);
 			} );
 	}
 	
@@ -288,8 +285,7 @@ public class GasStationServiceimplTestAPI {
 	public void testGetGasStationByProximityLonException() {
 		
 		GasStationServiceimpl gasStationServiceimpl = new GasStationServiceimpl(gasStationRepository, null);
-		
-		Assertions.assertThrows(GPSDataException.class, () -> { gasStationServiceimpl.getGasStationsByProximity(0, 200);
+		Assertions.assertThrows(GPSDataException.class, () -> { gasStationServiceimpl.getGasStationsByProximity(0, 200, 1);
 			} );
 	}
 	
@@ -298,23 +294,23 @@ public class GasStationServiceimplTestAPI {
 		
 		GasStationServiceimpl gasStationServiceimpl = new GasStationServiceimpl(gasStationRepository, null);
 		
-		//Set lat, lon per Canterino
+		//Set lat, lon for position where search is performed
 		double lat=45.551897;
 		double lon=8.0477697;
 		
 		//GasStation nel raggio (distance = 0.78) 
-		GasStation gs1 = new GasStation("EnerCoop", "Via Macchieraldo 2 Biella", true, true, true, true, true, "Enjoy", 45.5549032, 8.0569401, 1.1, 1.2, 1.3, 1.4, 1.5, null, "2020/05/17-18:30:17", 3.3);
+		GasStation gs1 = new GasStation("EnerCoop", "Via Macchieraldo 2 Biella", true, true, true, true, true, true, "Enjoy", 45.5549032, 8.0569401, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, null, 0.0);
 		entityManager.persist(gs1);
 		//GasStation in square, but not in radius (distance = 1.36)
-		GasStation gs2 =new GasStation("Esso", "Viale Roma Biella", true, true, true, true, true, "Car2Go",45.5560598,8.0642756, 1.1, 1.2, 1.3, 1.4, 1.5, null, "2020/05/18-18:30:17", 3.3);
+		GasStation gs2 =new GasStation("Esso", "Viale Roma Biella", true, true, true, true, true, true, "Car2Go", 45.5560598, 8.0642756, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, null, 0.0);
 		entityManager.persist(gs2);
-		//GasStation outside alltogether (distance = 61.69)
-		GasStation gs3 =new GasStation("Eni", "Via Magenta 52 Torino", true, true, true, true, true, "null", 45.0671772,7.6639721, 1.1, 1.2, 1.3, 1.4, 1.5, null, "2020/05/19-19:30:17", 3.3);
+		//GasStation outside radius of search (distance = 61.69)
+		GasStation gs3 =new GasStation("Eni", "Via Magenta 52 Torino", true, true, true, true, true, true, "null", 45.0671772,7.6639721, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, null, 0.0);
 		entityManager.persist(gs3);
 
 		//Create gasStationDto I need
-		GasStationDto gsDto1 = new GasStationDto(gs1.getGasStationId(),"EnerCoop", "Via Macchieraldo 2 Biella", true, true, true, true, true, "Enjoy", 45.5549032, 8.0569401, 1.1, 1.2, 1.3, 1.4, 1.5, null, "2020/05/17-18:30:17", 3.3);
-	
+		GasStationDto gsDto1 = new GasStationDto(gs1.getGasStationId(),"EnerCoop", "Via Macchieraldo 2 Biella", true, true, true, true, true, true, "Enjoy", 45.5549032, 8.0569401, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, null, 0.0);
+		
 		//Create List of correct results
 		List<GasStationDto> gasStationsDto = new ArrayList<GasStationDto>();
 		gasStationsDto.add(gsDto1);
@@ -324,29 +320,28 @@ public class GasStationServiceimplTestAPI {
 		 * 
 		 */
 		
-		List<GasStationDto> result = gasStationServiceimpl.getGasStationsByProximity(lat, lon);
+		//In this search we insert negative radius to check that it will be set to default of 1 km
+		List<GasStationDto> result = gasStationServiceimpl.getGasStationsByProximity(lat, lon, -1);
 
 		assert(result.equals(gasStationsDto));
 	}
 	
 	@Test
-	public void testGetGasStationsWithoutCoordinates() throws InvalidGasTypeException {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Car2Go", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, "null", 45.5549090, 8.0569411, 0, 0, 0.0, 0, 0, null, "null", 0);
+	public void testGetGasStationsWithoutCoordinates() throws InvalidGasTypeException, InvalidCarSharingException {
+		
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 45.55, 8.05, 0.0, null, 0.0, 0.0, null, 0.0, null, null, 0.0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, true, "Car2Go", 45.65, 8.25, 0.0, 0.0, null, 0.0, null, 0.0, null, null, 0.0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, "null", 45.5549090, 8.0569411, null, null, null, 0.0, 0.0, 0.0, null, null, 0.0);
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
 		entityManager.persist(gasStation3);
 		
 		List<GasStationDto> gasStationDtos = new ArrayList<GasStationDto>();
-		GasStationDto gasStationDto1 = new GasStationDto(gasStation1.getGasStationId(), "Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStationDto gasStationDto2 = new GasStationDto(gasStation2.getGasStationId(), "Example2", "Address2", true, true, false, true, false, "Car2Go", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStationDto gasStationDto1 = new GasStationDto(gasStation1.getGasStationId(), "Example1", "Address1", true, false, true, true, false, true, "Enjoy", 45.55, 8.05, 0.0, null, 0.0, 0.0, null, 0.0, null, null, 0.0);
 		gasStationDtos.add(gasStationDto1);
-		gasStationDtos.add(gasStationDto2);
 		
 		GasStationServiceimpl gasStationServiceimpl = new GasStationServiceimpl(gasStationRepository, null);
 		List<GasStationDto> results = gasStationServiceimpl.getGasStationsWithoutCoordinates("Diesel", "Enjoy");
-		gasStationDtos.remove(gasStationDtos.size() - 1);
 		assertTrue(results.equals(gasStationDtos));
 	}
 	
@@ -355,37 +350,33 @@ public class GasStationServiceimplTestAPI {
 		GasStationServiceimpl gasStationServiceimpl = new GasStationServiceimpl(gasStationRepository, null);
 		
 		Assertions.assertThrows(InvalidGasTypeException.class, () -> {
-			gasStationServiceimpl.getGasStationsWithoutCoordinates("LPG", "Enjoy");
+			gasStationServiceimpl.getGasStationsWithoutCoordinates("InvalidGas", "Enjoy");
 		});
 	}
 	
 	@Test
-	public void testGetGasStationsWithoutCoordinatesNullList() throws InvalidGasTypeException {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Enjoy", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, "null", 45.5549090, 8.0569411, 0, 0, 0.0, 0, 0, null, "null", 0);
+	public void testGetGasStationsWithoutCoordinatesNullList() throws InvalidGasTypeException, InvalidCarSharingException {
+		
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 45.55, 8.05, 0.0, null, 0.0, 0.0, null, 0.0, null, null, 0.0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, true, "Enjoy", 45.65, 8.25, 0.0, 0.0, null, 0.0, null, 0.0, null, null, 0.0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, "null", 45.5549090, 8.0569411, null, null, null, 0.0, 0.0, 0.0, null, null, 0.0);
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
 		entityManager.persist(gasStation3);
 		
-		GasStationDto gasStationDto1 = new GasStationDto(gasStation1.getGasStationId(), "Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStationDto gasStationDto2 = new GasStationDto(gasStation2.getGasStationId(), "Example2", "Address2", true, true, false, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		
-		List<GasStationDto> gasStationDtos = new ArrayList<GasStationDto>();
-		gasStationDtos.add(gasStationDto1);
-		gasStationDtos.add(gasStationDto2);
-		
+		//There are clearly no gas stations in the DB with gasType Diesel and carSharing Car2Go
 		GasStationServiceimpl gasStationServiceimpl = new GasStationServiceimpl(gasStationRepository, null);
 		List<GasStationDto> results = gasStationServiceimpl.getGasStationsWithoutCoordinates("Diesel", "Car2Go");
 		assertTrue(results.size() == 0);
 	}
 	
 	@Test
-	public void testGetGasStationsWithCoordinates() throws InvalidGasTypeException, GPSDataException {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.5549032, 8.0569401, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Car2Go", 45.5549100, 8.0569403, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, "null", 45.5549090, 8.0569411, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation4 = new GasStation("Example4", "Address4", true, true, false, true, false, "Car2Go", 45.0671772, 7.6639721, 0, 0, 0.0, 0, 0, null, "null", 0);
+	public void testGetGasStationsWithCoordinates() throws InvalidGasTypeException, GPSDataException, InvalidCarSharingException {
+		
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 45.5549032, 8.0569401, 0.0, null, 0.0 , 0.0, null, 0.0, null, null, 0.0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, true, "Car2Go", 45.5549100, 8.0569403, 0.0, 0.0, null, 0.0, null, 0.0, null, null, 0.0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, "null", 45.5549090, 8.0569411, null, null, null, 0.0, 0.0, 0.0, null, null, 0.0);
+		GasStation gasStation4 = new GasStation("Example4", "Address4", true, true, false, true, false, true, "Car2Go", 45.0671772, 7.6639721, 0.0, 0.0, null, 0.0, null, 0.0, null, null, 0.0);
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
 		entityManager.persist(gasStation3);
@@ -393,29 +384,21 @@ public class GasStationServiceimplTestAPI {
 		
 		GasStationServiceimpl gasStationServiceimpl = new GasStationServiceimpl(gasStationRepository, null);
 		
-		GasStationDto dto1 = new GasStationDto(gasStation1.getGasStationId(), "Example1", "Address1", true, false, true, true, false, "Enjoy", 45.5549032, 8.0569401, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStationDto dto2 = new GasStationDto(gasStation2.getGasStationId(), "Example2", "Address2", true, true, false, true, false, "Car2Go", 45.5549100, 8.0569403, 0, 0, 0.0, 0, 0, null, "null", 0);
-		//GasStationDto dto3 = new GasStationDto(gasStation3.getGasStationId(), "Example3", "Address3", false, false, false, true, true, null, 45.5549090, 8.0569411, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStationDto dto4 = new GasStationDto(gasStation4.getGasStationId(), "Example4", "Address4", true, true, false, true, false, "Car2Go", 45.0671772, 7.6639721, 0, 0, 0.0, 0, 0, null, "null", 0);
-		
+		GasStationDto dto1 = new GasStationDto(gasStation1.getGasStationId(), "Example1", "Address1", true, false, true, true, false,  true, "Enjoy", 45.5549032, 8.0569401, 0.0, null, 0.0 , 0.0, null, 0.0, null, null, 0.0);
+	
 		List<GasStationDto> gasStationDtos = new ArrayList<GasStationDto>();
 		gasStationDtos.add(dto1);
-		gasStationDtos.add(dto2);
-		gasStationDtos.add(dto4);
 
-		List<GasStationDto> results = gasStationServiceimpl.getGasStationsWithCoordinates(45.551897, 8.0477697, "Diesel", "Enjoy");
-		gasStationDtos.remove(gasStationDtos.size() - 1);
-		gasStationDtos.remove(gasStationDtos.size() - 1);
-		
+		List<GasStationDto> results = gasStationServiceimpl.getGasStationsWithCoordinates(45.551897, 8.0477697, 1, "Diesel", "Enjoy");
 		assertTrue(results.equals(gasStationDtos));
 	}
 	
 	@Test
-	public void testGetGasStationsWithCoordinatesNullList() throws InvalidGasTypeException, GPSDataException {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Car2Go", 45.5549032, 8.0569401, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Car2Go", 45.5549100, 8.0569403, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, "null", 45.5549090, 8.0569411, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation4 = new GasStation("Example4", "Address4", true, true, false, true, false, "Car2Go", 45.0671772, 7.6639721, 0, 0, 0.0, 0, 0, null, "null", 0);
+	public void testGetGasStationsWithCoordinatesNullList() throws InvalidGasTypeException, GPSDataException, InvalidCarSharingException {
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "null", 45.5549032, 8.0569401, 0.0, null, 0.0 , 0.0, null, 0.0, null, null, 0.0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, true, "Car2Go", 45.5549100, 8.0569403, 0.0, 0.0, null, 0.0, null, 0.0, null, null, 0.0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, "null", 45.5549090, 8.0569411, null, null, null, 0.0, 0.0, 0.0, null, null, 0.0);
+		GasStation gasStation4 = new GasStation("Example4", "Address4", true, true, false, true, false, true, "Car2Go", 45.0671772, 7.6639721, 0.0, 0.0, null, 0.0, null, 0.0, null, null, 0.0);
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
 		entityManager.persist(gasStation3);
@@ -423,50 +406,45 @@ public class GasStationServiceimplTestAPI {
 		
 		GasStationServiceimpl gasStationServiceimpl = new GasStationServiceimpl(gasStationRepository, null);
 		
-		GasStationDto dto1 = new GasStationDto(gasStation1.getGasStationId(), "Example1", "Address1", true, false, true, true, false, "Car2Go", 45.5549032, 8.0569401, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStationDto dto2 = new GasStationDto(gasStation2.getGasStationId(), "Example2", "Address2", true, true, false, true, false, "Car2Go", 45.5549100, 8.0569403, 0, 0, 0.0, 0, 0, null, "null", 0);
-		//GasStationDto dto3 = new GasStationDto(gasStation3.getGasStationId(), "Example3", "Address3", false, false, false, true, true, null, 45.5549090, 8.0569411, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStationDto dto4 = new GasStationDto(gasStation4.getGasStationId(), "Example4", "Address4", true, true, false, true, false, "Car2Go", 45.0671772, 7.6639721, 0, 0, 0.0, 0, 0, null, "null", 0);
-		
-		List<GasStationDto> gasStationDtos = new ArrayList<GasStationDto>();
-		gasStationDtos.add(dto1);
-		gasStationDtos.add(dto2);
-		gasStationDtos.add(dto4);
-
-		List<GasStationDto> results = gasStationServiceimpl.getGasStationsWithCoordinates(45.551897, 8.0477697, "Diesel", "Enjoy");
-		
+		//There are no gas stations in the area that have Diesel and car sharing enjoy -> result list should be empty
+		List<GasStationDto> results = gasStationServiceimpl.getGasStationsWithCoordinates(45.551897, 8.0477697, 1, "Diesel", "Enjoy");
 		assertTrue(results.size() == 0);
 	}
 	
 	@Test
-	public void testGetGasStationsWithCoordinatesOnlyLatLon() throws InvalidGasTypeException, GPSDataException {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.5549032, 8.0569401, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Car2Go", 45.0671772, 7.6639721, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, "null", 45.5549090, 8.0569411, 0, 0, 0.0, 0, 0, null, "null", 0);
+	public void testGetGasStationsWithCoordinatesOnlyLatLon() throws InvalidGasTypeException, GPSDataException, InvalidCarSharingException {
+		
+		//GasStation nel raggio di un km (distance = 0.78) 
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 45.5549032, 8.0569401, 0.0, null, 0.0, 0.0, null, 0.0, null, null, 0.0);
+		//GasStation outside radius of search (distance = 61.69)
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, true, "Car2Go", 45.0671772, 7.6639721, 0.0, 0.0, null, 0.0, null, 0.0, null, null, 0.0);
+		//GasStation in square, but not in radius (distance = 1.36)
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, "null", 45.5549090, 8.0569411, null, null, null, 0.0, 0.0, 0.0, null, null, 0.0);
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
 		entityManager.persist(gasStation3);
 		
 		GasStationServiceimpl gasStationServiceimpl = new GasStationServiceimpl(gasStationRepository, null);
 		
-		GasStationDto dto1 = new GasStationDto(gasStation1.getGasStationId(), "Example1", "Address1", true, false, true, true, false, "Enjoy", 45.5549032, 8.0569401, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStationDto dto3 = new GasStationDto(gasStation3.getGasStationId(), "Example3", "Address3", false, false, false, true, true, "null", 45.5549090, 8.0569411, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStationDto dto1 = new GasStationDto(gasStation1.getGasStationId(), "Example1", "Address1", true, false, true, true, false, true, "Enjoy", 45.5549032, 8.0569401, 0.0, null, 0.0, 0.0, null, 0.0, null, null, 0.0);
+		GasStationDto dto3 = new GasStationDto(gasStation3.getGasStationId(), "Example3", "Address3", false, false, false, true, true,  true, "null", 45.5549090, 8.0569411, null, null, null, 0.0, 0.0, 0.0, null, null, 0.0);
 		
+		//In the list of results I expect to find the gas stations in 1 km of radius (so I exclude gasStation2) with no particular requests in terms of carsharing or fuel type
 		List<GasStationDto> gasStationDtos = new ArrayList<GasStationDto>();
 		gasStationDtos.add(dto1);
 		gasStationDtos.add(dto3);
 
-		List<GasStationDto> results = gasStationServiceimpl.getGasStationsWithCoordinates(45.551897, 8.0477697, "null", "null");
+		List<GasStationDto> results = gasStationServiceimpl.getGasStationsWithCoordinates(45.551897, 8.0477697, 1, "null", "null");
 
 		assertTrue(results.equals(gasStationDtos));
 	}
 	
 	@Test
-	public void testGetGasStationsWithCoordinatesNoGasType() throws InvalidGasTypeException, GPSDataException {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.5549032, 8.0569401, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Enjoy", 45.5549100, 8.0569403, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, "null", 45.5549090, 8.0569411, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation4 = new GasStation("Example4", "Address4", true, true, false, true, false, "Enjoy", 45.0671772, 7.6639721, 0, 0, 0.0, 0, 0, null, "null", 0);
+	public void testGetGasStationsWithCoordinatesNoGasType() throws InvalidGasTypeException, GPSDataException, InvalidCarSharingException {
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 45.5549032, 8.0569401, 0.0, null, 0.0, 0.0, null, 0.0, null, null, 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, true, "Enjoy", 45.5549100, 8.0569403, 0.0, 0.0, null, 0.0, null, 0.0, null, null, 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, "null", 45.5549090, 8.0569411, null, null, null, 0.0, 0.0, 0.0, null, null, 0.0);
+		GasStation gasStation4 = new GasStation("Example4", "Address4", true, true, false, true, false, true, "Enjoy", 45.0671772, 7.6639721, 0.0, 0.0, null, 0.0, null, 0.0, null, null, 0.0);
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
 		entityManager.persist(gasStation3);
@@ -474,28 +452,28 @@ public class GasStationServiceimplTestAPI {
 
 		GasStationServiceimpl gasStationServiceimpl = new GasStationServiceimpl(gasStationRepository, null);
 		
-		GasStationDto dto1 = new GasStationDto(gasStation1.getGasStationId(), "Example1", "Address1", true, false, true, true, false, "Enjoy", 45.5549032, 8.0569401, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStationDto dto2 = new GasStationDto(gasStation2.getGasStationId(), "Example2", "Address2", true, true, false, true, false, "Car2Go", 45.5549100, 8.0569403, 0, 0, 0.0, 0, 0, null, "null", 0);
-		//GasStationDto dto3 = new GasStationDto(gasStation3.getGasStationId(), "Example3", "Address3", false, false, false, true, true, null, 45.5549090, 8.0569411, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStationDto dto4 = new GasStationDto(gasStation4.getGasStationId(), "Example4", "Address4", true, true, false, true, false, "Enjoy", 45.0671772, 7.6639721, 0, 0, 0.0, 0, 0, null, "null", 0);
-
+		//I won't create a dto for gasStation3 as it does not have Enjoy car sharing (that we are using in this test) and so it should not appear in results
+		//I won't create a dto for gasStation4 as it outside the 3 km radius of search that we will use
+		GasStationDto dto1 = new GasStationDto(gasStation1.getGasStationId(), "Example1", "Address1", true, false, true, true, false, true, "Enjoy", 45.5549032, 8.0569401, 0.0, null, 0.0, 0.0, null, 0.0, null, null, 0);
+		GasStationDto dto2 = new GasStationDto(gasStation2.getGasStationId(), "Example2", "Address2", true, true, false, true, false,true, "Enjoy", 45.5549100, 8.0569403, 0.0, 0.0, null, 0.0, null, 0.0, null, null, 0);
+		
 		List<GasStationDto> gasStationDtos = new ArrayList<GasStationDto>();
 		gasStationDtos.add(dto1);
 		gasStationDtos.add(dto2);
-		gasStationDtos.add(dto4);
-
-		List<GasStationDto> results = gasStationServiceimpl.getGasStationsWithCoordinates(45.551897, 8.0477697, "null", "Enjoy");
-		gasStationDtos.remove(gasStationDtos.size() - 1);
+		
+		//We perform a search with radius 3 km (so we also verify that this feature works)
+		List<GasStationDto> results = gasStationServiceimpl.getGasStationsWithCoordinates(45.551897, 8.0477697, 3, "null", "Enjoy");
 		
 		assertTrue(results.equals(gasStationDtos));
 	}
 	
 	@Test
-	public void testGetGasStationsWithCoordinatesNoCarSharing() throws InvalidGasTypeException, GPSDataException {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.5549032, 8.0569401, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Car2Go", 45.5549100, 8.0569403, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, "null", 45.5549090, 8.0569411, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation4 = new GasStation("Example4", "Address4", false, true, false, true, false, "Enjoy", 45.0671772, 7.6639721, 0, 0, 0.0, 0, 0, null, "null", 0);
+	public void testGetGasStationsWithCoordinatesNoCarSharing() throws InvalidGasTypeException, GPSDataException, InvalidCarSharingException {
+		
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 45.5549032, 8.0569401, 0.0, null, 0.0, 0.0, null, 0.0, null, null, 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, true, "Car2Go", 45.5549100, 8.0569403, 0.0, 0.0, null, 0.0, null, 0.0, null, null, 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, "null", 45.5549090, 8.0569411, null, null, null, 0.0, 0.0, 0.0, null, null, 0.0);
+		GasStation gasStation4 = new GasStation("Example4", "Address4", true, true, false, true, false, true, "Enjoy", 45.0671772, 7.6639721, 0.0, 0.0, null, 0.0, null, 0.0, null, null, 0.0);
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
 		entityManager.persist(gasStation3);
@@ -503,89 +481,100 @@ public class GasStationServiceimplTestAPI {
 
 		GasStationServiceimpl gasStationServiceimpl = new GasStationServiceimpl(gasStationRepository, null);
 		
-		GasStationDto dto1 = new GasStationDto(gasStation1.getGasStationId(), "Example1", "Address1", true, false, true, true, false, "Enjoy", 45.5549032, 8.0569401, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStationDto dto2 = new GasStationDto(gasStation2.getGasStationId(), "Example2", "Address2", true, true, false, true, false, "Car2Go", 45.5549100, 8.0569403, 0, 0, 0.0, 0, 0, null, "null", 0);
-		//GasStationDto dto3 = new GasStationDto(gasStation3.getGasStationId(), "Example3", "Address3", false, false, false, true, true, null, 45.5549090, 8.0569411, 0, 0, 0.0, 0, 0, null, "null", 0);
-		//GasStationDto dto4 = new GasStationDto(gasStation4.getGasStationId(), "Example4", "Address4", false, true, false, true, false, "Enjoy", 45.0671772, 7.6639721, 0, 0, 0.0, 0, 0, null, "null", 0);
+		//I won't create a dto for gasStation3 as it does not have Diesel fuel type
+		//I won't create a dto for gasStation4 as it outside the 3 km radius of search that we will use
+		GasStationDto dto1 = new GasStationDto(gasStation1.getGasStationId(), "Example1", "Address1", true, false, true, true, false, true, "Enjoy", 45.5549032, 8.0569401, 0.0, null, 0.0, 0.0, null, 0.0, null, null, 0);
+		GasStationDto dto2 = new GasStationDto(gasStation2.getGasStationId(), "Example2", "Address2", true, true, false, true, false, true, "Car2Go", 45.5549100, 8.0569403, 0.0, 0.0, null, 0.0, null, 0.0, null, null, 0);
 
 		List<GasStationDto> gasStationDtos = new ArrayList<GasStationDto>();
 		gasStationDtos.add(dto1);
 		gasStationDtos.add(dto2);
 
-		List<GasStationDto> results = gasStationServiceimpl.getGasStationsWithCoordinates(45.551897, 8.0477697, "Diesel", "null");
-		
+		List<GasStationDto> results = gasStationServiceimpl.getGasStationsWithCoordinates(45.551897, 8.0477697, 3, "Diesel", "null");
+
 		assertTrue(results.equals(gasStationDtos));
 	}
 	
 	@Test
 	public void testGetGasStationsWithCoordinatesInvalidGPS() throws InvalidGasTypeException, GPSDataException {
+		
 		GasStationServiceimpl gasStationServiceimpl = new GasStationServiceimpl(gasStationRepository, null);
 		
 		Assertions.assertThrows(GPSDataException.class, () -> {
-			gasStationServiceimpl.getGasStationsWithCoordinates(-100.1245, 54.541, "Diesel", "Enjoy");
+			gasStationServiceimpl.getGasStationsWithCoordinates(-100.1245, 54.541, 1, "Diesel", "Enjoy");
 		});
 	}
 	
 	@Test
 	public void testGetGasStationsWithCoordinatesInvalidGasType() throws InvalidGasTypeException, GPSDataException {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.5549032, 8.0569401, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Car2Go", 45.0671772, 7.6639721, 0, 0, 0.0, 0, 0, null, "null", 0);
-		entityManager.persist(gasStation1);
-		entityManager.persist(gasStation2);
 		
 		GasStationServiceimpl gasStationServiceimpl = new GasStationServiceimpl(gasStationRepository, null);
 		
 		Assertions.assertThrows(InvalidGasTypeException.class, () -> {
-			gasStationServiceimpl.getGasStationsWithCoordinates(45.551897, 8.0477697, "LPG", "Enjoy");
+			gasStationServiceimpl.getGasStationsWithCoordinates(45.551897, 8.0477697, 1, "InvalidGasType", "Enjoy");
 		});
 	}
 	
 	@Test
 	public void testSetReportNew() throws InvalidGasStationException, PriceException, InvalidUserException{
-		User user1 = new User("TestName","123","test@ezgas.com",3);
+		User user1 = new User("TestName","123","test@ezgas.com",2);
 		entityManager.persist(user1);
-		User user2= new User("nome2","456","nome2@ezgas.com",2);
+		User user2= new User("nome2","456","nome2@ezgas.com",1);
 		entityManager.persist(user2);
-		GasStation gs=new GasStation("test","testAddress",true,true,true,false,false,"enjoy",0.0,0.0,0.0,0.0,0.0,0.0,0.0,null,new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss").format(new java.util.Date()),25.0);	
+		GasStation gs=new GasStation("test","testAddress",true,true,true,false,false,false,"Enjoy",45,8,0.0,0.0,0.0,null,null,null,null,null,0);	
 		entityManager.persist(gs);
 		
-		
 		GasStationServiceimpl gasStationService = new GasStationServiceimpl(gasStationRepository, userRepository);
-		gasStationService.setReport(gs.getGasStationId(), 1.22, 1.76, 1.78, 0.1, 0.1, user2.getUserId());
+		gasStationService.setReport(gs.getGasStationId(), 1.22, 1.76, 1.78, null, null,null, user2.getUserId());
 		assert(gs.getDieselPrice()==1.22 && gs.getSuperPrice()==1.76 && gs.getSuperPlusPrice()==1.78 && gs.getReportUser()==user2.getUserId());
 	}
 	
 	@Test
-	public void testSetReportOverwritten() throws InvalidGasStationException, PriceException, InvalidUserException{
-		User user1 = new User("TestName","123","test@ezgas.com",3);
+	public void testSetReportOverwrittenUserTrust() throws InvalidGasStationException, PriceException, InvalidUserException{
+		User user1 = new User("TestName","123","test@ezgas.com",1);
 		entityManager.persist(user1);
 		User user2= new User("nome2","456","nome2@ezgas.com",2);
 		entityManager.persist(user2);
-		GasStation gs=new GasStation("test","testAddress",true,true,true,false,false,"enjoy",4.32,7.89,1.0,1.0,1.0,0.0,0.0,user1.getUserId(),new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss").format(new java.util.Date()),25.0);	
+		GasStation gs=new GasStation("test","testAddress",true,true,true,false,false,false,"Enjoy",45,8,0.0,0.0,0.0,null,null,null,user1.getUserId(),new SimpleDateFormat("MM-dd-yyyy").format(new java.util.Date()),25.0);	
+		gs.setUser(user1);
 		entityManager.persist(gs);
 		
+		GasStationServiceimpl gasStationService = new GasStationServiceimpl(gasStationRepository, userRepository);
+		gasStationService.setReport(gs.getGasStationId(), 1.22, 1.76, 1.78, null, null,null, user2.getUserId());
+		assert(gs.getDieselPrice()==1.22 && gs.getSuperPrice()==1.76 && gs.getSuperPlusPrice()==1.78 && gs.getReportUser()==user2.getUserId());
+	}
+	
+	@Test
+	public void testSetReportOverwrittenTimetag() throws InvalidGasStationException, PriceException, InvalidUserException{
+		User user1 = new User("TestName","123","test@ezgas.com",3);
+		entityManager.persist(user1);
+		User user2= new User("nome2","456","nome2@ezgas.com",1);
+		entityManager.persist(user2);
+		GasStation gs=new GasStation("test","testAddress",true,true,true,false,false,false,"Enjoy",45,8,0.0,0.0,0.0,null,null,null,user1.getUserId(),"06-11-2020",25.0);	
+		gs.setUser(user1);	
+		entityManager.persist(gs);
 		
 		GasStationServiceimpl gasStationService = new GasStationServiceimpl(gasStationRepository, userRepository);
-		gasStationService.setReport(gs.getGasStationId(), 1.22, 1.76, 1.78, 0.1, 0.1, user2.getUserId());
+		gasStationService.setReport(gs.getGasStationId(), 1.22, 1.76, 1.78, null, null,null, user2.getUserId());
 		assert(gs.getDieselPrice()==1.22 && gs.getSuperPrice()==1.76 && gs.getSuperPlusPrice()==1.78 && gs.getReportUser()==user2.getUserId());
 	}
 	
 	@Test
 	public void testSetReportPriceException() throws InvalidGasStationException, PriceException, InvalidUserException {
 		GasStationServiceimpl gasStationService=new GasStationServiceimpl(null, null);
-		Assertions.assertThrows(PriceException.class,()->{gasStationService.setReport(1, -2.0, 1.0, 1.0, 1.0, 1.0, 1);});
+		Assertions.assertThrows(PriceException.class,()->{gasStationService.setReport(1, -2.0, 1.0, 1.0, 1.0, 1.0,1.0, 1);});
 	}
 	
 	@Test
 	public void testSetReportInvalidUserException() throws InvalidGasStationException, PriceException, InvalidUserException {
 		GasStationServiceimpl gasStationService=new GasStationServiceimpl(null, null);
-		Assertions.assertThrows(InvalidUserException.class,()->{gasStationService.setReport(1, -1.0, 1.0, -1.0, 1.0, 1.0, -1);});
+		Assertions.assertThrows(InvalidUserException.class,()->{gasStationService.setReport(1, 1.0,1.0, 1.0, 1.0, 1.0, 1.0, -1);});
 	}
 	
 	@Test
 	public void testSetReportInvalidGasStationException() throws InvalidGasStationException, PriceException, InvalidUserException {
 		GasStationServiceimpl gasStationService=new GasStationServiceimpl(null, null);
-		Assertions.assertThrows(InvalidGasStationException.class,()->{gasStationService.setReport(-1, 1.0, -1.0, -1.0, 1.0, 1.0, 1);});
+		Assertions.assertThrows(InvalidGasStationException.class,()->{gasStationService.setReport(-1, 1.0, 1.0, 1.0, 1.0,1.0, 1.0, 1);});
 	}
 	
 	@Test
@@ -605,7 +594,7 @@ public class GasStationServiceimplTestAPI {
 		entityManager.persist(user);
 		 
 		ArrayList<GasStation> gsList=new ArrayList<GasStation>();
-		GasStation gs=new GasStation("test","testAddress",true,true,true,false,false,"Enjoy",4.32,7.89,1.0,1.0,1.0,0.0,0.0,user.getUserId(),new SimpleDateFormat("MM-dd-yyyy").format(new java.util.Date()),25.0);
+		GasStation gs=new GasStation("test","testAddress",true,true,true,false,false,false,"Enjoy",4.32,7.89,1.0,1.0,1.0,null,null,null,user.getUserId(),new SimpleDateFormat("MM-dd-yyyy").format(new java.util.Date()),25.0);
 		gs.setUser(user);
 		gsList.add(gs);
 				
@@ -623,13 +612,11 @@ public class GasStationServiceimplTestAPI {
 		String carSharing= "Enjoy";
 		
 		//I will set ReportUser == null as to not invoke updateUserDependabilities, as I am not concerned in the outcome of that function 
-		GasStation gasStation = new GasStation("Q8", "Via Fratelli Rosselli 102", true, true, true, true, true, carSharing, 45.5549032, 8.04, -1, -1, -1, -1, -1, null, null, 0);
-
-		//Save in db
+		GasStation gasStation = new GasStation("Q8", "Via Fratelli Rosselli 102", true, true, true, true, true, true, carSharing, 45.5549032, 8.04, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, null, 0.0);
 		entityManager.persist(gasStation);
 		
 		List<GasStationDto> output = new ArrayList<GasStationDto>();
-		GasStationDto gasStationDto = new GasStationDto(gasStation.getGasStationId(),"Q8", "Via Fratelli Rosselli 102", true, true, true, true, true, carSharing, 45.5549032, 8.04, -1, -1, -1, -1, -1, null, null, 0);
+		GasStationDto gasStationDto = new GasStationDto(gasStation.getGasStationId(),"Q8", "Via Fratelli Rosselli 102", true, true, true, true, true, true, carSharing, 45.5549032, 8.04, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, null, 0.0);
 		output.add(gasStationDto);
 		
 		List<GasStationDto> result = gasStationServiceimpl.getGasStationByCarSharing(carSharing);
@@ -642,16 +629,16 @@ public class GasStationServiceimplTestAPI {
 		
 		GasStationServiceimpl gasStationServiceimpl = new GasStationServiceimpl(gasStationRepository, null);
 		
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.5549032, 8.0569401, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Car2Go", 45.5549100, 8.0569403, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, "null", 45.5549090, 8.0569411, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 45.5549032, 8.0569401, 0.0, null, 0.0, 0.0, null, 0.0, null, null, 0.0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, true, "Car2Go", 45.5549100, 8.0569403, 0.0, 0.0, null, 0.0, null, 0.0, null, null, 0.0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, "null", 45.5549090, 8.0569411, null, null, null, 0.0, 0.0, 0.0, null, null, 0.0);
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
 		entityManager.persist(gasStation3);
 		
-		GasStationDto dto1 = new GasStationDto(gasStation1.getGasStationId(), "Example1", "Address1", true, false, true, true, false, "Enjoy", 45.5549032, 8.0569401, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStationDto dto2 = new GasStationDto(gasStation2.getGasStationId(), "Example2", "Address2", true, true, false, true, false, "Car2Go", 45.5549100, 8.0569403, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStationDto dto3 = new GasStationDto(gasStation3.getGasStationId(), "Example3", "Address3", false, false, false, true, true, "null", 45.5549090, 8.0569411, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStationDto dto1 = new GasStationDto(gasStation1.getGasStationId(), "Example1", "Address1", true, false, true, true, false, true, "Enjoy", 45.5549032, 8.0569401, 0.0, null, 0.0, 0.0, null, 0.0, null, null, 0.0);
+		GasStationDto dto2 = new GasStationDto(gasStation2.getGasStationId(), "Example2", "Address2", true, true, false, true, false, true, "Car2Go", 45.5549100, 8.0569403, 0.0, 0.0, null, 0.0, null, 0.0, null, null, 0.0);
+		GasStationDto dto3 = new GasStationDto(gasStation3.getGasStationId(), "Example3", "Address3", false, false, false, true, true, true, "null", 45.5549090, 8.0569411, null, null, null, 0.0, 0.0, 0.0, null, null, 0.0);
 
 		List<GasStationDto> gasStationDtos = new ArrayList<GasStationDto>();
 		gasStationDtos.add(dto1);
@@ -665,19 +652,30 @@ public class GasStationServiceimplTestAPI {
 	
 	@Test
 	public void testGetGasStationByCarSharingIsEmpty() {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.5549032, 8.0569401, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Enjoy", 45.5549100, 8.0569403, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, "null", 45.5549090, 8.0569411, 0, 0, 0.0, 0, 0, null, "null", 0);
+		
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 45.5549032, 8.0569401, 0.0, null, 0.0, 0.0, null, 0.0, null, null, 0.0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, true, "Enjoy", 45.5549100, 8.0569403, 0.0, 0.0, null, 0.0, null, 0.0, null, null, 0.0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, "null", 45.5549090, 8.0569411, null, null, null, 0.0, 0.0, 0.0, null, null, 0.0);
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
 		entityManager.persist(gasStation3);
 		
 		GasStationServiceimpl gasStationServiceimpl = new GasStationServiceimpl(gasStationRepository, null);
 		
-		String carSharing= "Car2Go";
+		String carSharing= "Car2Go"; //there are no gasStations with car sharing Car2Go so list of results should be empty
 		
 		List<GasStationDto> result = gasStationServiceimpl.getGasStationByCarSharing(carSharing);
 		List<GasStationDto> expected = new ArrayList<GasStationDto>();
 		assert(expected.equals(result));
+	}
+	
+	@Test
+	public void testInvalidCarSharing() {
+		
+		GasStationServiceimpl gasStationServiceimpl = new GasStationServiceimpl(gasStationRepository, null);
+		
+		Assertions.assertThrows(InvalidCarSharingException.class, () -> {
+			gasStationServiceimpl.getGasStationsWithoutCoordinates("Diesel", "InvalidCarSharing");
+		});
 	}
 }

@@ -1,6 +1,6 @@
 # Project Estimation  
 
-Authors: Cao Peng, Finocchiaro Loredana, Marino Matteo, Mc Mahon Shannon
+Authors: Finocchiaro Loredana, Marino Matteo, Mc Mahon Shannon
 
 Date: 02/05/2020
 
@@ -65,3 +65,21 @@ Insert here Gantt chart with above activities
 @enduml
 
 ```
+
+# Final estimation
+
+This is the final estimation required for the last deadline. We will be considering the our own productivity that can be found in Dashboard.md.
+We remind that the calculations are based on three people working, and not four.
+
+# Estimate by product decomposition
+
+### 
+
+|             | Estimate                        |             
+| ----------- | ------------------------------- |  
+| NC =  Estimated number of classes to be developed | 20 |             
+| A = Estimated average size per class, in LOC | 80 | 
+| S = Estimated size of project, in LOC (= NC * A) | 1600 |
+| E = Estimated effort, in person hours (here use the real productivity, i.e. 5.6 LOC per person hour)  | 286 ph |   
+| C = Estimated cost, in euro (here use 1 person hour cost = 30 euro) | 8580€ | 
+| Estimated calendar time, in calendar weeks (assume team of 3 people, 8 hours per day, 5 days per week ) | 12 days |               

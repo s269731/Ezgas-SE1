@@ -332,7 +332,7 @@ public class GasStationServiceimpl implements GasStationService {
 		List<GasStationDto> gasStationDtos = new ArrayList<GasStationDto>();
 		List<GasStationDto> gasStations = getGasStationsByGasolineType(gasolinetype);
 		for (GasStationDto dto:gasStations) {
-			if (dto.getCarSharing() == null)
+			if (dto.getCarSharing() != null && dto.getCarSharing().compareTo(carsharing) == 0)
 				gasStationDtos.add(dto);
 		}
 		

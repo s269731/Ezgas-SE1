@@ -160,7 +160,11 @@ public class TestController {
     	HttpUriRequest request = new HttpGet("http://localhost:8080/gasstation/searchGasStationByProximity/45.0672093/7.6638629/1");
     	HttpResponse response = HttpClientBuilder.create().build().execute(request);
     	
-    	assert(response.getStatusLine().getStatusCode() == 200);
+    	String jsonFromResponse = EntityUtils.toString(response.getEntity());
+		ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
+		GasStationDto[] gs= mapper.readValue(jsonFromResponse, GasStationDto[].class);
+		
+		assert(gs.length==3);
     }
     
     @Test
@@ -169,7 +173,7 @@ public class TestController {
     	String myLat="/45.0672093";
     	String myLon="/7.6638629";
     	String myRadius="/1";
-    	String gasolineType="/Gas";
+    	String gasolineType="/Diesel";
     	String carSharing="/Enjoy";
     	HttpUriRequest request = new HttpGet("http://localhost:8080/gasstation/getGasStationsWithCoordinates"+myLat+myLon+myRadius+gasolineType+carSharing);
     	HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -177,13 +181,13 @@ public class TestController {
     	ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     	GasStationDto[] gasStationArray = mapper.readValue(jsonFromResponse, GasStationDto[].class);
     	
-    	/* Should return Retitalia */
+    	/* Should return Q8 */
     	assert(gasStationArray.length==1);
     }
     
 	@Test
 	public void testSetGasStationReport() throws IOException {
-	    HttpPost request = new HttpPost("http://localhost:8080/gasstation/setGasStationReport/");	
+	    HttpPost request = new HttpPost("http://localhost:8080/gasstation/setGasStationReport");	
 	    String json = "{\"gasStationId\":3,\"dieselPrice\":\"1.256\",\"superPrice\":null,\"superPlusPrice\":\"1.3\",\"gasPrice\":null,\"methanePrice\":\"0.987\",\"premiumDieselPrice\":null,\"userId\":\"3\"}";
 		StringEntity entity = new StringEntity(json);
 		request.setEntity(entity); 

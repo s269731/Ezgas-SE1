@@ -3,6 +3,7 @@ package it.polito.ezgas;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
+
 import it.polito.ezgas.entity.GasStation;
 
 public class GasStationTest {
@@ -169,6 +170,26 @@ public class GasStationTest {
 		boolean result = gs.getHasMethane();
 		
 		assertEquals("getHasMethane() fails", hasMethane, result);
+	}
+	
+	@Test
+	public void testSetHasPremiumDiesel() {
+		
+		GasStation gs = new GasStation();
+		boolean hasPremiumDiesel = true;
+		gs.setHasPremiumDiesel(hasPremiumDiesel);
+		
+		assertEquals("setHasPremiumDiesel() fails", hasPremiumDiesel, gs.getHasPremiumDiesel());
+	}
+	
+	@Test
+	public void testGetHasPremiumDiesel() {
+		GasStation gs = new GasStation();
+		boolean hasPremiumDiesel = true;
+		gs.setHasPremiumDiesel(hasPremiumDiesel);
+		boolean result = gs.getHasPremiumDiesel();
+		
+		assertEquals("getHasPremiumDiesel() fails", hasPremiumDiesel, result);
 	}
 	
 	@Test
@@ -348,6 +369,28 @@ public class GasStationTest {
 	}
 	
 	@Test
+	public void testSetPremiumDieselPrice() {
+		
+		GasStation gs = new GasStation();
+		double premiumDieselPrice = 1.50;
+		gs.setPremiumDieselPrice(premiumDieselPrice);
+		 
+		assertEquals("setPremiumDieselPrice() fails", premiumDieselPrice, gs.getPremiumDieselPrice(), 0);
+		
+	}
+	
+	@Test
+	public void testGetPremiumDieselPrice() {
+		
+		GasStation gs = new GasStation();
+		double premiumDieselPrice = 1.50;
+		gs.setPremiumDieselPrice(premiumDieselPrice);;
+		double result = gs.getPremiumDieselPrice();
+		
+		assertEquals("getPremiumDieselPrice() fails", premiumDieselPrice, result, 0);
+	}
+	
+	@Test
 	public void testSetReportUser() {
 		
 		GasStation gs = new GasStation();
@@ -420,6 +463,7 @@ public class GasStationTest {
 		final boolean hasSuperPlus=false;
 		final boolean hasGas=true;
 		final boolean hasMethane=true;
+		final boolean hasPremiumDiesel=false;
 		final String carSharing="Enjoy"; 
 		final double lat=1.23;
 		final double lon=3.34; 
@@ -428,11 +472,12 @@ public class GasStationTest {
 		final double superPlusPrice=1.45; 
 		final double gasPrice=1.56; 
 		final double methanePrice=1.67;
+		final double premiumDieselPrice=1.51;
 		final Integer reportUser=4; 
-		final String reportTimestamp="17/05/2020-21:34:45"; 
+		final String reportTimestamp="05-17-2020"; 
 		final double reportDependability=4.0;
 		
-		GasStation gs = new GasStation(gasStationName, gasStationAddress,  hasDiesel,  hasSuper,  hasSuperPlus,  hasGas,  hasMethane,  carSharing,  lat,  lon,  dieselPrice,  superPrice,  superPlusPrice,  gasPrice,  methanePrice,  reportUser,  reportTimestamp,  reportDependability);
+		GasStation gs = new GasStation(gasStationName, gasStationAddress, hasDiesel, hasSuper, hasSuperPlus, hasGas, hasMethane, hasPremiumDiesel, carSharing, lat, lon, dieselPrice,  superPrice,  superPlusPrice,  gasPrice,  methanePrice, premiumDieselPrice,  reportUser,  reportTimestamp,  reportDependability);
 		
 		assertEquals(gasStationName, gs.getGasStationName());
 		assertEquals(gasStationAddress, gs.getGasStationAddress());
@@ -441,6 +486,7 @@ public class GasStationTest {
 		assertEquals(hasSuperPlus, gs.getHasSuperPlus());
 		assertEquals(hasGas, gs.getHasGas());
 		assertEquals(hasMethane, gs.getHasMethane());
+		assertEquals(hasPremiumDiesel, gs.getHasPremiumDiesel());
 		assertEquals(carSharing, gs.getCarSharing());
 		assertEquals(lat, gs.getLat(),0);
 		assertEquals(lon, gs.getLon(),0);
@@ -449,6 +495,7 @@ public class GasStationTest {
 		assertEquals(superPlusPrice, gs.getSuperPlusPrice(),0);
 		assertEquals(gasPrice, gs.getGasPrice(),0);
 		assertEquals(methanePrice, gs.getMethanePrice(),0);
+		assertEquals(premiumDieselPrice, gs.getPremiumDieselPrice(),0);
 		assertTrue(reportUser.equals(gs.getReportUser()));
 		assertEquals(reportTimestamp, gs.getReportTimestamp());
 		assertEquals(reportDependability, gs.getReportDependability(),0);

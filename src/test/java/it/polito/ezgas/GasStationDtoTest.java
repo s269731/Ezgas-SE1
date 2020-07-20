@@ -175,6 +175,26 @@ public class GasStationDtoTest {
 	}
 	
 	@Test
+	public void testSetHasPremiumDiesel() {
+		
+		GasStationDto gs = new GasStationDto();
+		boolean hasPremiumDiesel = true;
+		gs.setHasPremiumDiesel(hasPremiumDiesel);
+		
+		assertEquals("setHasPremiumDiesel() fails", hasPremiumDiesel, gs.getHasPremiumDiesel());
+	}
+	
+	@Test
+	public void testGetHasPremiumDiesel() {
+		GasStationDto gs = new GasStationDto();
+		boolean hasPremiumDiesel = true;
+		gs.setHasPremiumDiesel(hasPremiumDiesel);
+		boolean result = gs.getHasPremiumDiesel();
+		
+		assertEquals("getHasPremiumDiesel() fails", hasPremiumDiesel, result);
+	}
+	
+	@Test
 	public void testSetCarSharing() {
 		
 		GasStationDto gs = new GasStationDto();
@@ -351,6 +371,28 @@ public class GasStationDtoTest {
 	}
 	
 	@Test
+	public void testSetPremiumDieselPrice() {
+		
+		GasStationDto gs = new GasStationDto();
+		double premiumDieselPrice = 1.50;
+		gs.setPremiumDieselPrice(premiumDieselPrice);
+		 
+		assertEquals("setPremiumDieselPrice() fails", premiumDieselPrice, gs.getPremiumDieselPrice(), 0);
+		
+	}
+	
+	@Test
+	public void testGetPremiumDieselPrice() {
+		
+		GasStationDto gs = new GasStationDto();
+		double premiumDieselPrice = 1.50;
+		gs.setPremiumDieselPrice(premiumDieselPrice);;
+		double result = gs.getPremiumDieselPrice();
+		
+		assertEquals("getPremiumDieselPrice() fails", premiumDieselPrice, result, 0);
+	}
+	
+	@Test
 	public void testSetReportUser() {
 		
 		GasStationDto gs = new GasStationDto();
@@ -423,6 +465,7 @@ public class GasStationDtoTest {
 		final boolean hasSuperPlus=false;
 		final boolean hasGas=true;
 		final boolean hasMethane=true;
+		final boolean hasPremiumDiesel=false;
 		final String carSharing="Enjoy"; 
 		final double lat=1.23;
 		final double lon=3.34; 
@@ -431,11 +474,12 @@ public class GasStationDtoTest {
 		final double superPlusPrice=1.45; 
 		final double gasPrice=1.56; 
 		final double methanePrice=1.67;
+		final double premiumDieselPrice=1.51;
 		final Integer reportUser=4; 
-		final String reportTimestamp="17/05/2020-21:34:45"; 
+		final String reportTimestamp="05-17-2020"; 
 		final double reportDependability=4.0;
 		
-		GasStationDto gs = new GasStationDto(5, gasStationName, gasStationAddress,  hasDiesel,  hasSuper,  hasSuperPlus,  hasGas,  hasMethane,  carSharing,  lat,  lon,  dieselPrice,  superPrice,  superPlusPrice,  gasPrice,  methanePrice,  reportUser,  reportTimestamp,  reportDependability);
+		GasStationDto gs = new GasStationDto(5, gasStationName, gasStationAddress, hasDiesel, hasSuper, hasSuperPlus, hasGas, hasMethane, hasPremiumDiesel, carSharing,  lat,  lon,  dieselPrice,  superPrice,  superPlusPrice,  gasPrice,  methanePrice, premiumDieselPrice,  reportUser,  reportTimestamp,  reportDependability);
 		
 		assert(gs.getGasStationId() == 5);
 		assertEquals(gasStationName, gs.getGasStationName());
@@ -445,6 +489,7 @@ public class GasStationDtoTest {
 		assertEquals(hasSuperPlus, gs.getHasSuperPlus());
 		assertEquals(hasGas, gs.getHasGas());
 		assertEquals(hasMethane, gs.getHasMethane());
+		assertEquals(hasPremiumDiesel, gs.getHasPremiumDiesel());
 		assertEquals(carSharing, gs.getCarSharing());
 		assertEquals(lat, gs.getLat(),0);
 		assertEquals(lon, gs.getLon(),0);
@@ -453,6 +498,7 @@ public class GasStationDtoTest {
 		assertEquals(superPlusPrice, gs.getSuperPlusPrice(),0);
 		assertEquals(gasPrice, gs.getGasPrice(),0);
 		assertEquals(methanePrice, gs.getMethanePrice(),0);
+		assertEquals(premiumDieselPrice, gs.getPremiumDieselPrice(),0);
 		assertTrue(reportUser.equals(gs.getReportUser()));
 		assertEquals(reportTimestamp, gs.getReportTimestamp());
 		assertEquals(reportDependability, gs.getReportDependability(),0);
@@ -460,30 +506,30 @@ public class GasStationDtoTest {
 
 	@Test
 	public void testEquals() {
-		GasStationDto gasStationDto1 = new GasStationDto(5, "Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStationDto gasStationDto2 = new GasStationDto(5, "Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStationDto gasStationDto1 = new GasStationDto(5, "Example1", "Address1", true, false, true, true, false, false, "Enjoy", 45.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStationDto gasStationDto2 = new GasStationDto(5, "Example1", "Address1", true, false, true, true, false, false, "Enjoy", 45.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
 
 		assertTrue(gasStationDto1.equals(gasStationDto2));
 	}
 	
 	@Test
 	public void testEqualsNo() {
-		GasStationDto gasStationDto1 = new GasStationDto(5, "Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStationDto gasStationDto2 = new GasStationDto(7, "Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStationDto gasStationDto1 = new GasStationDto(5, "Example1", "Address1", true, false, true, true, false, false, "Enjoy", 45.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStationDto gasStationDto2 = new GasStationDto(7, "Example1", "Address1", true, false, true, true, false, false, "Enjoy", 45.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
 
 		assertFalse(gasStationDto1.equals(gasStationDto2));
 	}
 	
 	@Test
 	public void testEqualsSelf() {
-		GasStationDto gasStationDto1 = new GasStationDto(5, "Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStationDto gasStationDto1 = new GasStationDto(5, "Example1", "Address1", true, false, true, true, false, false, "Enjoy", 45.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
 
 		assertTrue(gasStationDto1.equals(gasStationDto1));
 	}
 	
 	@Test
 	public void testEqualsNull() {
-		GasStationDto gasStationDto1 = new GasStationDto(5, "Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStationDto gasStationDto1 = new GasStationDto(5, "Example1", "Address1", true, false, true, true, false, false, "Enjoy", 45.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
 
 		assertFalse(gasStationDto1.equals(null));
 	}

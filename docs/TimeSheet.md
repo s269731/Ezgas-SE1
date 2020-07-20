@@ -16,10 +16,8 @@ These figures will not be used to evauate neither the project nor the team
 | may 18 - 24| | 5 | 20 | 5 | 55 | | 1 | | 
 | may 25 - 31| | | | | 30 | | 1 | | 
 | jun 1 -  7 | | | | | | 12 | 1 | | 
-| jun 8 - 14 | | | | | | | | | 
-| jun 15 -21 | | | | | | | | | 
-| jun 22 -28 | | | | | | | | | 
-| jun 29 - 5 | | | | | | | | | 
-| jul 6 - 12 | | | | | | | | | 
-| jul 13 -19 | | | | | | | | |
-| jul 20 -26 | | | | | | | | |
+| jun 8 - 14 | | | 10 | | | 3 | 1 | | 
+| jun 15 -21 | | | 3 | | 15 | | 1 | | 
+
+The effort was calculated considering a team made of 3 people (the fourth member has never worked).
+

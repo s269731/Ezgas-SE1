@@ -126,7 +126,7 @@ public class TestController {
     @Test
 	public void testSaveGasStation() throws ClientProtocolException, IOException {
 		HttpPost request = new HttpPost("http://localhost:8080/gasstation/saveGasStation");
-		String json = "{\"gasStationId\":null,\"gasStationName\":\"Ip\",\"gasStationAddress\":\"Corso Trapani 79 Turin Piemont Italy\",\"hasDiesel\":true,\"hasSuper\":true,\"hasSuperPlus\":false,\"hasGas\":false,\"hasMethane\":false, \"carSharing\":\"Enjoy\",\"lat\":45.0692404,\"lon\": 7.6391213,\"dieselPrice\": 1.457, \"superPrice\": 1.768, \"superPlusPrice\":5,\"gasPrice\":5,\"methanePrice\":5,\"reportUser\": null,\"reportTimestamp\":null,\"reportDependability\":null}";
+		String json = "{\"gasStationId\":null,\"gasStationName\":\"Ip\",\"gasStationAddress\":\"Corso Trapani 79 Turin Piemont Italy\",\"hasDiesel\":true,\"hasSuper\":true,\"hasSuperPlus\":false,\"hasGas\":false,\"hasMethane\":false,\"hasPremiumDiesel\":false, \"carSharing\":\"Enjoy\",\"lat\":45.0692404,\"lon\": 7.6391213,\"dieselPrice\": 1.457, \"superPrice\": 1.768, \"superPlusPrice\": null,\"gasPrice\": null,\"methanePrice\": null,\"premiumDieselPrice\": null,\"reportUser\": null,\"reportTimestamp\":null,\"reportDependability\":null}";
 		StringEntity entity = new StringEntity(json);
 		request.setEntity(entity); 
 		request.setHeader("Accept", "application/json, text/plain, */*");
@@ -157,34 +157,44 @@ public class TestController {
   
     @Test
     public void testGetGasStationsByProximity() throws ClientProtocolException, IOException {
-    	HttpUriRequest request = new HttpGet("http://localhost:8080/gasstation/searchGasStationByProximity/45.0672093/7.6638629");
+    	HttpUriRequest request = new HttpGet("http://localhost:8080/gasstation/searchGasStationByProximity/45.0672093/7.6638629/1");
     	HttpResponse response = HttpClientBuilder.create().build().execute(request);
     	
-    	assert(response.getStatusLine().getStatusCode() == 200);
+    	String jsonFromResponse = EntityUtils.toString(response.getEntity());
+		ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
+		GasStationDto[] gs= mapper.readValue(jsonFromResponse, GasStationDto[].class);
+		
+		assert(gs.length==3);
     }
     
     @Test
     public void testGetGasStationsWithCoordinates() throws ClientProtocolException, IOException {
     	/*Consider starting location of Via Magenta 52/D Turin Piedmont*/
-    	String myLat="/45.0757537";
-    	String myLon="/7.6573574";
-    	String gasolineType="/Methane";
+    	String myLat="/45.0672093";
+    	String myLon="/7.6638629";
+    	String myRadius="/1";
+    	String gasolineType="/Diesel";
     	String carSharing="/Enjoy";
-    	HttpUriRequest request = new HttpGet("http://localhost:8080/gasstation/getGasStationsWithCoordinates"+myLat+myLon+gasolineType+carSharing);
+    	HttpUriRequest request = new HttpGet("http://localhost:8080/gasstation/getGasStationsWithCoordinates"+myLat+myLon+myRadius+gasolineType+carSharing);
     	HttpResponse response = HttpClientBuilder.create().build().execute(request);
     	String jsonFromResponse =EntityUtils.toString(response.getEntity());
     	ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     	GasStationDto[] gasStationArray = mapper.readValue(jsonFromResponse, GasStationDto[].class);
     	
-    	/* Should return Eni Station */
+    	/* Should return Q8 */
     	assert(gasStationArray.length==1);
     }
     
 	@Test
 	public void testSetGasStationReport() throws IOException {
-	    HttpPost request = new HttpPost("http://localhost:8080/gasstation/setGasStationReport/3/1.10/-1/1.20/-1/1.30/3");	
-		HttpResponse response = HttpClientBuilder.create().build().execute(request);
+	    HttpPost request = new HttpPost("http://localhost:8080/gasstation/setGasStationReport");	
+	    String json = "{\"gasStationId\":3,\"dieselPrice\":\"1.256\",\"superPrice\":null,\"superPlusPrice\":\"1.3\",\"gasPrice\":null,\"methanePrice\":\"0.987\",\"premiumDieselPrice\":null,\"userId\":\"3\"}";
+		StringEntity entity = new StringEntity(json);
+		request.setEntity(entity); 
+		request.setHeader("Accept", "application/json, text/plain, */*");
+		request.setHeader("Content-type", "application/json;charset=UTF-8");
 		
+	    HttpResponse response = HttpClientBuilder.create().build().execute(request);
 		assert(response.getStatusLine().getStatusCode() == 200);
 	}
 }

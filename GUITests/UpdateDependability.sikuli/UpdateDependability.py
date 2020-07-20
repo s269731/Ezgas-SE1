@@ -5,12 +5,10 @@ wait("gs_list2.png")
 click("item2.png")
 click("1590850131533.png")
 wait("fuel_list.png")
-click("gasoline.png")
+click("lpg.png")
 click("1590682218881.png")
-wait("1590855145991.png")
-#Timestamp format was updated after acceptance testing
-#String "null" for Car Sharing disappeared after acceptance testing
+wait("1592407866958.png")
 click("1590854978955.png")
 click("1590682218881.png")
-wait("1590855283399.png")
+wait("1592407904176.png")
 

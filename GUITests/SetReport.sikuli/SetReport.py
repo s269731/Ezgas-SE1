@@ -10,7 +10,7 @@ click("1590682059404-1.png")
 wait("carshlist-1.png")
 click("carshitem-1.png")
 click("1590682218881.png")
-wait("1590851941484.png")
+wait("1592407237213.png")
 #Set new report
 click("1590852551381.png")
 type(Key.PAGE_DOWN)

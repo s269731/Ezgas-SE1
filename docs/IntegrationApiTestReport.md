@@ -269,6 +269,16 @@ In the step 2, we mocked the Repository methods.
 |  1     | Anonymous user U tries to perfom a search by inserting invalid value for gasoline type |  
 |  2     | InvalidGasTypeException is thrown |
 
+## Scenario UC8.3
+
+| Scenario |  name |
+| ------------- |:-------------:| 
+|  Precondition     | - |
+|  Post condition     | InvalidCarSharingException |
+| Step#        | Description  |
+|  1     | Anonymous user U tries to perfom a search by inserting invalid value for car sharing |  
+|  2     | InvalidCarSharingException is thrown |
+
 ## Scenario UC10.3
 
 | Scenario |  name |
@@ -324,7 +334,8 @@ In the step 2, we mocked the Repository methods.
 |  | FR3.3 | it.polito.ezgas.GasStationServiceimplTestAPI.testGetAllGasStation() |
 |  | FR3.3 | it.polito.ezgas.GasStationServiceimplTestAPI.testGetAllGasStationZero() |
 | UC7 | FR5.1 | it.polito.ezgas.GasStationServiceimplTestAPI.testSetReportNew() |
-| UC7 | FR5.1 | it.polito.ezgas.GasStationServiceimplTestAPI.testSetReportOverwritten() |
+| UC7 | FR5.1 | it.polito.ezgas.GasStationServiceimplTestAPI.testSetReportOverwrittenUserTrust() |
+| UC7 | FR5.1 | it.polito.ezgas.GasStationServiceimplTestAPI.testSetReportOverwrittenTimetag() |
 | UC7.1 | FR5.1 | it.polito.ezgas.GasStationServiceimplTestAPI.testSetReportPriceException() |
 | UC7.2 | FR5.1 | it.polito.ezgas.GasStationServiceimplTestAPI.testSetReportInvalidUserException() |
 | UC7.3 | FR5.1 | it.polito.ezgas.GasStationServiceimplTestAPI.testSetReportInvalidGasStationException() |
@@ -345,6 +356,7 @@ In the step 2, we mocked the Repository methods.
 | UC8.1 | FR4 | it.polito.ezgas.GasStationServiceimplTestAPI.testGetGasStationByProximityLatException() |        
 | UC8.1 | FR4 | it.polito.ezgas.GasStationServiceimplTestAPI.testGetGasStationByProximityLonException() |
 | UC8.2 | FR4 | it.polito.ezgas.GasStationServiceimplTestAPI.testGetGasStationsByGasolineTypeInvalid() |
+| UC8.3 | FR4 | it.polito.ezgas.GasStationServiceimplTestAPI.testInvalidCarSharing() |
 | UC9   | FR5.2 | it.polito.ezgas.GasStationServiceimplTestAPI.testUpdateDependabilitiesReportUserNull() |
 | UC9   | FR5.2 | it.polito.ezgas.GasStationServiceimplTestAPI.testUpdateDependabilitiesObsolescencePositive() |
 | UC10.1  | FR5.3 | it.polito.ezgas.UserServiceimplTestAPI.testIncreaseUserReputation() |             

@@ -27,9 +27,9 @@ public class GasStationRepositoryTest {
 	
 	@Test
 	public void testFindByGasStationId() {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Car2Go", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, null, 45.05, 8.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 45.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, false, "Car2Go", 45.65, 8.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, null, 45.05, 8.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
 		
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
@@ -42,9 +42,9 @@ public class GasStationRepositoryTest {
 	
 	@Test
 	public void testFindByGasStationIdNull() {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Car2Go", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, null, 45.05, 8.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 45.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, false, "Car2Go", 45.65, 8.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, null, 45.05, 8.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
 		
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
@@ -57,9 +57,9 @@ public class GasStationRepositoryTest {
 	
 	@Test
 	public void testFindByLatBetweenAndLonBetween() {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 42.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Car2Go", 43.65, 9.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, null, 45.05, 10.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 42.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, false, "Car2Go", 43.65, 9.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, null, 45.05, 10.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
 		
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
@@ -73,9 +73,9 @@ public class GasStationRepositoryTest {
 	
 	@Test
 	public void testFindByLatBetweenAndLonBetweenNull() {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 42.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Enjoy", 43.65, 9.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, "Car2Go", 45.05, 10.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 42.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, false, "Car2Go", 43.65, 9.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, null, 45.05, 10.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
 		
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
@@ -90,9 +90,9 @@ public class GasStationRepositoryTest {
 	
 	@Test
 	public void testFindByHasDieselTrueOrderByDieselPriceAsc() {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Car2Go", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, null, 45.05, 8.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 42.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, false, "Car2Go", 43.65, 9.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, null, 45.05, 10.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
 		
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
@@ -106,9 +106,9 @@ public class GasStationRepositoryTest {
 	
 	@Test
 	public void testFindByHasDieselTrueOrderByDieselPriceAscNull() {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", false, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", false, true, false, true, false, "Car2Go", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, null, 45.05, 8.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation1 = new GasStation("Example1", "Address1", false, false, true, true, false, true, "Enjoy", 42.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", false, true, false, true, false, false, "Car2Go", 43.65, 9.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, null, 45.05, 10.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
 		
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
@@ -122,9 +122,9 @@ public class GasStationRepositoryTest {
 	
 	@Test
 	public void testFindByHasSuperTrueOrderBySuperPriceAsc() {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Car2Go", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, null, 45.05, 8.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 42.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, false, "Car2Go", 43.65, 9.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, null, 45.05, 10.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
 		
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
@@ -138,9 +138,9 @@ public class GasStationRepositoryTest {
 	
 	@Test
 	public void testFindByHasSuperTrueOrderBySuperPriceAscNull() {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, false, false, true, false, "Car2Go", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, null, 45.05, 8.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 42.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, false, false, true, false, false, "Car2Go", 43.65, 9.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, null, 45.05, 10.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
 		
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
@@ -154,9 +154,9 @@ public class GasStationRepositoryTest {
 	
 	@Test
 	public void testFindByHasSuperPlusTrueOrderBySuperPlusPriceAsc() {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Car2Go", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, true, true, true, null, 45.05, 8.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 42.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, true, true, false, false, "Car2Go", 43.65, 9.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, null, 45.05, 10.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
 		
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
@@ -170,9 +170,9 @@ public class GasStationRepositoryTest {
 	
 	@Test
 	public void testFindByHasSuperPlusTrueOrderBySuperPlusPriceAscNull() {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, false, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Car2Go", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, null, 45.05, 8.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, false, true, false, true, "Enjoy", 42.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, false, "Car2Go", 43.65, 9.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, null, 45.05, 10.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
 		
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
@@ -185,9 +185,9 @@ public class GasStationRepositoryTest {
 	}
 	
 	public void testFindByHasGasTrueOrderByGasPriceAsc() {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Car2Go", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, null, 45.05, 8.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 42.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, false, "Car2Go", 43.65, 9.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, null, 45.05, 10.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
 		
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
@@ -201,9 +201,9 @@ public class GasStationRepositoryTest {
 	
 	@Test
 	public void testFindByHasGasTrueOrderByGasPriceAscNull() {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", false, false, true, false, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, false, false, "Car2Go", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", true, false, false, false, true, null, 45.05, 8.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, false, false, true, "Enjoy", 42.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, false, false, false, "Car2Go", 43.65, 9.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, false, true, true, null, 45.05, 10.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
 		
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
@@ -216,9 +216,9 @@ public class GasStationRepositoryTest {
 	}
 	
 	public void testFindByHasMethaneTrueOrderByMethanePriceAsc() {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Car2Go", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, null, 45.05, 8.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 42.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, false, "Car2Go", 43.65, 9.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, null, 45.05, 10.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
 		
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
@@ -232,9 +232,9 @@ public class GasStationRepositoryTest {
 	
 	@Test
 	public void testFindByHasMethaneTrueOrderByMethanePriceAscNull() {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", false, false, true, false, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, false, false, "Car2Go", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", true, false, false, true, false, null, 45.05, 8.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 42.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, false, "Car2Go", 43.65, 9.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, false, true, null, 45.05, 10.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
 		
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
@@ -246,11 +246,42 @@ public class GasStationRepositoryTest {
 		assertTrue(results.size() == 0);
 	}
 	
+	public void testFindByHasPremiumDieselTrueOrderByPremiumDieselPriceAsc() {
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 42.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, false, "Car2Go", 43.65, 9.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, null, 45.05, 10.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		
+		entityManager.persist(gasStation1);
+		entityManager.persist(gasStation2);
+		entityManager.persist(gasStation3);
+		
+		List<GasStation> results = new ArrayList<GasStation>();
+		results = gasStationRepository.findByHasPremiumDieselTrueOrderByPremiumDieselPriceAsc();
+		
+		assertTrue(results.size() == 2);
+	}
+	
+	@Test
+	public void testFindByHasPremiumDieselTrueOrderByPremiumDieselPriceAscNull() {
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, false, "Enjoy", 42.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, false, "Car2Go", 43.65, 9.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, false, null, 45.05, 10.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		
+		entityManager.persist(gasStation1);
+		entityManager.persist(gasStation2);
+		entityManager.persist(gasStation3);
+		
+		List<GasStation> results = new ArrayList<GasStation>();
+		results = gasStationRepository.findByHasPremiumDieselTrueOrderByPremiumDieselPriceAsc();
+		
+		assertTrue(results.size() == 0);
+	}
+	
 	@Test
 	public void testFindByCarSharing() {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Car2Go", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, null, 45.05, 8.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 42.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, false, "Car2Go", 43.65, 9.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, null, 45.05, 10.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
 		
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
@@ -264,9 +295,9 @@ public class GasStationRepositoryTest {
 	
 	@Test
 	public void testFindByCarSharingNull() {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Enjoy", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, null, 45.05, 8.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 42.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, false, "Enjoy", 43.65, 9.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, null, 45.05, 10.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
 		
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
@@ -280,9 +311,9 @@ public class GasStationRepositoryTest {
 	
 	@Test
 	public void testFindByGasStationAddressAndLatAndLon() {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Enjoy", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, null, 45.05, 8.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 45.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, false, "Car2Go", 45.65, 8.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, null, 45.05, 8.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
 		
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);
@@ -294,9 +325,9 @@ public class GasStationRepositoryTest {
 	
 	@Test
 	public void testFindByGasStationAddressAndLatAndLonNull() {
-		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, "Enjoy", 45.55, 8.05, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, "Enjoy", 45.65, 8.25, 0, 0, 0.0, 0, 0, null, "null", 0);
-		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, null, 45.05, 8.15, 0, 0, 0.0, 0, 0, null, "null", 0);
+		GasStation gasStation1 = new GasStation("Example1", "Address1", true, false, true, true, false, true, "Enjoy", 45.55, 8.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation2 = new GasStation("Example2", "Address2", true, true, false, true, false, false, "Car2Go", 45.65, 8.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
+		GasStation gasStation3 = new GasStation("Example3", "Address3", false, false, false, true, true, true, null, 45.05, 8.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, null, "null", 0);
 		
 		entityManager.persist(gasStation1);
 		entityManager.persist(gasStation2);

@@ -397,6 +397,7 @@ interface "GasStationRepository" {
     +findBySuperPlusTrueOrderBySuperPlusPriceAsc(): List<GasStation>
     +findByGasTrueOrderByGasPriceAsc(): List<GasStation>
     +findByMethaneTrueOrderByMethanePriceAsc(): List<GasStation>
+    +findByPremiumDieselTrueOrderByPremiumDieselPriceAsc(): List<GasStation>
     +findByCarSharing(String carSharing): List<GasStation>
 	+findByGasStationAddressAndLatAndLon: GasStation
 }
@@ -415,12 +416,11 @@ class "GasStationController" {
     +saveGasStation(GasStationDto gasStationDto): void
     +deleteGasStation(Integer gasStationId): void
     +getGasStationsByGasolineType(String gasolinetype): List<GasStationDto>
-    +getGasStationsByProximity(Double myLat, Double myLon): List<GasStationDto>
-    +getGasStationsWithCoordinates(Double myLat, Double myLon, 
+    +getGasStationsByProximity(Double myLat, Double myLon, int radius): List<GasStationDto>
+    +getGasStationsWithCoordinates(Double myLat, Double myLon, int radius,
     String gasolineType, String carSharing): List<GasStationDto>
-    ++getGasStationsWithoutCoordinates(String gasolinetype, String carsharing): List<GasStationDto>
-    +setGasStationReport(Integer gasStationId, double dieselPrice, double superPrice, 
-    double superPlusPrice, double gasPrice, double methanePrice, Integer userId): void
+    +getGasStationsWithoutCoordinates(String gasolinetype, String carsharing): List<GasStationDto>
+    +setGasStationReport(PriceReportDto priceReportDto): void
 }
 
 interface "GasStationService" {
@@ -429,12 +429,12 @@ interface "GasStationService" {
     +saveGasStation(GasStationDto gasStationDto): gasStationDto
     +deleteGasStation(Integer gasStationId): Boolean
     +getGasStationsByGasolineType(String gasolinetype): List<GasStationDto>
-    +getGasStationsByProximity(Double myLat, Double myLon): List<GasStationDto>
-    +getGasStationsWithCoordinates(Double myLat, Double myLon, 
+    +getGasStationsByProximity(Double myLat, Double myLon, int radius): List<GasStationDto>
+    +getGasStationsWithCoordinates(Double myLat, Double myLon, int radius,
     String gasolineType, String carSharing): List<GasStationDto>
     +getGasStationsWithoutCoordinates(String gasolinetype, String carsharing): List<GasStationDto>
     +setGasStationReport(Integer gasStationId, double dieselPrice, double superPrice, 
-    double superPlusPrice, double gasPrice, double methanePrice, Integer userId): void
+    double superPlusPrice, double gasPrice, double methanePrice, double premiumDieselPrice, Integer userId): void
 }
 
 class "HomeController" {

@@ -14,6 +14,8 @@ These figures will not be used to evaluate neither the project nor the team
 | Week | CR0 | CR4  | CR7  | Other |
 |:-----------:|:--------:|:-----------:|:-----------:|:----------:|
 | jun 1 -  7 | 12 | | | 2 | 
-| jun 8 - 14 | | | | |
-| jun 15 -21 | | | | |
+| jun 8 - 14 | | 5 | 2 | |
+| jun 15 -21 | | | | 2 |
 | jun 22 -28 | | | | |
+
+The effort was calculated considering a team made of 3 people (the fourth member has never worked).

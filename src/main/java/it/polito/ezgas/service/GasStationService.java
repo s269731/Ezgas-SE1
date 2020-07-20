@@ -68,7 +68,7 @@ public interface GasStationService {
      * Returns an empty ArrayList if no gas station in the database is located within 1km from that geopoint
      * Throws an exception if an invalid value is given for latitude and/or longitude
      */
-	List<GasStationDto> getGasStationsByProximity(double lat, double lon) throws GPSDataException;
+	//List<GasStationDto> getGasStationsByProximity(double lat, double lon) throws GPSDataException;
 
 	/********************************************************************************/
 	/*
